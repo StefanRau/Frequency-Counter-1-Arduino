@@ -76,6 +76,7 @@ ModuleNone::~ModuleNone()
 
 void ModuleNone::I2EActivate()
 {
+	
 }
 
 void ModuleNone::I2EDeactivate()

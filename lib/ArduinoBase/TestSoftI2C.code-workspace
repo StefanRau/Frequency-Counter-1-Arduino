@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"name": "TestSoftI2C",
+			"path": "..\\..\\..\\..\\..\\..\\..\\..\\Users\\d028312\\OneDrive - SAP SE\\Documents\\PlatformIO\\Projects\\TestSoftI2C"
+		},
+		{
+			"name": "Arduino VS Code",
+			"path": "..\\.."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"chrono": "cpp",
+			"*.tcc": "cpp",
+			"condition_variable": "cpp",
+			"future": "cpp",
+			"mutex": "cpp",
+			"thread": "cpp",
+			"array": "cpp",
+			"functional": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"utility": "cpp"
+		}
+	}
+}

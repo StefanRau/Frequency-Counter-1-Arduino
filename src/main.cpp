@@ -16,6 +16,7 @@
 // 22.03.2022: Separate reset for counter - Stefan Rau
 // 29.03.2022: Separate reset functions - Stefan Rau
 // 29.03.2022: Get name of device - Stefan Rau
+// 02.08.2022: New in GIT
 
 #include "main.h"
 

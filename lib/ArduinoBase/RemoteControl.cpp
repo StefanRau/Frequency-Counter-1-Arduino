@@ -54,7 +54,8 @@ RemoteControl::RemoteControl()
 
     _mText = new TextRemoteControl();
 
-    Serial.begin(115200);
+    //Serial.begin(115200);
+    Serial.begin(9600);
     delay(10);
     Serial.println(_mText->Start());
     Serial.flush();

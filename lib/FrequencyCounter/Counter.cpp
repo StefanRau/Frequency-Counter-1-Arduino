@@ -86,7 +86,7 @@ String TextCounter::Overflow()
 
 Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("New Counter: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("New Counter: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	short lI2CAddress = mI2CAddress;
 	// Initialize hardware
@@ -260,6 +260,7 @@ void Counter::I2ESetFunctionCode(char iFunctionCode)
 	switch (iFunctionCode)
 	{
 	case eFunctionCode::TFrequency:
+	case eFunctionCode::TEventCounting:
 		_mI2UpperWord->digitalWrite(_cOSelectPeriod, LOW);
 		break;
 
@@ -285,10 +286,6 @@ void Counter::I2ESetFunctionCode(char iFunctionCode)
 		_mI2UpperWord->digitalWrite(_cOSelectFunctionS0, HIGH);
 		_mI2UpperWord->digitalWrite(_cOSelectFunctionS1, HIGH);
 		_mI2UpperWord->digitalWrite(_cOSelectPeriod, HIGH);
-		break;
-
-	case eFunctionCode::TEventCounting:
-		_mI2UpperWord->digitalWrite(_cOSelectPeriod, LOW);
 		break;
 
 	default:

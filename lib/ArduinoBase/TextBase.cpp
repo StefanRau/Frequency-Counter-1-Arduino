@@ -10,20 +10,20 @@
 
 static char gTextBaseLanguage; // Stores the language that is used for all text objects
 
-TextBase::TextBase(int iSettingsAddress) : ProjectBase(iSettingsAddress)
+TextBase::TextBase(int iSettingsAddress) : ProjectBase(iSettingsAddress, 1)
 {
 	DebugInstantiation("New TextI2CBase: SettingsAddress=" + String(iSettingsAddress));
 
 	if (iSettingsAddress >= 0)
 	{
-		gTextBaseLanguage = GetSetting();
+		gTextBaseLanguage = GetSetting(_cEepromIndexLanguage);
 	}
 
 	if (_cValidLanguages.indexOf(gTextBaseLanguage) < 0)
 	{
 		// If language was never set before, take the default language
 		gTextBaseLanguage = _cDefaultLanguage;
-		SetSetting(gTextBaseLanguage);
+		SetSetting(_cEepromIndexLanguage, gTextBaseLanguage);
 	}
 }
 
@@ -41,7 +41,7 @@ void TextBase::SetLanguage(char iLanguage)
 	if (_cValidLanguages.indexOf(iLanguage) >= 0)
 	{
 		gTextBaseLanguage = iLanguage;
-		SetSetting(gTextBaseLanguage);
+		SetSetting(_cEepromIndexLanguage, gTextBaseLanguage);
 	}
 }
 

@@ -6,6 +6,7 @@
 // 12.01.2022: extended by ARDUINO_NANO_RP2040_CONNECT - Stefan Rau
 // 16.03.2022: ARDUINO_NANO_RP2040_CONNECT removed - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 08.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
 
 #include "TaskHandler.h"
 #include <Arduino.h>
@@ -34,6 +35,11 @@
 #ifdef ARDUINO_SAMD_NANO_33_IOT
 #define TIMER1_TICKS_FOR_1_MS 1000
 static SAMDTimer lTimer(TIMER_TC3);
+#endif
+
+#ifdef ARDUINO_ARDUINO_NANO33BLE
+#define TIMER1_TICKS_FOR_1_MS 1000
+static NRF52_MBED_Timer lTimer(NRF_TIMER_1);
 #endif
 
 static TaskHandler *gTaskHandler = nullptr;

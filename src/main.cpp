@@ -16,7 +16,6 @@
 // 22.03.2022: Separate reset for counter - Stefan Rau
 // 29.03.2022: Separate reset functions - Stefan Rau
 // 29.03.2022: Get name of device - Stefan Rau
-// 02.08.2022: New in GIT
 
 #include "main.h"
 
@@ -53,11 +52,11 @@ void setup()
 {
 	// Set clock frequency of I2C to 100kHz
 	Wire.begin();
-	//Wire.setClock(100000);
+	delay(10);
 
-#ifdef ARDUINO_SAMD_NANO_33_IOT
-	delay(5000);
-#endif
+	// #ifdef ARDUINO_SAMD_NANO_33_IOT
+	// 	delay(1000);
+	// #endif
 
 	ProjectBase::SetI2CAddressGlobalEEPROM(mInitializeSystem.EEPROM.I2CAddress);
 	mText = new TextMain(mInitializeSystem.Text.SettingsAddress);
@@ -152,32 +151,13 @@ void loop()
 {
 	String lCommand = "";
 
-	// DebugPrint("Loop");
-
 	if (mLCDHandler != nullptr)
 	{
 		mLCDHandler->loop(); // LCD must be called before the hardware is initialized to show potential errors
 	}
 
-	//DebugLoop();
-
 	if (!mIsInitialized)
 	{
-		
-		// DebugPrint("Not Initialized");
-		return;
-	}
-
-	//delay(10);
-
-	// In case of an error, the program stops here
-	if (ErrorHandler::GetErrorHandler()->ContainsErrors())
-	{
-		if (!mErrorPrinted)
-		{
-			DebugPrint("Error: " + ErrorHandler::GetErrorHandler()->GetRootCause()->GetErrorEntry().ErrorMessage + " - processing stopped");
-			mErrorPrinted = true;
-		}
 		return;
 	}
 
@@ -283,7 +263,7 @@ void loop()
 				// lModule = 'K'
 				// lParameter = '0' .. '9'	: Number of the menu item to select
 				// lParameter = '*' 		: codes of all menu items "123..." - returns comma separated, readable text in verbose mode
-				// lParameter = '?'			: returns the number of the currently selected menu item - returns readable text in verbose mode
+				// lParameter = '?'			: returns the number of the currently selected menu item - returK:0ns readable text in verbose mode
 				lReturn = mFrontPlate->Dispatch(lModule, lParameter);
 			}
 
@@ -300,11 +280,25 @@ void loop()
 					mFrontPlate->TriggerLampTestOff(); // Reload displayed texts
 				}
 			}
-		}
 
-		RemoteControlPrint(lReturn);
+			if (lReturn != "")
+			{
+				Serial.println(lReturn + "#");
+			}
+		}
 	}
 #endif
+
+	// In case of an error, the program stops here
+	if (ErrorHandler::GetErrorHandler()->ContainsErrors())
+	{
+		if (!mErrorPrinted)
+		{
+			DebugPrint("Error: " + ErrorHandler::GetErrorHandler()->GetRootCause()->GetErrorEntry().ErrorMessage + " - processing stopped");
+			mErrorPrinted = true;
+		}
+		return;
+	}
 
 	mFrontPlate->loop();
 	mModuleFactory->loop();
@@ -363,8 +357,9 @@ void loop()
 		// Event counting used frequency counter input, but does not use 0.5Hz => that is set permanently to 1
 		// DebugPrint("Count events");
 		digitalWrite(cOReset0_5Hz, HIGH);
-		digitalWrite(cOResetFF, LOW);
 		delayMicroseconds(10);
+		digitalWrite(cOResetFF, LOW);
+		delayMicroseconds(100);
 		mMeasurementValue = mCounter->I2EGetCounterValue();
 	}
 	else
@@ -372,8 +367,8 @@ void loop()
 		// Pulse length
 		if (digitalRead(cIDone) == HIGH) // check if pulse end is detected
 		{
-			//DebugPrint("Trigger detected");
-			//  Wait a bit until the value is read
+			// DebugPrint("Trigger detected");
+			//   Wait a bit until the value is read
 			delayMicroseconds(100);
 			mMeasurementValue = mCounter->I2EGetCounterValue();
 			ResetCounters();
@@ -401,7 +396,7 @@ void TaskLampTestEnd()
 		DebugPrintFromTask("Initial function: " + mFrontPlate->GetSelectedFunctionName() + "\n");
 	}
 
-	// End lamp test at all modues
+	// End lamp test at all modules
 	if (mModuleFactory != nullptr)
 	{
 		mModuleFactory->TriggerLampTestOff();
@@ -433,20 +428,21 @@ void TaskLCDRefresh()
 
 int GetFreeRAM()
 {
-#ifdef ARDUINO_AVR_NANO_EVERY
-	extern int __heap_start, *__brkval;
-	int v;
-	return (int)&v - (__brkval == 0 ? (int)&__heap_start : (int)__brkval);
-#endif
 #ifdef ARDUINO_SAMD_NANO_33_IOT
-	return 0;
+	char top;
+#ifdef __arm__
+	return &top - reinterpret_cast<char *>(sbrk(0));
+#elif defined(CORE_TEENSY) || (ARDUINO > 103 && ARDUINO != 151)
+	return &top - __brkval;
+#else  // __arm__
+	return __brkval ? &top - __brkval : &top - __malloc_heap_start;
+#endif // __arm__
 #endif
 }
 
 void ResetCounters()
 {
 	// reset counters
-	//DebugPrint("Reset counters");
 	digitalWrite(cOResetCounter, HIGH);
 	delayMicroseconds(10);
 	digitalWrite(cOResetCounter, LOW);
@@ -456,7 +452,6 @@ void ResetCounters()
 void RestartPulsDetection()
 {
 	// Restart puls detection
-	//DebugPrint("Restart pulse detection");
 	digitalWrite(cONotResetPeriod, LOW);
 	delayMicroseconds(10);
 	digitalWrite(cONotResetPeriod, HIGH);
@@ -466,7 +461,6 @@ void RestartPulsDetection()
 void RestartGateTimer()
 {
 	// restart 0.5Hz
-	//DebugPrint("Restart 0.5Hz");
 	digitalWrite(cOReset0_5Hz, HIGH);
 	delayMicroseconds(10);
 	digitalWrite(cOReset0_5Hz, LOW);

@@ -10,6 +10,8 @@
 // 12.01.2022: extended by ARDUINO_NANO_RP2040_CONNECT - Stefan Rau
 // 16.03.2022: ARDUINO_NANO_RP2040_CONNECT removed - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 09.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
+// 09.08.2022: add ARDUINO NANO 33 BLE
 
 #include "ProjectBase.h"
 
@@ -17,19 +19,49 @@
 static bool _mVerboseMode = false; // returns results of dispatcher - true: in details, false: as single letter code
 #endif
 
+// // Text definitions
+
+// /// <summary>
+// /// There is no new EEPROM address required
+// /// </summary>
+// TextProjectBase::TextProjectBase() : TextBase(-1)
+// {
+//     DebugInstantiation("New TextProjectBase");
+// }
+
+// TextProjectBase::~TextProjectBase()
+// {
+// }
+
+// String TextProjectBase::GetObjectName()
+// {
+//     switch (GetLanguage())
+//     {
+//         TextLangE("Project base class");
+//         TextLangD("Projekt Basis Klasse");
+//     }
+// }
+
+// String TextProjectBase::InconsistentParameters()
+// {
+//     switch (GetLanguage())
+//     {
+//         TextLangE("Implementation error: parameter iNumberOfSettings must be set to a value > 0");
+//         TextLangD("Implementierungsfehler: Parameter iNumberOfSettings muss größer 0 sein");
+//     }
+// }
+
+/////////////////////////////////////////////////////////////
+
 static short gI2CAddressGlobalEEPROM = -1;
 static I2C_eeprom *gI2CGlobalEEPROM = nullptr;
 static bool gGlobalEEPROMIsInitialized = false;
 
-ProjectBase::ProjectBase(int iSettingsAddress)
+ProjectBase::ProjectBase(int iSettingsAddress, int iNumberOfSettings)
 {
-    DebugInstantiation("New ProjectBase: iSettingsAddress=" + String(iSettingsAddress));
+    DebugInstantiation("New ProjectBase: iInitializeModule[SettingsAddress, NumberOfSettings]=[" + String(iSettingsAddress) + ", " + String(iNumberOfSettings) + "]");
 
-    // Stores settings address of the object only if address is valid
-    if (iSettingsAddress >= 0)
-    {
-        _mSettingAdddress = iSettingsAddress;
-    }
+    // _mText = new TextProjectBase();
 
     // try only once to instantiate the EEPROM: with the 1st call of this constructor
     if (!gGlobalEEPROMIsInitialized)
@@ -62,6 +94,23 @@ ProjectBase::ProjectBase(int iSettingsAddress)
         }
 
         gGlobalEEPROMIsInitialized = true;
+    }
+
+    // Stores settings address of the object only if address is valid
+    if (iSettingsAddress >= 0)
+    {
+        _mSettingAdddress = iSettingsAddress;
+
+        if (iNumberOfSettings > 0)
+        {
+            _mNumberOfSettings = iNumberOfSettings;
+        }
+        else
+        {
+            // ErrorPrint(Error::eSeverity::TFatal, _mText->InconsistentParameters());
+            DebugPrint("Implementation error: parameter iNumberOfSettings must be set to a value > 0");
+            return;
+        }
     }
 }
 
@@ -96,37 +145,37 @@ bool ProjectBase::GetVerboseMode()
 }
 #endif
 
-void ProjectBase::SetSetting(char iValue)
+void ProjectBase::SetSetting(int iNumberOfSetting, char iValue)
 {
     // Settings address and value must be valid
-    if ((_mSettingAdddress >= 0) && (iValue != cNullSetting))
+    if ((_mSettingAdddress >= 0) && (iNumberOfSetting > 0) && (iNumberOfSetting <= _mNumberOfSettings) && (iValue != cNullSetting))
     {
 #ifdef ARDUINO_AVR_NANO_EVERY
-        EEPROM.update(_mSettingAdddress, iValue);
+        EEPROM.update(_mSettingAdddress + iNumberOfSetting - 1, iValue);
 #endif
-#if defined(ARDUINO_SAMD_NANO_33_IOT)
+#if defined(ARDUINO_SAMD_NANO_33_IOT) or defined(ARDUINO_ARDUINO_NANO33BLE)
         if (gI2CGlobalEEPROM != nullptr)
         {
-            gI2CGlobalEEPROM->updateByte(_mSettingAdddress, iValue);
+            gI2CGlobalEEPROM->updateByte(_mSettingAdddress + iNumberOfSetting - 1, iValue);
         }
 #endif
     }
     DebugPrint("Set Setting: " + String(_mSettingAdddress) + ", " + String((int)iValue));
 }
 
-char ProjectBase::GetSetting()
+char ProjectBase::GetSetting(int iNumberOfSetting)
 {
     char lSetting = cNullSetting;
 
-    if (_mSettingAdddress >= 0)
+    if ((_mSettingAdddress >= 0) && (iNumberOfSetting > 0) && (iNumberOfSetting <= _mNumberOfSettings))
     {
 #ifdef ARDUINO_AVR_NANO_EVERY
-        lSetting = EEPROM.read(_mSettingAdddress);
+        lSetting = EEPROM.read(_mSettingAdddress + iNumberOfSetting - 1);
 #endif
-#if defined(ARDUINO_SAMD_NANO_33_IOT)
+#if defined(ARDUINO_SAMD_NANO_33_IOT) or defined(ARDUINO_ARDUINO_NANO33BLE)
         if (gI2CGlobalEEPROM != nullptr)
         {
-            lSetting = gI2CGlobalEEPROM->readByte(_mSettingAdddress);
+            lSetting = gI2CGlobalEEPROM->readByte(_mSettingAdddress + iNumberOfSetting - 1);
         }
 #endif
     }

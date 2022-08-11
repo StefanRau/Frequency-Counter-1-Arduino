@@ -35,6 +35,13 @@ public:
 	String FreeMemory(int iFreeMemory);
 };
 
+#ifdef __arm__
+// should use uinstd.h to define sbrk but Due causes a conflict
+extern "C" char *sbrk(int incr);
+#else  // __ARM__
+extern char *__brkval;
+#endif // __arm__
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -57,13 +64,13 @@ extern "C"
 
 	struct sInitializeSystem
 	{
-		I2CBase::sInitializeModule EEPROM = {-1, 0x50};			 // EEPROM is not used, I2C uses 0x50
-		I2CBase::sInitializeModule Text = {0x00, -1};			 // EEPROM uses 0x00, I2C is not used
-		I2CBase::sInitializeModule Counter = {-1, 0x20};		 // EEPROM is not used, I2C uses 2 addresses 0x20 .. 0x21
-		I2CBase::sInitializeModule ModuleFactory = {0x02, 0x22}; // EEPROM uses 4 addresses 0x02 .. 0x05, I2C uses 3 addresses 0x22 .. 0x25
-		I2CBase::sInitializeModule LCDHandler = {0x06, 0x26};	 // EEPROM and I2C is used
-		I2CBase::sInitializeModule FrontPlate = {0x07, 0x27};	 // EEPROM and I2C is used
-		I2CBase::sInitializeModule ErrorLogger = {-1, -1};		 // EEPROM is not used
+		I2CBase::sInitializeModule EEPROM = {-1, 0, 0x50};			// EEPROM is not used, I2C uses 0x50
+		I2CBase::sInitializeModule Text = {0x00, 1, -1};			// EEPROM uses 0x00, I2C is not used
+		I2CBase::sInitializeModule Counter = {-1, 0, 0x20};			// EEPROM is not used, I2C uses 2 addresses 0x20 .. 0x21
+		I2CBase::sInitializeModule ModuleFactory = {0x02, 8, 0x22}; // EEPROM uses 4 addresses 0x02 .. 0x05, I2C uses 3 addresses 0x22 .. 0x25
+		I2CBase::sInitializeModule LCDHandler = {0x06, 1, 0x26};	// EEPROM and I2C is used
+		I2CBase::sInitializeModule FrontPlate = {0x07, 1, 0x27};	// EEPROM and I2C is used
+		I2CBase::sInitializeModule ErrorLogger = {-1, 0, -1};		// EEPROM is not used
 	} mInitializeSystem;
 
 	TextMain *mText;	// Pointer to current text objekt of main

@@ -64,7 +64,7 @@ String TextModuleTTLCMOS::MenuItemOE()
 
 ModuleTTLCMOS::ModuleTTLCMOS(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-	DebugInstantiation("New ModuleTTLCMOS: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DebugInstantiation("New ModuleTTLCMOS: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleTTLCMOS();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;

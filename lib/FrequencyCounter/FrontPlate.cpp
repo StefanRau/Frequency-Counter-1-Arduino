@@ -160,7 +160,7 @@ String TextFrontPlate::ErrorPlausibilityViolation()
 
 FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("New FrontPlate: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DebugInstantiation("New FrontPlate: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	// Initialize hardware
 	_mText = new TextFrontPlate();
@@ -264,15 +264,15 @@ void FrontPlate::loop()
 	// switch off LEDs and show the current function on the LCD
 	if (_mTriggerLampTestOff)
 	{
-		_I2ESelectFunction((Counter::eFunctionCode)GetSetting());	  // Read setting from processor internal EEPROM
-		_mLCDHandler->SetSelectedFunction(GetSelectedFunctionName()); // Output at LCD
+		_I2ESelectFunction((Counter::eFunctionCode)GetSetting(_cEepromIndexFunction)); // Read setting from processor internal EEPROM
+		_mLCDHandler->SetSelectedFunction(GetSelectedFunctionName());				   // Output at LCD
 		_mCurrentModuleCode = _mModuleFactory->GetSelectedModule()->GetModuleCode();
 		_mTriggerLampTestOff = false;
 		return;
 	}
 
 	// if module has changed: set frequency measurement on, because that is sopported by all modules
-	// HF module does not support periode measurement
+	// e.g. HF module does not support periode measurement
 	if (_mCurrentModuleCode != _mModuleFactory->GetSelectedModule()->GetModuleCode())
 	{
 		DebugPrint("Old Function code:" + String(_mCurrentModuleCode));
@@ -304,9 +304,9 @@ void FrontPlate::loop()
 
 		if ((lKeyInput & 0x08) > 0)
 		{
-			DebugPrint("Frequency key pressed");
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TFrequency)
 			{
+				DebugPrint("Frequency selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TFrequency);
 				_mChangeFunctionDetected = true;
 			}
@@ -314,9 +314,9 @@ void FrontPlate::loop()
 
 		if ((lKeyInput & 0x10) > 0)
 		{
-			DebugPrint("Level positive key pressed");
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TPositive)
 			{
+				DebugPrint("Level positive selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TPositive);
 				_mChangeFunctionDetected = true;
 			}
@@ -324,9 +324,9 @@ void FrontPlate::loop()
 
 		if ((lKeyInput & 0x20) > 0)
 		{
-			DebugPrint("Level negative key pressed");
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TNegative)
 			{
+				DebugPrint("Level negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TNegative);
 				_mChangeFunctionDetected = true;
 			}
@@ -334,9 +334,9 @@ void FrontPlate::loop()
 
 		if ((lKeyInput & 0xc0) == 0x40)
 		{
-			DebugPrint("Edge negative key pressed");
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEdgePositive)
 			{
+				DebugPrint("Edge negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgePositive);
 				_mChangeFunctionDetected = true;
 			}
@@ -344,8 +344,8 @@ void FrontPlate::loop()
 
 		if ((lKeyInput & 0xc0) == 0x80)
 		{
-			DebugPrint("Edge positive key pressed");
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEdgeNegative)
+				DebugPrint("Edge positive selected");
 			{
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgeNegative);
 				_mChangeFunctionDetected = true;
@@ -354,9 +354,9 @@ void FrontPlate::loop()
 
 		if ((lKeyInput & 0xc0) == 0xc0)
 		{
-			DebugPrint("Edge negative key pressed & Edge positive key pressed");
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEventCounting)
 			{
+				DebugPrint("Event counting selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEventCounting);
 				_mChangeFunctionDetected = true;
 			}
@@ -561,7 +561,7 @@ void FrontPlate::_I2ESelectSingleFunction(char iFunctionCode)
 		break;
 	}
 
-	SetSetting(iFunctionCode);
+	SetSetting(_cEepromIndexFunction, iFunctionCode);
 	DebugPrint("New function selected: " + GetSelectedFunctionName());
 }
 

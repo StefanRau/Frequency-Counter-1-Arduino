@@ -93,10 +93,14 @@ public:
 };
 
 #define ErrorPrint(iSeverity, iErrorMessage) ErrorHandler::GetErrorHandler()->Print(iSeverity, iErrorMessage)
+
 #ifdef ARDUINO_AVR_NANO_EVERY
 #define ErrorHandlerStartAddress 0x000 // nano uses internal EEPROM
 #endif
 #ifdef ARDUINO_SAMD_NANO_33_IOT
+#define ErrorHandlerStartAddress 0x0100 // 1st address for logging
+#endif
+#ifdef ARDUINO_ARDUINO_NANO33BLE
 #define ErrorHandlerStartAddress 0x0100 // 1st address for logging
 #endif
 

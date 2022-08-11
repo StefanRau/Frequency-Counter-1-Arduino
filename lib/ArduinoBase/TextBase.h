@@ -32,6 +32,7 @@ private:
 	const char _cDefaultLanguage = 'D';	  // Defines default langauge
 	const String _cValidLanguages = "DE"; // List of all avallable languages
 	char _mLanguage = _cDefaultLanguage;  // Current language
+	const int _cEepromIndexLanguage = 1;  // Entry used for language
 
 #ifndef _DebugApplication
 										 // Remote commands
@@ -42,6 +43,10 @@ private:
 #endif
 
 protected:
+	/// <summary>
+	/// Constructor
+	/// </summary>
+	/// <param name="iSettingsAddress">Address of the EEPROM where language code is stored</param>
 	TextBase(int iSettingsAddress);
 	~TextBase();
 

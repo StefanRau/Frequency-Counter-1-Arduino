@@ -10,6 +10,8 @@
 // 16.03.2022: ARDUINO_NANO_RP2040_CONNECT removed - Stefan Rau
 // 04.04.2022: Improve output of log: use severity enumeration, ISO date formate - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 08.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
+// 08.08.2022: add ARDUINO NANO 33 BLE
 
 #include "ErrorHandler.h"
 
@@ -121,9 +123,15 @@ String TextErrorHandler::SeverityUnknown()
 
 Error::Error(int iNumber, eSeverity iSeverity, String iErrorMessage)
 {
+	struct tm lTime;
+
+	lTime.tm_year = 1966;
+	lTime.tm_mon = 7;
+	lTime.tm_yday = 13;
+
 	DebugInstantiation("New Error: iNumber=" + String(iNumber) + ", iSeverity=" + String(iSeverity) + ", iErrorMessage=" + iErrorMessage);
 	_mErrorEntry.ErrorHeader.ErrorHeader.Severity = iSeverity;
-	_mErrorEntry.ErrorHeader.ErrorHeader.Timestamp = 0;
+	_mErrorEntry.ErrorHeader.ErrorHeader.Timestamp = mktime(&lTime);
 	_mErrorEntry.ErrorHeader.ErrorHeader.Count = iNumber;
 	_mErrorEntry.ErrorMessage = iErrorMessage;
 }
@@ -223,22 +231,27 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 				// get header
 				union Error::uErrorHeader lErrorHeader;
 				char lTimeString[50];
+				char *lTimeStringP;
 				struct tm lTime; // Reserve memory - the simple way
 				struct tm *pTime;
 
 				pTime = &lTime;
+				lTimeStringP = lTimeString;
 
 				GetI2CGlobalEEPROM()->readBlock(_mEEPROMMemoryIterator, lErrorHeader.Buffer, sizeof(Error::sErrorHeader));
 				_mEEPROMMemoryIterator += sizeof(Error::sErrorHeader) + ErrorHandlerStartAddress;
 
 				// Error count
-				lReturn = String(lErrorHeader.ErrorHeader.Count);
+				lReturn = String(_mEEPROMErrorIterator);
 				lReturn += ": ";
 
 				// Timestamp of error
 				pTime = gmtime(&lErrorHeader.ErrorHeader.Timestamp);
-				isotime_r(pTime, lTimeString);
-				lReturn += String(lTimeString) + ": ";
+
+				 asctime_r(pTime,lTimeStringP);
+				
+				//	isotime_r(pTime, lTimeString);
+				lReturn += String(lTimeStringP) + ": ";
 
 				// Severity
 				switch (lErrorHeader.ErrorHeader.Severity)

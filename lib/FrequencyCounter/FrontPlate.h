@@ -101,10 +101,9 @@ private:
 	char _mSelectedFunctionCode;									  // Code of the currently selected function
 	char _mCurrentModuleCode = ModuleBase::eModuleCode::TNoSelection; // code of the currently activemodule - for checking in loop() if a new module was selected
 	char _mSelectedeMenuKeyCode;									  // the last pressed menu button
-	// int _mFunctionKeyPressedCounter;								  // at least one of the function keys is pressed => count up to avoid jitter
-	bool _mChangeFunctionDetected; // there is a new function detected
-	// int _mMenuKeyPressedCounter;									  // at least one of the menu keys is pressed => count up to avoid jitter
-	bool _mChangeMenuDecected; // there is a new menu entry detected
+	bool _mChangeFunctionDetected;									  // there is a new function detected
+	bool _mChangeMenuDecected;										  // there is a new menu entry detected
+	const int _cEepromIndexFunction = 1;							  // Selected function on front plate
 
 public:
 	/// <summary>

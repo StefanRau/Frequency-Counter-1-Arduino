@@ -35,7 +35,7 @@ String TextModuleHF::GetObjectName()
 
 ModuleHF::ModuleHF(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-    DebugInstantiation("New ModuleHF: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DebugInstantiation("New ModuleHF: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
     _mText = new TextModuleHF();
     mLastMenuEntryNumber = _cNumberOfMenuEntries;

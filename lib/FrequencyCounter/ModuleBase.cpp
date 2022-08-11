@@ -40,12 +40,12 @@ String TextModuleBase::GetObjectName()
 
 ModuleBase::ModuleBase(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("New ModuleBase: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DebugInstantiation("New ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleBase();
 
 	mI2EModule = new Adafruit_MCP23X17();
-	mCurrentMenuEntryNumber = GetSetting();
+	mCurrentMenuEntryNumber = GetSetting(_cEepromIndexMenu);
 }
 
 ModuleBase::~ModuleBase()
@@ -82,7 +82,7 @@ void ModuleBase::I2EScrollFunctionUp()
 	if (mCurrentMenuEntryNumber < (mLastMenuEntryNumber - 1))
 	{
 		mCurrentMenuEntryNumber += 1;
-		SetSetting(mCurrentMenuEntryNumber);
+		SetSetting(_cEepromIndexMenu,mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -92,7 +92,7 @@ void ModuleBase::I2EScrollFunctionDown()
 	if (mCurrentMenuEntryNumber > 0)
 	{
 		mCurrentMenuEntryNumber -= 1;
-		SetSetting(mCurrentMenuEntryNumber);
+		SetSetting(_cEepromIndexMenu,mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -117,7 +117,7 @@ void ModuleBase::I2ESetCurrentMenuEntryNumber(int iCurrentMenuEntryNumber)
 	// Something changed?
 	if (lCurrentMenuEntryNumber != mCurrentMenuEntryNumber)
 	{
-		SetSetting(mCurrentMenuEntryNumber);
+		SetSetting(_cEepromIndexMenu,mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }

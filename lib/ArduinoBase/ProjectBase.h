@@ -14,6 +14,22 @@
 #endif
 
 #include "Debug.h"
+//#include "ErrorHandler.h"
+
+// /// <summary>
+// /// Local text class of the module
+// /// </summary>
+// class TextProjectBase : public TextBase
+// {
+// public:
+// 	TextProjectBase();
+// 	~TextProjectBase();
+
+// 	String GetObjectName() override;
+// 	String InconsistentParameters();
+// };
+
+/////////////////////////////////////////////////////////////
 
 class ProjectBase
 {
@@ -32,13 +48,17 @@ public:
 
 private:
 	int _mSettingAdddress = -1; // EEPROM Address of the settings of this module. Per default, the setting is inactive.
+	int _mNumberOfSettings = 0; // Number of reserved settings in the EEPROM.
+
+	// TextProjectBase *_mText; // Pointer to current text objekt of the class
 
 public:
 	/// <summary>
 	/// Constructor
 	/// </summary>
-	/// <param name="iSettingsAddress">Address of the EEPROM for storing the current value, if -1, then this value is ignored</param>
-	ProjectBase(int iSettingsAddress);
+	/// <param name="iSettingsAddress">1st Address of the EEPROM for storing the current value, if -1, then this value is ignored</param>
+	/// <param name="iNumberOfSettings">Number of settings, relevant for this instance. If iSettingsAddress = -1 => this parameter is ignored and set to 0.</param>
+	ProjectBase(int iSettingsAddress,int iNumberOfSettings);
 
 	/// <summary>
 	/// Constructor without setting
@@ -85,14 +105,16 @@ protected:
 	/// <summary>
 	/// Saves a setting parameter in the internal EEPROM, if the settings address is larger or equal than 0
 	/// </summary>
+	/// <param name="iNumberOfSetting">The number of the current setting.</param>
 	/// <param name="iValue">Value to be saved. A blank value is not stored.</param>
-	void SetSetting(char iValue);
+	void SetSetting(int iNumberOfSetting,char iValue);
 
 	/// <summary>
 	/// Reads the setting parameter from the internal EEPROM, if the settings address is larger or equal than 0
 	/// </summary>
+	/// <param name="iNumberOfSetting">The number of the current setting.</param>
 	/// <returns>Value from EEPROM. Returns blank for settings address is smaller than 0.</returns>
-	char GetSetting();
+	char GetSetting(int iNumberOfSetting);
 };
 
 #endif

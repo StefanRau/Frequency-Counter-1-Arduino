@@ -49,9 +49,9 @@ String TextI2CBase::ModuleNotInitialized()
 
 // Module implementation
 
-I2CBase::I2CBase(sInitializeModule iInitializeModule) : ProjectBase(iInitializeModule.SettingsAddress)
+I2CBase::I2CBase(sInitializeModule iInitializeModule) : ProjectBase(iInitializeModule.SettingsAddress, iInitializeModule.NumberOfSettings)
 {
-    DebugInstantiation("New I2CBase: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DebugInstantiation("New I2CBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
     _mText = new TextI2CBase();
 

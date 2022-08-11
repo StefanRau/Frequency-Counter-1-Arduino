@@ -61,7 +61,7 @@ String TextModuleNone::MenuItemEnd()
 
 ModuleNone::ModuleNone(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-	DebugInstantiation("New I2CBase: ModuleNone[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("New ModuleNone: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleNone();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -76,7 +76,6 @@ ModuleNone::~ModuleNone()
 
 void ModuleNone::I2EActivate()
 {
-	
 }
 
 void ModuleNone::I2EDeactivate()
@@ -108,13 +107,10 @@ String ModuleNone::GetCurrentMenuEntry(int iMenuEntry)
 	{
 	case 0:
 		return _mText->MenuItemStart();
-		break;
 	case 1:
 		return _mText->MenuItemCenter();
-		break;
 	case 2:
 		return _mText->MenuItemEnd();
-		break;
 	}
 	return "";
 }

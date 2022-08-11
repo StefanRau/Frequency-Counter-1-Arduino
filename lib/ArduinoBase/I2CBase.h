@@ -36,6 +36,7 @@ public:
 	struct sInitializeModule
 	{
 		int SettingsAddress;
+		int NumberOfSettings;
 		short I2CAddress;
 	};
 

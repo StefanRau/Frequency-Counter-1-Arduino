@@ -47,9 +47,10 @@ String TextModuleFactory::Unknown()
 
 ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-    DebugInstantiation("New ModuleFactory: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("New ModuleFactory: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	sInitializeModule lInitializeModule = iInitializeModule;
+	lInitializeModule.NumberOfSettings = 2;
 
 	_mText = new TextModuleFactory();
 
@@ -59,17 +60,17 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 
 	// 100 MHz analog
 	lInitializeModule.I2CAddress += 1;
-	lInitializeModule.SettingsAddress += 1;
+	lInitializeModule.SettingsAddress += 2;
 	_mModuleAnalog = new ModuleAnalog(lInitializeModule);
 
 	// 10GHz
 	lInitializeModule.I2CAddress += 1;
-	lInitializeModule.SettingsAddress += 1;
+	lInitializeModule.SettingsAddress += 2;
 	_mModuleHF = new ModuleHF(lInitializeModule);
 
 	// Dummy module
 	lInitializeModule.I2CAddress = -1;
-	lInitializeModule.SettingsAddress = -1;
+	lInitializeModule.SettingsAddress += 2;
 	_mModuleNone = new ModuleNone(lInitializeModule);
 
 	if (_mModuleTTLCMOS->IsModuleInitialized())

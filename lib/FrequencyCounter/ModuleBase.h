@@ -47,6 +47,8 @@ private:
 	const uint8_t _cOSelectionPeriod = 1;		 // Selects output relais of period output
 	const uint8_t _cIAddressSelectionButton = 8; // Button at front plate
 	const uint8_t _cOAddressLED = 9;			 // LED at front plate
+	const int _cEepromIndexMenu = 1;			 // Entry used for selected menu
+	const int _cEepromIndexFunction = 2;		 // Entry used for selected function
 
 	TextModuleBase *_mText; // Pointer to current text objekt of the class
 

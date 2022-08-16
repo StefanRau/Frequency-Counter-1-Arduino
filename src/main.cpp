@@ -359,7 +359,9 @@ void loop()
 		digitalWrite(cOReset0_5Hz, HIGH);
 		delayMicroseconds(10);
 		digitalWrite(cOResetFF, LOW);
-		delayMicroseconds(100);
+		delayMicroseconds(10);
+//		digitalWrite(cOResetCounter, LOW);
+//		delayMicroseconds(10);
 		mMeasurementValue = mCounter->I2EGetCounterValue();
 	}
 	else

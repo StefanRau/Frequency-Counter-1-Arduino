@@ -129,7 +129,7 @@ Error::Error(int iNumber, eSeverity iSeverity, String iErrorMessage)
 	lTime.tm_mon = 7;
 	lTime.tm_yday = 13;
 
-	DebugInstantiation("New Error: iNumber=" + String(iNumber) + ", iSeverity=" + String(iSeverity) + ", iErrorMessage=" + iErrorMessage);
+	DebugInstantiation("New Error: iNumber=" + String(iNumber) + ", iSeverity=" + String((char)iSeverity) + ", iErrorMessage=" + iErrorMessage);
 	_mErrorEntry.ErrorHeader.ErrorHeader.Severity = iSeverity;
 	_mErrorEntry.ErrorHeader.ErrorHeader.Timestamp = mktime(&lTime);
 	_mErrorEntry.ErrorHeader.ErrorHeader.Count = iNumber;
@@ -429,7 +429,7 @@ void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 		{
 			// EEPROM error => set status back
 			mModuleIsInitialized = false;
-			DebugPrint("EEPROM write error");
+			DebugPrint("EEPROM write error - header");
 			return;
 		};
 		lErrorEEPROMHeader.ErrorHeader.NextErrorWritePointer += sizeof(Error::sErrorHeader);
@@ -439,7 +439,7 @@ void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 		{
 			// EEPROM error => set status back
 			mModuleIsInitialized = false;
-			DebugPrint("EEPROM write error");
+			DebugPrint("EEPROM write error - message");
 			return;
 		};
 		lErrorEEPROMHeader.ErrorHeader.NextErrorWritePointer += lMessageLength;
@@ -449,7 +449,7 @@ void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 		{
 			// EEPROM error => set status back
 			mModuleIsInitialized = false;
-			DebugPrint("EEPROM write error");
+			DebugPrint("EEPROM write error - message terminator");
 			return;
 		};
 

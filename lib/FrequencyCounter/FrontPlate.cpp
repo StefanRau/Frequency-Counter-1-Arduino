@@ -160,7 +160,7 @@ String TextFrontPlate::ErrorPlausibilityViolation()
 
 FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter) : I2CBase(iInitializeModule)
 {
-    DebugInstantiation("New FrontPlate: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("New FrontPlate: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	// Initialize hardware
 	_mText = new TextFrontPlate();
@@ -250,9 +250,16 @@ FrontPlate::~FrontPlate()
 void FrontPlate::loop()
 {
 
-	uint8_t lKeyMask;
-	uint8_t lKeyTestMask;
-	uint8_t lKeyInput;
+	// uint8_t lKeyMask;
+	//  uint8_t lKeyTestMask;
+	// uint8_t lKeyInput;
+	bool lFunctionKeyFrequencyPressed;
+	bool lFunctionKeyPositivePressed;
+	bool lFunctionKeyNegativePressed;
+	bool lFunctionKeyEdgePositivePressed;
+	bool lFunctionKeyEdgeNegativePressed;
+	bool lIsPeriodMeasurementPossible;
+	bool lIsEventCountingPossible;
 	bool lMenuUpKeyPressed;
 	bool lMenuDownKeyPressed;
 
@@ -285,24 +292,16 @@ void FrontPlate::loop()
 	// Read keys
 	if (!_mChangeFunctionDetected)
 	{
-		// if a finished selection is not already detected
-		lKeyMask = 0x08; // Frequency counting is possible with every module
-		lKeyMask |= _mModuleFactory->GetSelectedModule()->IsPeriodMeasurementPossible() ? 0xf0 : 0x00;
-		lKeyMask |= _mModuleFactory->GetSelectedModule()->IsEventCountingPossible() ? 0xa0 : 0x00;
-		lKeyInput = _mI2EModule->readGPIOA();
+		lFunctionKeyFrequencyPressed = _mI2EModule->digitalRead(_cIKeySelectFrequency);
+		lFunctionKeyPositivePressed = _mI2EModule->digitalRead(_cIKeySelectTPositive);
+		lFunctionKeyNegativePressed = _mI2EModule->digitalRead(_cIKeySelectTNegative);
+		lFunctionKeyEdgePositivePressed = _mI2EModule->digitalRead(_cIKeySelectTEdgePositive);
+		lFunctionKeyEdgeNegativePressed = _mI2EModule->digitalRead(_cIKeySelectTEdgeNegative);
 
-		// Plausibility check
-		lKeyTestMask = lKeyInput & 0xf8;
-		if ((lKeyTestMask != 0x00) && (lKeyTestMask != 0x08) && (lKeyTestMask != 0x10) && (lKeyTestMask != 0x20) && (lKeyTestMask != 0x40) && (lKeyTestMask != 0x80) && (lKeyTestMask != 0xc0))
-		{
-			ErrorPrint(Error::eSeverity::TError, _mText->ErrorPlausibilityViolation());
-			DebugPrint("Plausibility Violation");
-			return;
-		}
+		lIsPeriodMeasurementPossible = _mModuleFactory->GetSelectedModule()->IsPeriodMeasurementPossible();
+		lIsEventCountingPossible = _mModuleFactory->GetSelectedModule()->IsEventCountingPossible();
 
-		lKeyInput &= lKeyMask;
-
-		if ((lKeyInput & 0x08) > 0)
+		if (lFunctionKeyFrequencyPressed)
 		{
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TFrequency)
 			{
@@ -312,7 +311,7 @@ void FrontPlate::loop()
 			}
 		}
 
-		if ((lKeyInput & 0x10) > 0)
+		if (lFunctionKeyPositivePressed && lIsPeriodMeasurementPossible)
 		{
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TPositive)
 			{
@@ -322,7 +321,7 @@ void FrontPlate::loop()
 			}
 		}
 
-		if ((lKeyInput & 0x20) > 0)
+		if (lFunctionKeyNegativePressed && lIsPeriodMeasurementPossible)
 		{
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TNegative)
 			{
@@ -332,7 +331,7 @@ void FrontPlate::loop()
 			}
 		}
 
-		if ((lKeyInput & 0xc0) == 0x40)
+		if (lFunctionKeyEdgePositivePressed && (!lFunctionKeyEdgeNegativePressed) && lIsPeriodMeasurementPossible)
 		{
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEdgePositive)
 			{
@@ -342,7 +341,7 @@ void FrontPlate::loop()
 			}
 		}
 
-		if ((lKeyInput & 0xc0) == 0x80)
+		if ((!lFunctionKeyEdgePositivePressed) && lFunctionKeyEdgeNegativePressed && lIsPeriodMeasurementPossible)
 		{
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEdgeNegative)
 				DebugPrint("Edge positive selected");
@@ -352,7 +351,7 @@ void FrontPlate::loop()
 			}
 		}
 
-		if ((lKeyInput & 0xc0) == 0xc0)
+		if (lFunctionKeyEdgePositivePressed && lFunctionKeyEdgeNegativePressed && lIsEventCountingPossible)
 		{
 			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEventCounting)
 			{
@@ -361,6 +360,12 @@ void FrontPlate::loop()
 				_mChangeFunctionDetected = true;
 			}
 		}
+
+		// // No function key is pressed
+		// if ((!lFunctionKeyFrequencyPressed) && (!lFunctionKeyPositivePressed) && (!lFunctionKeyNegativePressed) && (!lFunctionKeyEdgePositivePressed) && (!lFunctionKeyEdgeNegativePressed))
+		// {
+		// 	_mSelectedFunctionCode = Counter::eFunctionCode::TNoSelection;
+		// }
 	}
 
 	// Menu key processing
@@ -382,7 +387,7 @@ void FrontPlate::loop()
 		}
 
 		// Menu down is pressed?
-		if (_mI2EModule->digitalRead(_cIKeySelectMenuDown))
+		if (lMenuDownKeyPressed)
 		{
 			if (_mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyDown)
 			{
@@ -513,6 +518,10 @@ void FrontPlate::_I2ESelectFunction(char iFunctionCode)
 
 	switch (iFunctionCode)
 	{
+	case Counter::eFunctionCode::TFrequency:
+		_I2ESelectSingleFunction(Counter::eFunctionCode::TFrequency);
+		_mI2EModule->digitalWrite(_cOLEDSelectFrequency, HIGH);
+		break;
 	case Counter::eFunctionCode::TPositive:
 		_I2ESelectSingleFunction(Counter::eFunctionCode::TPositive);
 		_mI2EModule->digitalWrite(_cOLEDSelectTPositive, HIGH);
@@ -534,10 +543,7 @@ void FrontPlate::_I2ESelectFunction(char iFunctionCode)
 		_mI2EModule->digitalWrite(_cOLEDSelectTEdgePositive, HIGH);
 		_mI2EModule->digitalWrite(_cOLEDSelectTEdgeNegative, HIGH);
 		break;
-	case Counter::eFunctionCode::TFrequency:
 	default:
-		_I2ESelectSingleFunction(Counter::eFunctionCode::TFrequency);
-		_mI2EModule->digitalWrite(_cOLEDSelectFrequency, HIGH);
 		break;
 	}
 }
@@ -556,8 +562,13 @@ void FrontPlate::_I2ESelectSingleFunction(char iFunctionCode)
 	case Counter::eFunctionCode::TEventCounting:
 		_mModuleFactory->GetSelectedModule()->I2ESelectFrequencyCounter();
 		break;
-	default:
+	case Counter::eFunctionCode::TPositive:
+	case Counter::eFunctionCode::TNegative:
+	case Counter::eFunctionCode::TEdgePositive:
+	case Counter::eFunctionCode::TEdgeNegative:
 		_mModuleFactory->GetSelectedModule()->I2ESelectPeriodMeasurement();
+		break;
+	default:
 		break;
 	}
 

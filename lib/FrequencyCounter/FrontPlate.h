@@ -29,16 +29,10 @@ public:
 	String InitErrorCounterRequired();
 	String InitErrorModuleFactoryRequired();
 	String InitErrorLCDRequired();
-	String FunctionNameFrequency();
-	String FunctionNameEdgeNegative();
-	String FunctionNameEdgePositive();
-	String FunctionNameNegative();
-	String FunctionNamePositive();
-	String FunctionNameNoSelection();
-	String FunctionNameEventCounting();
-	String FunctionNameUnknown();
 	String ErrorPlausibilityViolation();
 };
+
+//static TextFrontPlate gTextFrontPlate;
 
 /////////////////////////////////////////////////////////////
 
@@ -93,17 +87,17 @@ private:
 	};
 #endif
 
-	TextFrontPlate *_mText;											  // Pointer to current text objekt of the class
-	ModuleFactory *_mModuleFactory;									  // Reference to factory of input modules
-	Counter *_mCounter;												  // Reference to counter
-	LCDHandler *_mLCDHandler;										  // Reference to LCD handler
-	bool _mTriggerLampTestOff;										  // Stores information, if LCD must be switched off at next loop
-	char _mSelectedFunctionCode;									  // Code of the currently selected function
-	char _mCurrentModuleCode = ModuleBase::eModuleCode::TNoSelection; // code of the currently activemodule - for checking in loop() if a new module was selected
-	char _mSelectedeMenuKeyCode;									  // the last pressed menu button
-	bool _mChangeFunctionDetected;									  // there is a new function detected
-	bool _mChangeMenuDecected;										  // there is a new menu entry detected
-	const int _cEepromIndexFunction = 1;							  // Selected function on front plate
+	TextFrontPlate *_mText;																 // Pointer to current text objekt of the class
+	ModuleFactory *_mModuleFactory;														 // Reference to factory of input modules
+	Counter *_mCounter;																	 // Reference to counter
+	LCDHandler *_mLCDHandler;															 // Reference to LCD handler
+	bool _mTriggerLampTestOff;															 // Stores information, if LCD must be switched off at next loop
+	Counter::eFunctionCode _mSelectedCounterFunctionCode;								 // Code of the currently selected function
+	ModuleBase::eModuleCode _mCurrentModuleCode = ModuleBase::eModuleCode::TNoSelection; // code of the currently activemodule - for checking in loop() if a new module was selected
+	eMenuKeyCode _mSelectedeMenuKeyCode;												 // the last pressed menu button
+	bool _mChangeFunctionDetected;														 // there is a new function detected
+	bool _mChangeMenuDecected;															 // there is a new menu entry detected
+	const int _cEepromIndexFunction = 1;												 // Selected function on front plate
 
 public:
 	/// <summary>
@@ -149,13 +143,13 @@ private:
 	/// Selects a specified function
 	/// </summary>
 	/// <param name="iFunctionCode">Function code to be selected</param>
-	void _I2ESelectFunction(char iFunctionCode);
+	void _I2ESelectFunction(Counter::eFunctionCode iFunctionCode);
 
 	/// <summary>
 	/// Bundles all required functionality about function selection - called by _I2ESelectFunction
 	/// </summary>
 	/// <param name="iFunctionCode">Function code to be selected</param>
-	void _I2ESelectSingleFunction(char iFunctionCode);
+	void _I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode);
 
 	/// <summary>
 	/// Sets all LEDs to a specified state
@@ -178,18 +172,6 @@ public:
 	/// Sets a trigger for switchin off LED in the next loop() call
 	/// </summary>
 	void TriggerLampTestOff();
-
-	/// <summary>
-	/// Returns the code of the currently selected function
-	/// </summary>
-	/// <returns>Function code</returns>
-	char GetSelectedFunctionCode();
-
-	/// <summary>
-	/// Returns the name of the currently selected function
-	/// </summary>
-	/// <returns>Readable name</returns>
-	String GetSelectedFunctionName();
 
 	/// <summary>
 	/// Scans keys for selecting the function

@@ -194,7 +194,7 @@ String ModuleTTLCMOS::GetCurrentMenuEntry(int iMenuEntry)
 	return "";
 }
 
-char ModuleTTLCMOS::GetModuleCode()
+ModuleBase::eModuleCode ModuleTTLCMOS::GetModuleCode()
 {
 	return ModuleBase::eModuleCode::TModuleTTLCMOS;
 }

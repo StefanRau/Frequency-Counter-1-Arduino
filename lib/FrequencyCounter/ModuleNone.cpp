@@ -115,7 +115,7 @@ String ModuleNone::GetCurrentMenuEntry(int iMenuEntry)
 	return "";
 }
 
-char ModuleNone::GetModuleCode()
+ModuleBase::eModuleCode ModuleNone::GetModuleCode()
 {
 	return ModuleBase::eModuleCode::TModuleNone;
 }

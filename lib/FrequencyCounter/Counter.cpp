@@ -82,6 +82,78 @@ String TextCounter::Overflow()
 	}
 }
 
+String TextCounter::FunctionNameFrequency()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Frequency");
+		TextLangD("Frequenz");
+	}
+}
+
+String TextCounter::FunctionNameEdgeNegative()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Dur. neg. edge");
+		TextLangD("Dauer neg.Flanke");
+	}
+}
+
+String TextCounter::FunctionNameEdgePositive()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Dur. pos. edge");
+		TextLangD("Dauer pos.Flanke");
+	}
+}
+
+String TextCounter::FunctionNameNegative()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Length neg.level");
+		TextLangD("Dauer neg. Pegel");
+	}
+}
+
+String TextCounter::FunctionNamePositive()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Length pos.level");
+		TextLangD("Dauer pos. Pegel");
+	}
+}
+
+String TextCounter::FunctionNameEventCounting()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Event counting");
+		TextLangD("Ereigniszaehlung");
+	}
+}
+
+String TextCounter::FunctionNameNoSelection()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Initial");
+		TextLangD("Initial");
+	}
+}
+
+String TextCounter::FunctionNameUnknown()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Unknown function");
+		TextLangD("Unbekannte Funktion");
+	}
+}
+
 /////////////////////////////////////////////////////////////
 
 Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
@@ -92,6 +164,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	// Initialize hardware
 
 	_mText = new TextCounter();
+//	_mText = &gTextCounter;
 
 	if (lI2CAddress < 0)
 	{
@@ -245,7 +318,7 @@ String Counter::I2EGetCounterValue()
 	return lResultString;
 }
 
-void Counter::I2ESetFunctionCode(char iFunctionCode)
+void Counter::I2ESetFunctionCode(eFunctionCode iFunctionCode)
 {
 
 	DebugPrint("Counter::I2ESetFunctionCode:" + String(iFunctionCode));
@@ -257,7 +330,7 @@ void Counter::I2ESetFunctionCode(char iFunctionCode)
 
 	_mFunctionCode = iFunctionCode;
 
-	switch (iFunctionCode)
+	switch (_mFunctionCode)
 	{
 	case eFunctionCode::TFrequency:
 	case eFunctionCode::TEventCounting:
@@ -291,6 +364,31 @@ void Counter::I2ESetFunctionCode(char iFunctionCode)
 	default:
 		break;
 	}
+}
+
+Counter::eFunctionCode Counter::GetFunctionCode()
+{
+	return _mFunctionCode;
+}
+
+String Counter::GetSelectedFunctionName()
+{
+	switch (_mFunctionCode)
+	{
+	case Counter::eFunctionCode::TFrequency:
+		return _mText->FunctionNameFrequency();
+	case Counter::eFunctionCode::TPositive:
+		return _mText->FunctionNamePositive();
+	case Counter::eFunctionCode::TNegative:
+		return _mText->FunctionNameNegative();
+	case Counter::eFunctionCode::TEdgePositive:
+		return _mText->FunctionNameEdgePositive();
+	case Counter::eFunctionCode::TEdgeNegative:
+		return _mText->FunctionNameEdgeNegative();
+	case Counter::eFunctionCode::TEventCounting:
+		return _mText->FunctionNameEventCounting();
+	}
+	return _mText->FunctionNameUnknown();
 }
 
 String Counter::GetName()

@@ -75,6 +75,8 @@ extern "C"
 
 	TextMain *mText;	// Pointer to current text objekt of main
 	bool mErrorPrinted; // Signals than an error in the main loop is outputted
+	bool mEventCountingInitialized;// Event counting shall be initialized only once after selected
+	int mFreeMemory;
 
 	// Module
 	Counter *mCounter = nullptr;

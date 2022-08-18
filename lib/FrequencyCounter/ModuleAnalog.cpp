@@ -171,7 +171,7 @@ String ModuleAnalog::GetCurrentMenuEntry(int iMenuEntry)
 	return "";
 }
 
-char ModuleAnalog::GetModuleCode()
+ModuleBase::eModuleCode ModuleAnalog::GetModuleCode()
 {
 	return ModuleBase::eModuleCode::TModuleAnalog;
 }

@@ -93,7 +93,7 @@ public:
     /// Retrieves the specific code of the module
     /// </summary>
     /// <returns>Module code</returns>
-    char GetModuleCode() override;
+    ModuleBase::eModuleCode GetModuleCode() override;
 };
 
 #endif

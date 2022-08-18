@@ -84,7 +84,7 @@ String ModuleHF::GetCurrentMenuEntry(int iMenuEntry)
     return "";
 }
 
-char ModuleHF::GetModuleCode()
+ModuleBase::eModuleCode ModuleHF::GetModuleCode()
 {
     return ModuleBase::eModuleCode::TModuleHF;
 }

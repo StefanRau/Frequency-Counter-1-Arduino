@@ -121,7 +121,7 @@ void LCDHandler::loop()
         return;
     }
 
-    // the LCD must not be updated out of a timer interrupt
+    // the LCD must not be updated from a timer interrupt
     switch (_mStateCode)
     {
     case TInitialize:

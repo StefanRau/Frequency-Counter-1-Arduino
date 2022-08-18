@@ -28,6 +28,14 @@ public:
 	String ResultPeriod(float iNumber);
 	String ResultEventCount(float iNumber);
 	String Overflow();
+	String FunctionNameFrequency();
+	String FunctionNameEdgeNegative();
+	String FunctionNameEdgePositive();
+	String FunctionNameNegative();
+	String FunctionNamePositive();
+	String FunctionNameNoSelection();
+	String FunctionNameEventCounting();
+	String FunctionNameUnknown();
 };
 
 /////////////////////////////////////////////////////////////
@@ -48,7 +56,6 @@ public:
 	};
 
 private:
-
 	const uint8_t _cOSelectFunctionS0 = 12;
 	const uint8_t _cOSelectFunctionS1 = 13;
 	const uint8_t _cOSelectPeriod = 14;
@@ -60,8 +67,8 @@ private:
 	// MCP23017 IC 5 - upper word input 16 .. 26, reset counter, input selection
 	Adafruit_MCP23X17 *_mI2UpperWord;
 
-	TextCounter *_mText; // Pointer to current text objekt of the class
-	char _mFunctionCode;
+	TextCounter *_mText;		  // Pointer to current text objekt of the class
+	eFunctionCode _mFunctionCode; // Code of the currently selected function
 
 public:
 	/// <summary>
@@ -99,7 +106,19 @@ public:
 	/// Sets counter to dedicated function
 	/// </summary>
 	/// <param name="iFunctionCode">Function code of frequency or period measurement</param>
-	void I2ESetFunctionCode(char iFunctionCode);
+	void I2ESetFunctionCode(eFunctionCode iFunctionCode);
+
+	/// <summary>
+	/// Sets counter to dedicated function
+	/// </summary>
+	/// <returns="iFunctionCode">Function code of frequency or period measurement</returns>
+	eFunctionCode GetFunctionCode();
+
+	/// <summary>
+	/// Returns the name of the currently selected function
+	/// </summary>
+	/// <returns>Readable name</returns>
+	String GetSelectedFunctionName();
 
 	// Functions that can be called from everywhere
 

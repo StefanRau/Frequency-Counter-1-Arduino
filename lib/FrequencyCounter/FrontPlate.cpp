@@ -18,6 +18,9 @@
 
 // Text definitions
 
+// extern TextFrontPlate gTextFrontPlate;
+//extern TextFrontPlate gTextFrontPlate();
+
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
@@ -75,78 +78,6 @@ String TextFrontPlate::InitErrorLCDRequired()
 	}
 }
 
-String TextFrontPlate::FunctionNameFrequency()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Frequency");
-		TextLangD("Frequenz");
-	}
-}
-
-String TextFrontPlate::FunctionNameEdgeNegative()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Dur. neg. edge");
-		TextLangD("Dauer neg.Flanke");
-	}
-}
-
-String TextFrontPlate::FunctionNameEdgePositive()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Dur. pos. edge");
-		TextLangD("Dauer pos.Flanke");
-	}
-}
-
-String TextFrontPlate::FunctionNameNegative()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Length neg.level");
-		TextLangD("Dauer neg. Pegel");
-	}
-}
-
-String TextFrontPlate::FunctionNamePositive()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Length pos.level");
-		TextLangD("Dauer pos. Pegel");
-	}
-}
-
-String TextFrontPlate::FunctionNameEventCounting()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Event counting");
-		TextLangD("Ereigniszaehlung");
-	}
-}
-
-String TextFrontPlate::FunctionNameNoSelection()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Initial");
-		TextLangD("Initial");
-	}
-}
-
-String TextFrontPlate::FunctionNameUnknown()
-{
-	switch (GetLanguage())
-	{
-		TextLangE("Unknown function");
-		TextLangD("Unbekannte Funktion");
-	}
-}
-
 String TextFrontPlate::ErrorPlausibilityViolation()
 {
 	switch (GetLanguage())
@@ -164,6 +95,7 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 
 	// Initialize hardware
 	_mText = new TextFrontPlate();
+	//_mText = &gTextFrontPlate;
 
 	if (iLCDHandler == nullptr)
 	{
@@ -229,13 +161,13 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	_mI2EModule->pinMode(_cIKeySelectMenuUp, INPUT);
 	_mI2EModule->pinMode(_cIKeySelectMenuDown, INPUT);
 
-	// unassigned pins => set as input with pull downs
+	// unassigned pins => set as input with pull ups
 	_mI2EModule->pinMode(_cA2Unassigned, INPUT_PULLUP);
 	_mI2EModule->pinMode(_cB5Unassigned, INPUT_PULLUP);
 	_mI2EModule->pinMode(_cB6Unassigned, INPUT_PULLUP);
 	_mI2EModule->pinMode(_cB7Unassigned, INPUT_PULLUP);
 
-	_mSelectedFunctionCode = Counter::eFunctionCode::TNoSelection;
+	_mSelectedCounterFunctionCode = Counter::eFunctionCode::TNoSelection;
 
 	// swith on all LEDs for lamp test
 	_I2ESwitchLEDs(HIGH);
@@ -249,10 +181,6 @@ FrontPlate::~FrontPlate()
 
 void FrontPlate::loop()
 {
-
-	// uint8_t lKeyMask;
-	//  uint8_t lKeyTestMask;
-	// uint8_t lKeyInput;
 	bool lFunctionKeyFrequencyPressed;
 	bool lFunctionKeyPositivePressed;
 	bool lFunctionKeyNegativePressed;
@@ -272,7 +200,7 @@ void FrontPlate::loop()
 	if (_mTriggerLampTestOff)
 	{
 		_I2ESelectFunction((Counter::eFunctionCode)GetSetting(_cEepromIndexFunction)); // Read setting from processor internal EEPROM
-		_mLCDHandler->SetSelectedFunction(GetSelectedFunctionName());				   // Output at LCD
+		_mLCDHandler->SetSelectedFunction(_mCounter->GetSelectedFunctionName());	   // Output at LCD
 		_mCurrentModuleCode = _mModuleFactory->GetSelectedModule()->GetModuleCode();
 		_mTriggerLampTestOff = false;
 		return;
@@ -303,7 +231,7 @@ void FrontPlate::loop()
 
 		if (lFunctionKeyFrequencyPressed)
 		{
-			if (_mSelectedFunctionCode != Counter::eFunctionCode::TFrequency)
+			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TFrequency)
 			{
 				DebugPrint("Frequency selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TFrequency);
@@ -313,7 +241,7 @@ void FrontPlate::loop()
 
 		if (lFunctionKeyPositivePressed && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedFunctionCode != Counter::eFunctionCode::TPositive)
+			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TPositive)
 			{
 				DebugPrint("Level positive selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TPositive);
@@ -323,7 +251,7 @@ void FrontPlate::loop()
 
 		if (lFunctionKeyNegativePressed && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedFunctionCode != Counter::eFunctionCode::TNegative)
+			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TNegative)
 			{
 				DebugPrint("Level negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TNegative);
@@ -333,7 +261,7 @@ void FrontPlate::loop()
 
 		if (lFunctionKeyEdgePositivePressed && (!lFunctionKeyEdgeNegativePressed) && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEdgePositive)
+			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgePositive)
 			{
 				DebugPrint("Edge negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgePositive);
@@ -343,9 +271,9 @@ void FrontPlate::loop()
 
 		if ((!lFunctionKeyEdgePositivePressed) && lFunctionKeyEdgeNegativePressed && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEdgeNegative)
-				DebugPrint("Edge positive selected");
+			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgeNegative)
 			{
+				DebugPrint("Edge positive selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgeNegative);
 				_mChangeFunctionDetected = true;
 			}
@@ -353,7 +281,7 @@ void FrontPlate::loop()
 
 		if (lFunctionKeyEdgePositivePressed && lFunctionKeyEdgeNegativePressed && lIsEventCountingPossible)
 		{
-			if (_mSelectedFunctionCode != Counter::eFunctionCode::TEventCounting)
+			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEventCounting)
 			{
 				DebugPrint("Event counting selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEventCounting);
@@ -361,11 +289,11 @@ void FrontPlate::loop()
 			}
 		}
 
-		// // No function key is pressed
-		// if ((!lFunctionKeyFrequencyPressed) && (!lFunctionKeyPositivePressed) && (!lFunctionKeyNegativePressed) && (!lFunctionKeyEdgePositivePressed) && (!lFunctionKeyEdgeNegativePressed))
-		// {
-		// 	_mSelectedFunctionCode = Counter::eFunctionCode::TNoSelection;
-		// }
+		// No function key is pressed
+		if ((!lFunctionKeyFrequencyPressed) && (!lFunctionKeyPositivePressed) && (!lFunctionKeyNegativePressed) && (!lFunctionKeyEdgePositivePressed) && (!lFunctionKeyEdgeNegativePressed))
+		{
+			_mSelectedCounterFunctionCode = Counter::eFunctionCode::TNoSelection;
+		}
 	}
 
 	// Menu key processing
@@ -510,7 +438,7 @@ String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 }
 #endif
 
-void FrontPlate::_I2ESelectFunction(char iFunctionCode)
+void FrontPlate::_I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
 {
 	DebugPrint("FrontPlate::_I2ESelectFunction:" + String(iFunctionCode));
 
@@ -548,14 +476,14 @@ void FrontPlate::_I2ESelectFunction(char iFunctionCode)
 	}
 }
 
-void FrontPlate::_I2ESelectSingleFunction(char iFunctionCode)
+void FrontPlate::_I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
 {
 	DebugPrint("FrontPlate::_I2ESelectSingleFunction:" + String(iFunctionCode));
 
-	_mSelectedFunctionCode = iFunctionCode;
-	_mLCDHandler->SetSelectedFunction(GetSelectedFunctionName());
+	_mSelectedCounterFunctionCode = iFunctionCode;
+	_mCounter->I2ESetFunctionCode(_mSelectedCounterFunctionCode);
+	_mLCDHandler->SetSelectedFunction(_mCounter->GetSelectedFunctionName());
 	_mLCDHandler->TriggerShowCounter();
-	_mCounter->I2ESetFunctionCode(_mSelectedFunctionCode);
 	switch (iFunctionCode)
 	{
 	case Counter::eFunctionCode::TFrequency:
@@ -573,7 +501,7 @@ void FrontPlate::_I2ESelectSingleFunction(char iFunctionCode)
 	}
 
 	SetSetting(_cEepromIndexFunction, iFunctionCode);
-	DebugPrint("New function selected: " + GetSelectedFunctionName());
+	DebugPrint("New function selected: " + _mCounter->GetSelectedFunctionName());
 }
 
 void FrontPlate::_I2ESwitchLEDs(uint8_t iTest)
@@ -593,31 +521,6 @@ String FrontPlate::GetName()
 void FrontPlate::TriggerLampTestOff()
 {
 	_mTriggerLampTestOff = true;
-}
-
-char FrontPlate::GetSelectedFunctionCode()
-{
-	return _mSelectedFunctionCode;
-}
-
-String FrontPlate::GetSelectedFunctionName()
-{
-	switch (_mSelectedFunctionCode)
-	{
-	case Counter::eFunctionCode::TFrequency:
-		return _mText->FunctionNameFrequency();
-	case Counter::eFunctionCode::TPositive:
-		return _mText->FunctionNamePositive();
-	case Counter::eFunctionCode::TNegative:
-		return _mText->FunctionNameNegative();
-	case Counter::eFunctionCode::TEdgePositive:
-		return _mText->FunctionNameEdgePositive();
-	case Counter::eFunctionCode::TEdgeNegative:
-		return _mText->FunctionNameEdgeNegative();
-	case Counter::eFunctionCode::TEventCounting:
-		return _mText->FunctionNameEventCounting();
-	}
-	return _mText->FunctionNameUnknown();
 }
 
 bool FrontPlate::IsNewFunctionSelected()

@@ -173,7 +173,7 @@ public:
 	/// Retrieves the specific code of the module
 	/// </summary>
 	/// <returns>Module code</returns>
-	virtual char GetModuleCode() = 0;
+	virtual eModuleCode GetModuleCode() = 0;
 
 	/// <summary>
 	/// Checks if the module exists in the system

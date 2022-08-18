@@ -151,6 +151,12 @@ void loop()
 {
 	String lCommand = "";
 
+	if (mFreeMemory != GetFreeRAM())
+	{
+		mFreeMemory = GetFreeRAM();
+		DebugPrint("Free Memory: " + String(mFreeMemory));
+	}
+
 	if (mLCDHandler != nullptr)
 	{
 		mLCDHandler->loop(); // LCD must be called before the hardware is initialized to show potential errors
@@ -320,9 +326,10 @@ void loop()
 		mMeasurementValue = mCounter->I2EGetCounterValue();
 		RestartPulsDetection();
 		RestartGateTimer();
+		mEventCountingInitialized = false;
 	}
 
-	if (mFrontPlate->GetSelectedFunctionCode() == Counter::eFunctionCode::TFrequency)
+	if (mCounter->GetFunctionCode() == Counter::eFunctionCode::TFrequency)
 	{
 		// When frequency is selected
 		if (digitalRead(cI0_5Hz) == LOW) // check if 10.000.000 pulses were counted
@@ -352,16 +359,19 @@ void loop()
 			delayMicroseconds(10);
 		}
 	}
-	else if (mFrontPlate->GetSelectedFunctionCode() == Counter::eFunctionCode::TEventCounting)
+	else if (mCounter->GetFunctionCode() == Counter::eFunctionCode::TEventCounting)
 	{
 		// Event counting used frequency counter input, but does not use 0.5Hz => that is set permanently to 1
 		// DebugPrint("Count events");
-		digitalWrite(cOReset0_5Hz, HIGH);
-		delayMicroseconds(10);
-		digitalWrite(cOResetFF, LOW);
-		delayMicroseconds(10);
-//		digitalWrite(cOResetCounter, LOW);
-//		delayMicroseconds(10);
+		if (!mEventCountingInitialized)
+		{
+			digitalWrite(cOReset0_5Hz, HIGH);
+			delayMicroseconds(10);
+			digitalWrite(cOResetFF, LOW);
+			delayMicroseconds(10);
+			mEventCountingInitialized = true;
+		}
+		delay(1000);
 		mMeasurementValue = mCounter->I2EGetCounterValue();
 	}
 	else
@@ -395,7 +405,7 @@ void TaskLampTestEnd()
 	if (mFrontPlate != nullptr)
 	{
 		mFrontPlate->TriggerLampTestOff();
-		DebugPrintFromTask("Initial function: " + mFrontPlate->GetSelectedFunctionName() + "\n");
+		DebugPrintFromTask("Initial function: " + mCounter->GetSelectedFunctionName() + "\n");
 	}
 
 	// End lamp test at all modules
@@ -430,7 +440,6 @@ void TaskLCDRefresh()
 
 int GetFreeRAM()
 {
-#ifdef ARDUINO_SAMD_NANO_33_IOT
 	char top;
 #ifdef __arm__
 	return &top - reinterpret_cast<char *>(sbrk(0));
@@ -439,7 +448,6 @@ int GetFreeRAM()
 #else  // __arm__
 	return __brkval ? &top - __brkval : &top - __malloc_heap_start;
 #endif // __arm__
-#endif
 }
 
 void ResetCounters()

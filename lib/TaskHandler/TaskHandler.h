@@ -45,7 +45,6 @@ private:
     /// <param name="iTicks">Number of ticks relevant for that task - depending on iTaskType, it can control the cycle time or time until a task starts</param>
     /// <param name="iCallback">Address of the function implementing the task handler</param>
     Task(eTaskType iTaskType, int iTicks, void (*iCallback)());
-
     ~Task();
 
     volatile Task *_mPreviouslyProcessed = nullptr; // Previous task

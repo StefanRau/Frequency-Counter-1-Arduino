@@ -47,16 +47,15 @@ private:
 	ModuleHF *_mModuleHF = nullptr;			  // Instance of HF module
 	ModuleNone *_mModuleNone = nullptr;		  // Instance of dummy module
 	ModuleBase *_mSelectedModule = nullptr;	  // Instance of the currently selected module
-	TextModuleFactory *_mText;				  // Pointer to current text objekt of the class
+	TextModuleFactory *_mText = nullptr;	  // Pointer to current text objekt of the class
 
 public:
-
 	/// <summary>
 	/// Constructor
 	/// </summary>
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	ModuleFactory(sInitializeModule iInitializeModule);
-	
+
 	~ModuleFactory();
 
 	// Functions that can be called from within main loop

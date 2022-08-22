@@ -56,9 +56,9 @@ public:
 
 	struct sErrorHeader
 	{
-		eSeverity Severity;	  // severity of an error message
-		int Count;		  // error count
-		time_t Timestamp; // timstamp of the error message
+		eSeverity Severity; // severity of an error message
+		int Count;			// error count
+		time_t Timestamp;	// timstamp of the error message
 	};
 
 	union uErrorHeader
@@ -120,8 +120,8 @@ private:
 		uint8_t Buffer[sizeof(sErrorEEPROMHeader)];
 	};
 
-	TextErrorHandler *_mText;															// Pointer to current text objekt of the class
-	ListCollection *_mErrorList;														// List of errors
+	TextErrorHandler *_mText = nullptr;													// Pointer to current text objekt of the class
+	ListCollection *_mErrorList = nullptr;												// List of errors
 	int _mEEPROMMemoryIterator = sizeof(sErrorEEPROMHeader) + ErrorHandlerStartAddress; // pointer to address of next error log item, initially that's the bype after the last entry of header
 	int _mEEPROMErrorIterator = 0;														// number of next error log item
 

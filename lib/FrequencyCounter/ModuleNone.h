@@ -35,7 +35,7 @@ private:
 	/// <summary>
 	/// Pointer to current text objekt of the class
 	/// </summary>
-	TextModuleNone *_mText;
+	TextModuleNone *_mText = nullptr;
 
 public:
 	/// <summary>

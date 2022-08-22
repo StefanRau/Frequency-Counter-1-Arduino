@@ -160,7 +160,7 @@ void ProjectBase::SetSetting(int iNumberOfSetting, char iValue)
         }
 #endif
     }
-    DebugPrint("Set Setting: " + String(_mSettingAdddress) + ", " + String((int)iValue));
+    DebugPrint("Set Setting: " + String(_mSettingAdddress) + ", " + String(iValue));
 }
 
 char ProjectBase::GetSetting(int iNumberOfSetting)
@@ -180,6 +180,6 @@ char ProjectBase::GetSetting(int iNumberOfSetting)
 #endif
     }
 
-    DebugPrint("Get Setting: " + String(_mSettingAdddress) + ", " + String((int)lSetting));
+    DebugPrint("Get Setting: " + String(_mSettingAdddress) + ", " + String(lSetting));
     return lSetting;
 }

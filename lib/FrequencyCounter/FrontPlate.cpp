@@ -19,7 +19,7 @@
 // Text definitions
 
 // extern TextFrontPlate gTextFrontPlate;
-//extern TextFrontPlate gTextFrontPlate();
+// extern TextFrontPlate gTextFrontPlate();
 
 /// <summary>
 /// There is no new EEPROM address required
@@ -233,9 +233,9 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TFrequency)
 			{
-				DebugPrint("Frequency selected");
+				DebugPrint("\nFrequency selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TFrequency);
-				_mChangeFunctionDetected = true;
+				delay(100);
 			}
 		}
 
@@ -243,9 +243,9 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TPositive)
 			{
-				DebugPrint("Level positive selected");
+				DebugPrint("\nLevel positive selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TPositive);
-				_mChangeFunctionDetected = true;
+				delay(100);
 			}
 		}
 
@@ -253,9 +253,9 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TNegative)
 			{
-				DebugPrint("Level negative selected");
+				DebugPrint("\nLevel negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TNegative);
-				_mChangeFunctionDetected = true;
+				delay(100);
 			}
 		}
 
@@ -263,9 +263,9 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgePositive)
 			{
-				DebugPrint("Edge negative selected");
+				DebugPrint("\nEdge negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgePositive);
-				_mChangeFunctionDetected = true;
+				delay(100);
 			}
 		}
 
@@ -273,9 +273,9 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgeNegative)
 			{
-				DebugPrint("Edge positive selected");
+				DebugPrint("\nEdge positive selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgeNegative);
-				_mChangeFunctionDetected = true;
+				delay(100);
 			}
 		}
 
@@ -283,17 +283,17 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEventCounting)
 			{
-				DebugPrint("Event counting selected");
+				DebugPrint("\nEvent counting selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEventCounting);
-				_mChangeFunctionDetected = true;
+				delay(500);
 			}
 		}
 
-		// No function key is pressed
-		if ((!lFunctionKeyFrequencyPressed) && (!lFunctionKeyPositivePressed) && (!lFunctionKeyNegativePressed) && (!lFunctionKeyEdgePositivePressed) && (!lFunctionKeyEdgeNegativePressed))
-		{
-			_mSelectedCounterFunctionCode = Counter::eFunctionCode::TNoSelection;
-		}
+		// // No function key is pressed
+		// if ((!lFunctionKeyFrequencyPressed) && (!lFunctionKeyPositivePressed) && (!lFunctionKeyNegativePressed) && (!lFunctionKeyEdgePositivePressed) && (!lFunctionKeyEdgeNegativePressed))
+		// {
+		// 	_mSelectedCounterFunctionCode = Counter::eFunctionCode::TNoSelection;
+		// }
 	}
 
 	// Menu key processing
@@ -307,7 +307,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyUp)
 			{
-				DebugPrint("Menu up");
+				DebugPrint("\nMenu up");
 				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionUp();
 				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyUp;
 				_mChangeMenuDecected = true;
@@ -319,7 +319,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyDown)
 			{
-				DebugPrint("Menu down");
+				DebugPrint("\nMenu down");
 				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionDown();
 				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyDown;
 				_mChangeMenuDecected = true;
@@ -348,7 +348,6 @@ String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 
 		case Counter::eFunctionCode::TFrequency:
 			_I2ESelectFunction((Counter::eFunctionCode)iParameter);
-			_mChangeFunctionDetected = true;
 			return String(iParameter);
 
 		case Counter::eFunctionCode::TPositive:
@@ -359,20 +358,19 @@ String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 			if (_mModuleFactory->GetSelectedModule()->IsPeriodMeasurementPossible())
 			{
 				_I2ESelectFunction((Counter::eFunctionCode)iParameter);
-				_mChangeFunctionDetected = true;
 			}
 			return String(iParameter);
 
 		case ProjectBase::eFunctionCode::TParameterGetAll:
-			lReturn += ProjectBase::GetVerboseMode() ? _mText->FunctionNameFrequency() : String((char)Counter::eFunctionCode::TFrequency);
+			lReturn += ProjectBase::GetVerboseMode() ? _mCounter->_mText->FunctionNameFrequency() : String((char)Counter::eFunctionCode::TFrequency);
 
 			if (_mModuleFactory->GetSelectedModule()->IsPeriodMeasurementPossible())
 			{
-				lReturn += ProjectBase::GetVerboseMode() ? ',' + _mText->FunctionNamePositive() +
-															   ',' + _mText->FunctionNameNegative() +
-															   ',' + _mText->FunctionNameEdgePositive() +
-															   ',' + _mText->FunctionNameEdgeNegative() +
-															   ',' + _mText->FunctionNameEventCounting()
+				lReturn += ProjectBase::GetVerboseMode() ? ',' + _mCounter->_mText->FunctionNamePositive() +
+															   ',' + _mCounter->_mText->FunctionNameNegative() +
+															   ',' + _mCounter->_mText->FunctionNameEdgePositive() +
+															   ',' + _mCounter->_mText->FunctionNameEdgeNegative() +
+															   ',' + _mCounter->_mText->FunctionNameEventCounting()
 														 : String((char)Counter::eFunctionCode::TPositive) +
 															   String((char)Counter::eFunctionCode::TNegative) +
 															   String((char)Counter::eFunctionCode::TEdgePositive) +
@@ -383,7 +381,7 @@ String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 			return lReturn;
 
 		case ProjectBase::eFunctionCode::TParameterGetCurrent:
-			switch (_mSelectedFunctionCode)
+			switch (_mSelectedCounterFunctionCode)
 			{
 			case Counter::eFunctionCode::TFrequency:
 			case Counter::eFunctionCode::TPositive:
@@ -393,17 +391,19 @@ String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 			case Counter::eFunctionCode::TEventCounting:
 				if (ProjectBase::GetVerboseMode())
 				{
-					return GetSelectedFunctionName();
+					return _mCounter->GetSelectedFunctionName();
 				}
 				else
 				{
-					return String((char)_mSelectedFunctionCode);
+					return String((char)_mSelectedCounterFunctionCode);
 				}
+			default:
+				break;
 			}
 			return String((char)Counter::eFunctionCode::TNoSelection);
 		}
 
-		return _mText->FunctionNameUnknown();
+		return _mCounter->_mText->FunctionNameUnknown();
 
 	case eFunctionCode::TNameMenu:
 
@@ -431,7 +431,7 @@ String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 			}
 		}
 
-		return _mText->FunctionNameUnknown();
+		return _mCounter->_mText->FunctionNameUnknown();
 	}
 
 	return String("");
@@ -500,6 +500,7 @@ void FrontPlate::_I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
 		break;
 	}
 
+	_mChangeFunctionDetected = true;
 	SetSetting(_cEepromIndexFunction, iFunctionCode);
 	DebugPrint("New function selected: " + _mCounter->GetSelectedFunctionName());
 }

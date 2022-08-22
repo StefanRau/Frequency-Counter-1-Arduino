@@ -45,7 +45,7 @@ private:
 	/// <summary>
 	/// Pointer to current text objekt of the class
 	/// </summary>
-	TextModuleAnalog *_mText;
+	TextModuleAnalog *_mText = nullptr;
 
 public:
 	/// <summary>

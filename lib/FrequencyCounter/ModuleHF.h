@@ -32,7 +32,7 @@ private:
     /// <summary>
     /// Pointer to current text objekt of the class
     /// </summary>
-    TextModuleHF *_mText;
+    TextModuleHF *_mText = nullptr;
 
 public:
     /// <summary>
@@ -53,7 +53,7 @@ public:
     /// <summary>
     /// Deactivates the module - switch off all outputs
     /// </summary>
-  void I2EDeactivate() override;
+    void I2EDeactivate() override;
 
 protected:
     /// <summary>
@@ -76,11 +76,11 @@ public:
     /// <returns>true: module supports period measurement, false: module does not support period measurement</returns>
     bool IsPeriodMeasurementPossible() override;
 
-	/// <summary>
-	/// Gets the information about possibility of counting single events.
-	/// </summary>
-	/// <returns>true: module supports event counting, false: module does not support event counting</returns>
-	bool IsEventCountingPossible() override;
+    /// <summary>
+    /// Gets the information about possibility of counting single events.
+    /// </summary>
+    /// <returns>true: module supports event counting, false: module does not support event counting</returns>
+    bool IsEventCountingPossible() override;
 
     /// <summary>
     /// Returns text of the current menu item

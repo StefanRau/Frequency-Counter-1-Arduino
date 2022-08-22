@@ -32,7 +32,7 @@ public:
 	String ErrorPlausibilityViolation();
 };
 
-//static TextFrontPlate gTextFrontPlate;
+// static TextFrontPlate gTextFrontPlate;
 
 /////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ private:
 	};
 
 	// MCP23017 port extender of front plate
-	Adafruit_MCP23X17 *_mI2EModule;
+	Adafruit_MCP23X17 *_mI2EModule = nullptr;
 
 	// I/O bits of MCP23017
 	// Frequency measurement: Key = A3, LED = B0
@@ -87,10 +87,10 @@ private:
 	};
 #endif
 
-	TextFrontPlate *_mText;																 // Pointer to current text objekt of the class
-	ModuleFactory *_mModuleFactory;														 // Reference to factory of input modules
-	Counter *_mCounter;																	 // Reference to counter
-	LCDHandler *_mLCDHandler;															 // Reference to LCD handler
+	TextFrontPlate *_mText = nullptr;													 // Pointer to current text objekt of the class
+	ModuleFactory *_mModuleFactory = nullptr;											 // Reference to factory of input modules
+	Counter *_mCounter = nullptr;														 // Reference to counter
+	LCDHandler *_mLCDHandler = nullptr;													 // Reference to LCD handler
 	bool _mTriggerLampTestOff;															 // Stores information, if LCD must be switched off at next loop
 	Counter::eFunctionCode _mSelectedCounterFunctionCode;								 // Code of the currently selected function
 	ModuleBase::eModuleCode _mCurrentModuleCode = ModuleBase::eModuleCode::TNoSelection; // code of the currently activemodule - for checking in loop() if a new module was selected
@@ -159,7 +159,7 @@ private:
 
 public:
 	///////////////////////////////////////////////
-	// Functions that can be called also from tasks
+	// Functions that can be called from everywhere
 	///////////////////////////////////////////////
 
 	/// <summary>

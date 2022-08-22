@@ -55,6 +55,8 @@ public:
 		TNoSelection = '-'
 	};
 
+	TextCounter *_mText = nullptr; // Pointer to current text objekt of the class
+
 private:
 	const uint8_t _cOSelectFunctionS0 = 12;
 	const uint8_t _cOSelectFunctionS1 = 13;
@@ -62,13 +64,12 @@ private:
 	const uint8_t _cIOverflow = 15;
 
 	// MCP23017 IC 4 - lower word input 0 .. 15
-	Adafruit_MCP23X17 *_mI2LowerWord;
+	Adafruit_MCP23X17 *_mI2LowerWord = nullptr;
 
 	// MCP23017 IC 5 - upper word input 16 .. 26, reset counter, input selection
-	Adafruit_MCP23X17 *_mI2UpperWord;
+	Adafruit_MCP23X17 *_mI2UpperWord = nullptr;
 
-	TextCounter *_mText;		  // Pointer to current text objekt of the class
-	eFunctionCode _mFunctionCode; // Code of the currently selected function
+	eFunctionCode _mFunctionCode;  // Code of the currently selected function
 
 public:
 	/// <summary>
@@ -108,6 +109,10 @@ public:
 	/// <param name="iFunctionCode">Function code of frequency or period measurement</param>
 	void I2ESetFunctionCode(eFunctionCode iFunctionCode);
 
+	///////////////////////////////////////////////
+	// Functions that can be called from everywhere
+	///////////////////////////////////////////////
+
 	/// <summary>
 	/// Sets counter to dedicated function
 	/// </summary>
@@ -119,8 +124,6 @@ public:
 	/// </summary>
 	/// <returns>Readable name</returns>
 	String GetSelectedFunctionName();
-
-	// Functions that can be called from everywhere
 
 	/// <summary>
 	/// Readable name of the module

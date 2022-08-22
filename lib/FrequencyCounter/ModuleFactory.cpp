@@ -110,7 +110,7 @@ void ModuleFactory::loop()
 	// check the state of the key of all modules
 	if (_mModuleTTLCMOS->I2EIsKeySelected())
 	{
-		DebugPrint("Module TTL/CMOS key pressed");
+		DebugPrint("\nModule TTL/CMOS key pressed");
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleTTLCMOS)
 		{
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleTTLCMOS);
@@ -119,7 +119,7 @@ void ModuleFactory::loop()
 
 	if (_mModuleAnalog->I2EIsKeySelected())
 	{
-		DebugPrint("Module Analog key pressed");
+		DebugPrint("\nModule Analog key pressed");
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleAnalog)
 		{
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleAnalog);
@@ -128,7 +128,7 @@ void ModuleFactory::loop()
 
 	if (_mModuleHF->I2EIsKeySelected())
 	{
-		DebugPrint("Module HF key pressed");
+		DebugPrint("\nModule HF key pressed");
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleHF)
 		{
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleHF);

@@ -115,9 +115,9 @@ void setup()
 	mMenuSwitchOfTime = Task::GetNewTask(Task::TTriggerOneTime, 20, TaskMenuSwitchOff);
 	mMenuSwitchOfTime->DefinePrevious(mLampTestTime);
 
-	// Task timer LCD refresh
-	mLCDRefreshCycleTime = Task::GetNewTask(Task::TFollowUpCyclic, 10, TaskLCDRefresh);
-	mLCDRefreshCycleTime->DefinePrevious(mLampTestTime);
+	// // Task timer LCD refresh
+	// mLCDRefreshCycleTime = Task::GetNewTask(Task::TFollowUpCyclic, 10, TaskLCDRefresh);
+	// mLCDRefreshCycleTime->DefinePrevious(mLampTestTime);
 
 	// Initialize task handler
 	TaskHandler::GetTaskHandler()->SetCycleTimeInMs(100);
@@ -306,6 +306,7 @@ void loop()
 		return;
 	}
 
+	DebugLoop();
 	mFrontPlate->loop();
 	mModuleFactory->loop();
 	mCounter->loop();
@@ -313,6 +314,7 @@ void loop()
 	// Get current menu item if a new one was selected
 	if (mFrontPlate->IsNewMenuSelected())
 	{
+		DebugPrint("Trigger TaskMenuSwitchOff");
 		mMenuSwitchOfTime->Restart();
 		ModuleBase *lModuleBase = mModuleFactory->GetSelectedModule();
 		mLCDHandler->TriggerMenuSelectedFunction(lModuleBase->GetCurrentMenuEntry(-1), lModuleBase->GetCurrentMenuEntryNumber(), lModuleBase->GetLastMenuEntryNumber());
@@ -371,7 +373,7 @@ void loop()
 			delayMicroseconds(10);
 			mEventCountingInitialized = true;
 		}
-		delay(1000);
+		delay(50);
 		mMeasurementValue = mCounter->I2EGetCounterValue();
 	}
 	else
@@ -422,21 +424,21 @@ void TaskLampTestEnd()
 void TaskMenuSwitchOff()
 {
 	// Switch off menu message on display
-	// DebugPrintFromTask("TaskMenuSwitchOff\n");
+	DebugPrintFromTask("TaskMenuSwitchOff\n");
 	if (mLCDHandler != nullptr)
 	{
 		mLCDHandler->TriggerShowCounter();
 	}
 }
 
-void TaskLCDRefresh()
-{
-	// DebugPrintFromTask("LCDRefresh");
-	if (mLCDHandler != nullptr)
-	{
-		mLCDHandler->TriggerShowRefresh();
-	}
-}
+// void TaskLCDRefresh()
+// {
+// 	// DebugPrintFromTask("LCDRefresh");
+// 	if (mLCDHandler != nullptr)
+// 	{
+// 		mLCDHandler->TriggerShowRefresh();
+// 	}
+// }
 
 int GetFreeRAM()
 {

@@ -56,7 +56,7 @@ void Debug::loop()
 	if (_mBufferContainsData)
 	{
 		Serial.print(_mWriteBuffer);
-		Serial.println();
+		//Serial.println();
 		// Wait until buffer is empty
 		Serial.flush();
 		_mWriteBuffer = "";

@@ -43,8 +43,8 @@ public:
 class RemoteControl
 {
 private:
-	String _mBuffer;			// Receiver buffer
-	TextRemoteControl* _mText;	// Pointer to current text objekt of the class
+	String _mBuffer;					 // Receiver buffer
+	TextRemoteControl *_mText = nullptr; // Pointer to current text objekt of the class
 
 	RemoteControl();
 	~RemoteControl();
@@ -54,10 +54,10 @@ public:
 	/// Gets a singleton
 	/// </summary>
 	/// <returns>Instance of remote control</returns>
-	static RemoteControl* GetRemoteControl();
+	static RemoteControl *GetRemoteControl();
 
 	/// <summary>
-	/// Receives a command string from serial interface. Must be called in a cycle. 
+	/// Receives a command string from serial interface. Must be called in a cycle.
 	/// Cummulates single characters in buffer from serial interface until CR or LF is detected.
 	/// </summary>
 	/// <returns>Returns a string after serial input detects a CR or LF. Otherwise returns empty string when characters are collected.</returns>

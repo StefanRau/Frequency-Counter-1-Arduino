@@ -73,9 +73,9 @@ extern "C"
 		I2CBase::sInitializeModule ErrorLogger = {-1, 0, -1};		// EEPROM is not used
 	} mInitializeSystem;
 
-	TextMain *mText;	// Pointer to current text objekt of main
-	bool mErrorPrinted; // Signals than an error in the main loop is outputted
-	bool mEventCountingInitialized;// Event counting shall be initialized only once after selected
+	TextMain *mText = nullptr;		// Pointer to current text objekt of main
+	bool mErrorPrinted;				// Signals than an error in the main loop is outputted
+	bool mEventCountingInitialized; // Event counting shall be initialized only once after selected
 	int mFreeMemory;
 
 	// Module
@@ -85,9 +85,9 @@ extern "C"
 	ModuleFactory *mModuleFactory = nullptr;
 
 	// Tasks
-	Task *mLampTestTime;
-	Task *mMenuSwitchOfTime;
-	Task *mLCDRefreshCycleTime;
+	Task *mLampTestTime = nullptr;
+	Task *mMenuSwitchOfTime = nullptr;
+	//Task *mLCDRefreshCycleTime = nullptr;
 	bool mIsInitialized = false;
 
 	String mMeasurementValue = "";

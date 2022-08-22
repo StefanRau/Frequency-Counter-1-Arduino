@@ -53,9 +53,9 @@ private:
 	TextModuleBase *_mText; // Pointer to current text objekt of the class
 
 protected:
-	Adafruit_MCP23X17 *mI2EModule;	 // Reference of port extender
-	int mLastMenuEntryNumber;		 // Number of menu entries of the current input module
-	int mCurrentMenuEntryNumber = 0; // Number of current menu entry
+	Adafruit_MCP23X17 *mI2EModule = nullptr; // Reference of port extender
+	int mLastMenuEntryNumber;				 // Number of menu entries of the current input module
+	int mCurrentMenuEntryNumber = 0;		 // Number of current menu entry
 
 public:
 	/// <summary>

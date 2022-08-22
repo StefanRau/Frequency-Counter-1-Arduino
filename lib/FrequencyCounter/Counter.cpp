@@ -164,7 +164,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	// Initialize hardware
 
 	_mText = new TextCounter();
-//	_mText = &gTextCounter;
+	//	_mText = &gTextCounter;
 
 	if (lI2CAddress < 0)
 	{
@@ -387,6 +387,8 @@ String Counter::GetSelectedFunctionName()
 		return _mText->FunctionNameEdgeNegative();
 	case Counter::eFunctionCode::TEventCounting:
 		return _mText->FunctionNameEventCounting();
+	default:
+		break;
 	}
 	return _mText->FunctionNameUnknown();
 }

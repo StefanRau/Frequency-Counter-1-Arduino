@@ -44,7 +44,7 @@ private:
 	/// <summary>
 	/// Pointer to current text objekt of the class
 	/// </summary>
-	TextI2CBase *_mText;
+	TextI2CBase *_mText = nullptr;
 
 protected:
 	/// <summary>

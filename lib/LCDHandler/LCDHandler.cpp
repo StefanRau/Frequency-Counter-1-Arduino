@@ -75,6 +75,8 @@ String TextLCDHandler::InitError()
 
 // Module implementation
 
+static	LCDHandler::_eStateCode _mStateCode;			   // State of LCD forhandler for synchronization
+
 LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
     DebugInstantiation("New LCDHandler: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
@@ -169,10 +171,12 @@ void LCDHandler::loop()
         _mI2ELCD->print(_TrimLine(_mText->Error()));
         _mI2ELCD->setCursor(0, 1);
         _mI2ELCD->print(_TrimLine(_mInputError));
+        break;
 
     default:
         break;
     }
+
 }
 
 String LCDHandler::GetName()
@@ -243,6 +247,7 @@ void LCDHandler::SetMeasurementValue(String iText)
 void LCDHandler::SetErrorText(String iText)
 {
     _mInputError = iText;
+    _mStateCode = TShowError;
 }
 
 void LCDHandler::TriggerMenuSelectedFunction(String iText, int iCurrentMenuEntryNumber, int iLastMenuEntryNumber)
@@ -276,7 +281,6 @@ void LCDHandler::TriggerShowCounter()
     switch (_mStateCode)
     {
     case TInitialize:
-        break;
     case TShowError:
         break;
     default:

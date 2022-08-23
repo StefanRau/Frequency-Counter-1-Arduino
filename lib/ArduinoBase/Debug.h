@@ -7,7 +7,7 @@
 #ifndef _Debug_h
 #define _Debug_h
 
-//#define _DebugApplication
+#define _DebugApplication
 
 #ifdef _DebugApplication
 #define _DebugMethodCalls

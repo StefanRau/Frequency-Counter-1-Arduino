@@ -8,6 +8,7 @@
 // 05.12.2021: Initialization shows compile date - Stefan Rau
 // 05.12.2021: Show arrows in line 2 - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 24.08.2022: Use new LCD library - Stefan Rau
 
 #include "LCDHandler.h"
 #include "ErrorHandler.h"
@@ -75,7 +76,7 @@ String TextLCDHandler::InitError()
 
 // Module implementation
 
-static	LCDHandler::_eStateCode _mStateCode;			   // State of LCD forhandler for synchronization
+static LCDHandler::_eStateCode _mStateCode; // State of LCD handler for synchronization
 
 LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
@@ -88,17 +89,17 @@ LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializ
     _mText = new TextLCDHandler();
 
     // Initialize hardware
-    _mI2ELCD = new LiquidCrystal_I2C(mI2CAddress, 16, 2);
+    _mI2ELCD = new hd44780_I2Cexp(mI2CAddress);
+
+    if (_mI2ELCD->begin(16, 2) != 0)
+    {
+        DebugPrint("LCD can't be initialized");
+        ErrorPrint(Error::eSeverity::TFatal, _mText->InitError());
+        return;
+    }
+
     DebugPrint("LCD is initialized at address: " + String(mI2CAddress));
 
-    _mI2ELCD->begin(16, 2);
-
-    // if (!_mI2ELCD->begin())
-    // {
-    //     DebugPrint("LCD can't be initialized");
-    //     ErrorPrint(Error::eSeverity::TFatal, _mText->InitError());
-    //     return;
-    // }
     _mI2ELCD->noCursor();
     _mI2ELCD->noBlink();
 
@@ -176,7 +177,6 @@ void LCDHandler::loop()
     default:
         break;
     }
-
 }
 
 String LCDHandler::GetName()

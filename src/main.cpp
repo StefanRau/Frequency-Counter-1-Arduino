@@ -16,6 +16,7 @@
 // 22.03.2022: Separate reset for counter - Stefan Rau
 // 29.03.2022: Separate reset functions - Stefan Rau
 // 29.03.2022: Get name of device - Stefan Rau
+// 24.08.2022: Trigger reading of event counter in sync to display refresh - Stefan Rau
 
 #include "main.h"
 
@@ -53,10 +54,6 @@ void setup()
 	// Set clock frequency of I2C to 100kHz
 	Wire.begin();
 	delay(10);
-
-	// #ifdef ARDUINO_SAMD_NANO_33_IOT
-	// 	delay(1000);
-	// #endif
 
 	ProjectBase::SetI2CAddressGlobalEEPROM(mInitializeSystem.EEPROM.I2CAddress);
 	mText = new TextMain(mInitializeSystem.Text.SettingsAddress);
@@ -115,9 +112,9 @@ void setup()
 	mMenuSwitchOfTime = Task::GetNewTask(Task::TTriggerOneTime, 20, TaskMenuSwitchOff);
 	mMenuSwitchOfTime->DefinePrevious(mLampTestTime);
 
-	// // Task timer LCD refresh
-	// mLCDRefreshCycleTime = Task::GetNewTask(Task::TFollowUpCyclic, 10, TaskLCDRefresh);
-	// mLCDRefreshCycleTime->DefinePrevious(mLampTestTime);
+	// Task timer LCD refresh
+	mLCDRefreshCycleTime = Task::GetNewTask(Task::TFollowUpCyclic, 10, TaskLCDRefresh);
+	mLCDRefreshCycleTime->DefinePrevious(mLampTestTime);
 
 	// Initialize task handler
 	TaskHandler::GetTaskHandler()->SetCycleTimeInMs(100);
@@ -150,10 +147,12 @@ void setup()
 void loop()
 {
 	String lCommand = "";
+	long lFreeMemory;
 
-	if (mFreeMemory != GetFreeRAM())
+	lFreeMemory = GetFreeRAM();
+	if (mFreeMemory != lFreeMemory)
 	{
-		mFreeMemory = GetFreeRAM();
+		mFreeMemory = lFreeMemory;
 		DebugPrint("Free Memory: " + String(mFreeMemory));
 	}
 
@@ -329,6 +328,7 @@ void loop()
 		RestartPulsDetection();
 		RestartGateTimer();
 		mEventCountingInitialized = false;
+		mReadEventCounter = false;
 	}
 
 	if (mCounter->GetFunctionCode() == Counter::eFunctionCode::TFrequency)
@@ -373,8 +373,11 @@ void loop()
 			delayMicroseconds(10);
 			mEventCountingInitialized = true;
 		}
-		delay(50);
-		mMeasurementValue = mCounter->I2EGetCounterValue();
+		if (mReadEventCounter)
+		{
+			mMeasurementValue = mCounter->I2EGetCounterValue();
+			mReadEventCounter = false;
+		}
 	}
 	else
 	{
@@ -424,23 +427,24 @@ void TaskLampTestEnd()
 void TaskMenuSwitchOff()
 {
 	// Switch off menu message on display
-	DebugPrintFromTask("TaskMenuSwitchOff\n");
+	// DebugPrintFromTask("TaskMenuSwitchOff\n");
 	if (mLCDHandler != nullptr)
 	{
 		mLCDHandler->TriggerShowCounter();
 	}
 }
 
-// void TaskLCDRefresh()
-// {
-// 	// DebugPrintFromTask("LCDRefresh");
-// 	if (mLCDHandler != nullptr)
-// 	{
-// 		mLCDHandler->TriggerShowRefresh();
-// 	}
-// }
+void TaskLCDRefresh()
+{
+	// DebugPrintFromTask("LCDRefresh");
+	mReadEventCounter = true;
+	if (mLCDHandler != nullptr)
+	{
+		mLCDHandler->TriggerShowRefresh();
+	}
+}
 
-int GetFreeRAM()
+long GetFreeRAM()
 {
 	char top;
 #ifdef __arm__
@@ -450,6 +454,7 @@ int GetFreeRAM()
 #else  // __arm__
 	return __brkval ? &top - __brkval : &top - __malloc_heap_start;
 #endif // __arm__
+	return 0;
 }
 
 void ResetCounters()

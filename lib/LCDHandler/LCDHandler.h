@@ -7,7 +7,9 @@
 #ifndef _LCDHandler_h
 #define _LCDHandler_h
 
-#include <LiquidCrystal_I2C.h>
+#include <wire.h>
+#include <hd44780.h>					   // main hd44780 header; use this library because others have issues
+#include <hd44780ioClass/hd44780_I2Cexp.h> // i2c expander i/o class header
 #include "I2CBase.h"
 //#include "Debug.h"
 #include "TextBase.h"
@@ -35,7 +37,7 @@ public:
 /// </summary>
 class LCDHandler : public I2CBase
 {
-//private:
+	// private:
 public:
 	enum _eStateCode : char
 	{
@@ -50,15 +52,15 @@ public:
 	};
 
 private:
-	LiquidCrystal_I2C *_mI2ELCD = nullptr; // LDC driver
-	TextLCDHandler *_mText = nullptr;	   // Pointer to current text objekt of the class
-//	_eStateCode _mStateCode;			   // State of LCD forhandler for synchronization
-	String _mMenuSelectedFunction;		   // In case of manu output: name of the menu
-	int _mCurrentMenuEntryNumber;		   // In case of manu output: current index of the menu entry
-	int _mLastMenuEntryNumber;			   // In case of manu output: number of menu entries for the given module
-	String _mInputSelectedFunction;		   // Name of the function to show
-	String _mInputCurrentValue;			   // Measurement value to show
-	String _mInputError;				   // Error messge to show
+	hd44780_I2Cexp *_mI2ELCD = nullptr; // LDC driver
+	TextLCDHandler *_mText = nullptr;	// Pointer to current text objekt of the class
+										//	_eStateCode _mStateCode;			   // State of LCD forhandler for synchronization
+	String _mMenuSelectedFunction;		// In case of manu output: name of the menu
+	int _mCurrentMenuEntryNumber;		// In case of manu output: current index of the menu entry
+	int _mLastMenuEntryNumber;			// In case of manu output: number of menu entries for the given module
+	String _mInputSelectedFunction;		// Name of the function to show
+	String _mInputCurrentValue;			// Measurement value to show
+	String _mInputError;				// Error messge to show
 	bool _mIsCritical = false;
 
 public:

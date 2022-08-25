@@ -197,7 +197,7 @@ bool ModuleBase::I2EInitialize()
 		return false;
 	}
 	DebugPrint(GetName() + " is initialized at address: " + String(mI2CAddress));
-	mI2EModule->enableAddrPins();
+	//mI2EModule->enableAddrPins();
 
 	// set common I/O
 	mI2EModule->pinMode(_cOSelectionFrequency, OUTPUT);

@@ -135,7 +135,7 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 		return;
 	}
 	DebugPrint("Front Plate is initialized at address: " + String(mI2CAddress));
-	_mI2EModule->enableAddrPins();
+	//	_mI2EModule->enableAddrPins();
 
 	// Key frequency measurement
 	_mI2EModule->pinMode(_cIKeySelectFrequency, INPUT);
@@ -220,11 +220,18 @@ void FrontPlate::loop()
 	// Read keys
 	if (!_mChangeFunctionDetected)
 	{
-		lFunctionKeyFrequencyPressed = _mI2EModule->digitalRead(_cIKeySelectFrequency);
-		lFunctionKeyPositivePressed = _mI2EModule->digitalRead(_cIKeySelectTPositive);
-		lFunctionKeyNegativePressed = _mI2EModule->digitalRead(_cIKeySelectTNegative);
-		lFunctionKeyEdgePositivePressed = _mI2EModule->digitalRead(_cIKeySelectTEdgePositive);
-		lFunctionKeyEdgeNegativePressed = _mI2EModule->digitalRead(_cIKeySelectTEdgeNegative);
+		lFunctionKeyFrequencyPressed = (_mI2EModule->digitalRead(_cIKeySelectFrequency) == HIGH);
+		lFunctionKeyPositivePressed = (_mI2EModule->digitalRead(_cIKeySelectTPositive) == HIGH);
+		lFunctionKeyNegativePressed = (_mI2EModule->digitalRead(_cIKeySelectTNegative) == HIGH);
+		lFunctionKeyEdgePositivePressed = (_mI2EModule->digitalRead(_cIKeySelectTEdgePositive) == HIGH);
+		lFunctionKeyEdgeNegativePressed = (_mI2EModule->digitalRead(_cIKeySelectTEdgeNegative) == HIGH);
+
+		if (lFunctionKeyFrequencyPressed && lFunctionKeyPositivePressed && lFunctionKeyNegativePressed && lFunctionKeyEdgePositivePressed && lFunctionKeyEdgeNegativePressed)
+		{
+			// Crash of MCP23X17 detected
+			// DebugPrint("\nCrash");
+			return;
+		}
 
 		lIsPeriodMeasurementPossible = _mModuleFactory->GetSelectedModule()->IsPeriodMeasurementPossible();
 		lIsEventCountingPossible = _mModuleFactory->GetSelectedModule()->IsEventCountingPossible();
@@ -299,8 +306,8 @@ void FrontPlate::loop()
 	// Menu key processing
 	if (!_mChangeMenuDecected)
 	{
-		lMenuUpKeyPressed = _mI2EModule->digitalRead(_cIKeySelectMenuUp);
-		lMenuDownKeyPressed = _mI2EModule->digitalRead(_cIKeySelectMenuDown);
+		lMenuUpKeyPressed = (_mI2EModule->digitalRead(_cIKeySelectMenuUp) == HIGH);
+		lMenuDownKeyPressed = (_mI2EModule->digitalRead(_cIKeySelectMenuDown) == HIGH);
 
 		// Menu up is pressed?
 		if (lMenuUpKeyPressed)
@@ -311,6 +318,7 @@ void FrontPlate::loop()
 				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionUp();
 				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyUp;
 				_mChangeMenuDecected = true;
+				delay(100);
 			}
 		}
 
@@ -323,6 +331,7 @@ void FrontPlate::loop()
 				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionDown();
 				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyDown;
 				_mChangeMenuDecected = true;
+				delay(100);
 			}
 		}
 

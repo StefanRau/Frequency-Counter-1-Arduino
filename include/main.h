@@ -76,7 +76,8 @@ extern "C"
 	TextMain *mText = nullptr;		// Pointer to current text objekt of main
 	bool mErrorPrinted;				// Signals than an error in the main loop is outputted
 	bool mEventCountingInitialized; // Event counting shall be initialized only once after selected
-	int mFreeMemory;
+	long mFreeMemory;
+	bool mReadEventCounter;
 
 	// Module
 	Counter *mCounter = nullptr;
@@ -87,7 +88,7 @@ extern "C"
 	// Tasks
 	Task *mLampTestTime = nullptr;
 	Task *mMenuSwitchOfTime = nullptr;
-	//Task *mLCDRefreshCycleTime = nullptr;
+	Task *mLCDRefreshCycleTime = nullptr;
 	bool mIsInitialized = false;
 
 	String mMeasurementValue = "";
@@ -123,7 +124,7 @@ extern "C"
 	/// Get the really free RAM of the processor
 	/// </summary>
 	/// <returns>Free RAM in byte</returns>
-	int GetFreeRAM();
+	long GetFreeRAM();
 
 	/// <summary>
 	/// Resets the counters

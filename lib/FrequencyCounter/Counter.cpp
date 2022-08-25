@@ -181,7 +181,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 		return;
 	}
 	DebugPrint("Counter IC for lower word is initialized at address: " + String(lI2CAddress));
-	_mI2LowerWord->enableAddrPins();
+	//_mI2LowerWord->enableAddrPins();
 	lI2CAddress += 1;
 
 	// I2C address of upper word
@@ -193,7 +193,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 		return;
 	}
 	DebugPrint("Counter IC for upper word is initialized at address: " + String(lI2CAddress));
-	_mI2UpperWord->enableAddrPins();
+	//_mI2UpperWord->enableAddrPins();
 
 	_mI2LowerWord->pinMode(0, INPUT);
 	_mI2LowerWord->pinMode(1, INPUT);
@@ -309,7 +309,7 @@ String Counter::I2EGetCounterValue()
 	}
 
 	// Check for overflow
-	if (_mI2UpperWord->digitalRead(_cIOverflow))
+	if (_mI2UpperWord->digitalRead(_cIOverflow) == HIGH)
 	{
 		lResultString = _mText->Overflow();
 	}

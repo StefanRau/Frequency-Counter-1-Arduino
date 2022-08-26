@@ -58,7 +58,7 @@ public:
 	{
 		eSeverity Severity; // severity of an error message
 		int Count;			// error count
-		time_t Timestamp;	// timstamp of the error message
+		tm Time;			// time of the error message
 	};
 
 	union uErrorHeader
@@ -95,7 +95,7 @@ public:
 #define ErrorPrint(iSeverity, iErrorMessage) ErrorHandler::GetErrorHandler()->Print(iSeverity, iErrorMessage)
 
 #ifdef ARDUINO_AVR_NANO_EVERY
-#define ErrorHandlerStartAddress 0x000 // nano uses internal EEPROM
+#define ErrorHandlerStartAddress 0x000 // nano uses internal EEPROM for settings
 #endif
 #ifdef ARDUINO_SAMD_NANO_33_IOT
 #define ErrorHandlerStartAddress 0x0100 // 1st address for logging

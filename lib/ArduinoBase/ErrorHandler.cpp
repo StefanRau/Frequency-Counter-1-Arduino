@@ -12,6 +12,7 @@
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 08.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
 // 08.08.2022: add ARDUINO NANO 33 BLE - Stefan Rau
+// 26.08.2022: fix wrong log output - Stefan Rau - Stefan Rau
 // 07.09.2022: transient error list removed - Stefan Rau
 
 #include "ErrorHandler.h"
@@ -124,15 +125,14 @@ String TextErrorHandler::SeverityUnknown()
 
 Error::Error(int iNumber, eSeverity iSeverity, String iErrorMessage)
 {
-	struct tm lTime;
-
-	lTime.tm_year = 1966;
-	lTime.tm_mon = 7;
-	lTime.tm_yday = 13;
-
 	DebugInstantiation("New Error: iNumber=" + String(iNumber) + ", iSeverity=" + String((char)iSeverity) + ", iErrorMessage=" + iErrorMessage);
 	_mErrorEntry.ErrorHeader.ErrorHeader.Severity = iSeverity;
-	_mErrorEntry.ErrorHeader.ErrorHeader.Timestamp = mktime(&lTime);
+	_mErrorEntry.ErrorHeader.ErrorHeader.Time.tm_year = 2000;
+	_mErrorEntry.ErrorHeader.ErrorHeader.Time.tm_mon = 11;
+	_mErrorEntry.ErrorHeader.ErrorHeader.Time.tm_mday = 13;
+	_mErrorEntry.ErrorHeader.ErrorHeader.Time.tm_hour = 19;
+	_mErrorEntry.ErrorHeader.ErrorHeader.Time.tm_min = 15;
+	_mErrorEntry.ErrorHeader.ErrorHeader.Time.tm_sec = 0;
 	_mErrorEntry.ErrorHeader.ErrorHeader.Count = iNumber;
 	_mErrorEntry.ErrorMessage = iErrorMessage;
 }
@@ -230,26 +230,32 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 				union Error::uErrorHeader lErrorHeader;
 				char lTimeString[50];
 				char *lTimeStringP;
-				struct tm lTime; // Reserve memory - the simple way
-				struct tm *pTime;
 
-				pTime = &lTime;
 				lTimeStringP = lTimeString;
 
 				GetI2CGlobalEEPROM()->readBlock(_mEEPROMMemoryIterator, lErrorHeader.Buffer, sizeof(Error::sErrorHeader));
-				_mEEPROMMemoryIterator += sizeof(Error::sErrorHeader) + ErrorHandlerStartAddress;
+				_mEEPROMMemoryIterator += sizeof(Error::sErrorHeader);// + ErrorHandlerStartAddress;
 
 				// Error count
 				lReturn = String(_mEEPROMErrorIterator);
 				lReturn += ": ";
 
-				// Timestamp of error
-				pTime = gmtime(&lErrorHeader.ErrorHeader.Timestamp);
-
-				asctime_r(pTime, lTimeStringP);
-
-				//	isotime_r(pTime, lTimeString);
-				lReturn += String(lTimeStringP) + ": ";
+				// Timestamp of the error
+				// lTimeStringP = asctime(&lErrorHeader.ErrorHeader.Time);
+				sprintf(lTimeStringP, "%02i.%02i.%04i %02i:%02i:%02i ",
+						lErrorHeader.ErrorHeader.Time.tm_mday,
+						lErrorHeader.ErrorHeader.Time.tm_mon,
+						lErrorHeader.ErrorHeader.Time.tm_year,
+						lErrorHeader.ErrorHeader.Time.tm_hour,
+						lErrorHeader.ErrorHeader.Time.tm_min,
+						lErrorHeader.ErrorHeader.Time.tm_sec);
+				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_mday) + ".";
+				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_mon) + ".";
+				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_year) + " ";
+				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_hour) + ":";
+				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_min) + ":";
+				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_sec) + " ";
+				lReturn += String(lTimeStringP);
 
 				// Severity
 				switch (lErrorHeader.ErrorHeader.Severity)
@@ -292,14 +298,17 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 				else
 				{
 					return _mText->ErrorListDone();
-				}
+				};
+				break;
 			case TReadReset:
 				_mEEPROMErrorIterator = 0;
 				_mEEPROMMemoryIterator = sizeof(sErrorEEPROMHeader) + ErrorHandlerStartAddress; // starting point of memory iteration is after last byte of header
 				return String(iParameter);
+				break;
 			case TReadSize:
 				lReturn = String(lErrorEepromHeader.ErrorHeader.NumberOfErrors);
 				return lReturn;
+				break;
 			case TFormat:
 				if (GetI2CGlobalEEPROM()->setBlock(ErrorHandlerStartAddress, 0, GetI2CGlobalEEPROM()->getDeviceSize() - ErrorHandlerStartAddress) != 0)
 				{
@@ -315,6 +324,7 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 				}
 				ErrorPrint(Error::eSeverity::TMessage, _mText->FormatDone());
 				return _mText->FormatDone();
+				break;
 			}
 			return _mText->FunctionNameUnknown(iModuleIdentifyer, iParameter);
 		}
@@ -386,7 +396,7 @@ String ErrorHandler::GetName()
 void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 {
 	union uErrorEEPROMHeader lErrorEEPROMHeader;
-	unsigned int lMessageLength = iErrorMessage.length();
+	uint16_t lMessageLength = iErrorMessage.length();
 
 	if (GetI2CGlobalEEPROM() != nullptr)
 	{

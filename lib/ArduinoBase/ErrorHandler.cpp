@@ -11,7 +11,8 @@
 // 04.04.2022: Improve output of log: use severity enumeration, ISO date formate - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 08.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
-// 08.08.2022: add ARDUINO NANO 33 BLE
+// 08.08.2022: add ARDUINO NANO 33 BLE - Stefan Rau
+// 07.09.2022: transient error list removed - Stefan Rau
 
 #include "ErrorHandler.h"
 
@@ -157,9 +158,6 @@ ErrorHandler::ErrorHandler(sInitializeModule iInitializeModule) : I2CBase(iIniti
 
 	_mText = new TextErrorHandler();
 
-	// The error is based on the standard list
-	_mErrorList = new ListCollection();
-
 	if (GetI2CGlobalEEPROM() != nullptr)
 	{
 		// get checksum
@@ -248,8 +246,8 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 				// Timestamp of error
 				pTime = gmtime(&lErrorHeader.ErrorHeader.Timestamp);
 
-				 asctime_r(pTime,lTimeStringP);
-				
+				asctime_r(pTime, lTimeStringP);
+
 				//	isotime_r(pTime, lTimeString);
 				lReturn += String(lTimeStringP) + ": ";
 
@@ -385,12 +383,6 @@ String ErrorHandler::GetName()
 	return _mText->GetObjectName();
 }
 
-Error *ErrorHandler::GetRootCause()
-{
-	// Root cause is the 1st error in the list - all following errors are based on this one
-	return (Error *)_mErrorList->GetFirst();
-}
-
 void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 {
 	union uErrorEEPROMHeader lErrorEEPROMHeader;
@@ -411,7 +403,7 @@ void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 	// write transient - no log messages
 	if (iSeverity != Error::eSeverity::TMessage)
 	{
-		_mErrorList->Add(lError);
+		_mErrorDetected = true;
 	}
 
 	// write persistent
@@ -465,10 +457,5 @@ void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 
 bool ErrorHandler::ContainsErrors()
 {
-	return (_mErrorList->Count() > 0);
-}
-
-ListCollection *ErrorHandler::GetErrorList()
-{
-	return _mErrorList;
+	return _mErrorDetected;
 }

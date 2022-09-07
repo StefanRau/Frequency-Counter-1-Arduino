@@ -52,7 +52,7 @@ private:
 
 	// TextProjectBase *_mText; // Pointer to current text objekt of the class
 
-public:
+protected:
 	/// <summary>
 	/// Constructor
 	/// </summary>
@@ -67,6 +67,7 @@ public:
 
 	~ProjectBase();
 
+public:
 	/// <summary>
 	/// Sets the I2C address of the large EEPROM
 	/// </summary>

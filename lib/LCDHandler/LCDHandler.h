@@ -63,7 +63,7 @@ private:
 	String _mInputError;				// Error messge to show
 	bool _mIsCritical = false;
 
-public:
+protected:
 	/// <summary>
 	/// Constructor
 	/// </summary>
@@ -71,6 +71,9 @@ public:
 	LCDHandler(sInitializeModule iInitializeModule);
 
 	~LCDHandler();
+
+public:
+	static LCDHandler *GetLCDHandler(sInitializeModule iInitializeModule);
 
 	/////////////////////////////////////////////////////
 	// Functions that can be called from within main loop

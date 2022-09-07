@@ -69,16 +69,19 @@ private:
 	// MCP23017 IC 5 - upper word input 16 .. 26, reset counter, input selection
 	Adafruit_MCP23X17 *_mI2UpperWord = nullptr;
 
-	eFunctionCode _mFunctionCode;  // Code of the currently selected function
+	eFunctionCode _mFunctionCode; // Code of the currently selected function
 
-public:
+protected:
 	/// <summary>
 	/// Constructor
 	/// </summary>
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	Counter(sInitializeModule iInitializeModule);
-
+	
 	~Counter();
+
+public:
+	static Counter *GetCounter(sInitializeModule iInitializeModule);
 
 	// Functions that can be called from within main loop
 

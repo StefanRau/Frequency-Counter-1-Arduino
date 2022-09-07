@@ -121,9 +121,9 @@ private:
 	};
 
 	TextErrorHandler *_mText = nullptr;													// Pointer to current text objekt of the class
-	ListCollection *_mErrorList = nullptr;												// List of errors
 	int _mEEPROMMemoryIterator = sizeof(sErrorEEPROMHeader) + ErrorHandlerStartAddress; // pointer to address of next error log item, initially that's the bype after the last entry of header
 	int _mEEPROMErrorIterator = 0;														// number of next error log item
+	bool _mErrorDetected = false;														// signals that an error was detected
 
 #ifndef _DebugApplication
 	// Commands for remote control
@@ -149,7 +149,7 @@ public:
 	// Functions that can be called from within main loop
 
 	/// <summary>
-	/// Is called periodically from main loop
+	/// Can be called periodically from main loop => makes no sense for error handler
 	/// </summary>
 	void loop() override;
 
@@ -200,22 +200,10 @@ public:
 	void Print(Error::eSeverity iSeverity, String iErrorMessage);
 
 	/// <summary>
-	/// Returns the 1st error of the list
-	/// </summary>
-	/// <returns>The error object</returns>
-	Error *GetRootCause();
-
-	/// <summary>
 	/// Checks if the error list contains error or fatal
 	/// </summary>
 	/// <returns>true: the list of errors contains one, false: there was no error ot fatal</returns>
 	bool ContainsErrors();
-
-	/// <summary>
-	/// Returns a list object with all errors
-	/// </summary>
-	/// <returns></returns>
-	ListCollection *GetErrorList();
 
 	/// <summary>
 	/// Readable name of the module

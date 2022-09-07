@@ -12,6 +12,7 @@
 // 21.03.2022: Event counting added - Stefan Rau
 // 23.04.2022: Delay in front plate key detection - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 06.09.2022: Singleton instantiation - Stefan Rau
 
 #include "FrontPlate.h"
 #include "ErrorHandler.h"
@@ -88,6 +89,8 @@ String TextFrontPlate::ErrorPlausibilityViolation()
 }
 
 /////////////////////////////////////////////////////////////
+
+static FrontPlate *gFrontPlate = nullptr;
 
 FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter) : I2CBase(iInitializeModule)
 {
@@ -177,6 +180,12 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 
 FrontPlate::~FrontPlate()
 {
+}
+
+FrontPlate *FrontPlate::GetFrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter)
+{
+	gFrontPlate = (gFrontPlate == nullptr) ? new FrontPlate(iInitializeModule, iLCDHandler, iModuleFactory, iCounter) : gFrontPlate;
+	return gFrontPlate;
 }
 
 void FrontPlate::loop()

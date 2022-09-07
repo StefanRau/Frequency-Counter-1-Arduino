@@ -17,6 +17,7 @@
 // 29.03.2022: Separate reset functions - Stefan Rau
 // 29.03.2022: Get name of device - Stefan Rau
 // 24.08.2022: Trigger reading of event counter in sync to display refresh - Stefan Rau
+// 07.09.2022: Transient error log removed - Stefan Rau
 
 #include "main.h"
 
@@ -44,6 +45,24 @@ String TextMain::FreeMemory(int iFreeMemory)
 	{
 		TextLangE("Free memory: " + String(iFreeMemory) + " byte");
 		TextLangD("Freier Speicher: " + String(iFreeMemory) + " Byte");
+	}
+}
+
+String TextMain::ErrorInSetup()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Error in setup");
+		TextLangD("Fehler im setup");
+	}
+}
+
+String TextMain::ErrorInLoop()
+{
+	switch (GetLanguage())
+	{
+		TextLangE("Error in loop");
+		TextLangD("Fehler in loop");
 	}
 }
 
@@ -78,20 +97,20 @@ void setup()
 	// LCD
 	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
 	{
-		mLCDHandler = new LCDHandler(mInitializeSystem.LCDHandler);
+		mLCDHandler = LCDHandler::GetLCDHandler(mInitializeSystem.LCDHandler);
 	}
 
 	// Reset input modules and start lamp test
 	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
 	{
-		mModuleFactory = new ModuleFactory(mInitializeSystem.ModuleFactory);
+		mModuleFactory = ModuleFactory::GetModuleFactory(mInitializeSystem.ModuleFactory);
 		mModuleFactory->I2ELampTestOn();
 	}
 
 	// Initialize main counter
 	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
 	{
-		mCounter = new Counter(mInitializeSystem.Counter);
+		mCounter = Counter::GetCounter(mInitializeSystem.Counter);
 		mCounter->I2ESetFunctionCode(Counter::eFunctionCode::TFrequency);
 	}
 
@@ -99,7 +118,7 @@ void setup()
 	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
 	{
 		// Reset selection and start
-		mFrontPlate = new FrontPlate(mInitializeSystem.FrontPlate, mLCDHandler, mModuleFactory, mCounter);
+		mFrontPlate = FrontPlate::GetFrontPlate(mInitializeSystem.FrontPlate, mLCDHandler, mModuleFactory, mCounter);
 	}
 
 	// Initialize task management and all tasks
@@ -135,10 +154,9 @@ void setup()
 	{
 		if (mLCDHandler != nullptr)
 		{
-			mLCDHandler->SetErrorText(ErrorHandler::GetErrorHandler()->GetRootCause()->GetErrorEntry().ErrorMessage);
+			mLCDHandler->SetErrorText(mText->ErrorInSetup());
 		}
-		DebugPrint("Error when setup");
-		DebugPrint(ErrorHandler::GetErrorHandler()->GetRootCause()->GetErrorEntry().ErrorMessage);
+		DebugPrint("Error in setup");
 	}
 
 	DebugPrint("End setup");
@@ -299,7 +317,8 @@ void loop()
 	{
 		if (!mErrorPrinted)
 		{
-			DebugPrint("Error: " + ErrorHandler::GetErrorHandler()->GetRootCause()->GetErrorEntry().ErrorMessage + " - processing stopped");
+			mLCDHandler->SetErrorText(mText->ErrorInLoop());
+			DebugPrint("Error in runtime => processing stopped");
 			mErrorPrinted = true;
 		}
 		return;
@@ -309,6 +328,14 @@ void loop()
 	mFrontPlate->loop();
 	mModuleFactory->loop();
 	mCounter->loop();
+
+	// Reset I2C after an error was detected
+	if (Wire.getWriteError() != 0)
+	{
+		Wire.end();
+		Wire.begin();
+		DebugPrint("Reset I2C");
+	}
 
 	// Get current menu item if a new one was selected
 	if (mFrontPlate->IsNewMenuSelected())

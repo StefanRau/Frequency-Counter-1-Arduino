@@ -9,6 +9,7 @@
 // 05.12.2021: Show arrows in line 2 - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 24.08.2022: Use new LCD library - Stefan Rau
+// 06.09.2022: Singleton instantiation - Stefan Rau
 
 #include "LCDHandler.h"
 #include "ErrorHandler.h"
@@ -77,6 +78,7 @@ String TextLCDHandler::InitError()
 // Module implementation
 
 static LCDHandler::_eStateCode _mStateCode; // State of LCD handler for synchronization
+static LCDHandler *gLCDHandler = nullptr;
 
 LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
@@ -115,6 +117,12 @@ LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 
 LCDHandler::~LCDHandler()
 {
+}
+
+LCDHandler *LCDHandler::GetLCDHandler(sInitializeModule iInitializeModule)
+{
+	gLCDHandler = (gLCDHandler == nullptr) ? new LCDHandler(iInitializeModule) : gLCDHandler;
+	return gLCDHandler;
 }
 
 void LCDHandler::loop()

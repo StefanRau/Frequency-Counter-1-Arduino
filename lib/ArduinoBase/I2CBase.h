@@ -57,7 +57,7 @@ protected:
 	/// </summary>
 	short mI2CAddress = -1;
 
-public:
+	// public:
 	/// <summary>
 	/// Constructor
 	/// </summary>
@@ -66,6 +66,7 @@ public:
 
 	~I2CBase();
 
+public:
 	/// <summary>
 	/// Is called periodically from main loop
 	/// </summary>

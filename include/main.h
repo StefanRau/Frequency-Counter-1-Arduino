@@ -33,6 +33,8 @@ public:
 
 	String GetObjectName() override;
 	String FreeMemory(int iFreeMemory);
+	String ErrorInSetup();
+	String ErrorInLoop();
 };
 
 #ifdef __arm__

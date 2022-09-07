@@ -9,6 +9,7 @@
 // 21.03.2022: Event counting added - Stefan Rau
 // 13.06.2022: Use constants for bits 12 - 15 of 2nd input expander and other renamings - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 06.09.2022: Singleton instantiation - Stefan Rau
 
 #include "ErrorHandler.h"
 #include "Counter.h"
@@ -156,6 +157,8 @@ String TextCounter::FunctionNameUnknown()
 
 /////////////////////////////////////////////////////////////
 
+static Counter *gCounter = nullptr;
+
 Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
 	DebugInstantiation("New Counter: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
@@ -237,6 +240,12 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 
 Counter::~Counter()
 {
+}
+
+Counter *Counter::GetCounter(sInitializeModule iInitializeModule)
+{
+	gCounter = (gCounter == nullptr) ? new Counter(iInitializeModule) : gCounter;
+	return gCounter;
 }
 
 void Counter::loop()

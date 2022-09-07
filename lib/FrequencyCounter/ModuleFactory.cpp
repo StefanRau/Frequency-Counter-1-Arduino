@@ -8,6 +8,7 @@
 // 04.11.2021: Verbose mode implemented - Stefan Rau
 // 17.11.2021: LED of module did not work => fixed - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 06.09.2022: Singleton instantiation - Stefan Rau
 
 #include "ModuleFactory.h"
 
@@ -44,6 +45,8 @@ String TextModuleFactory::Unknown()
 }
 
 /////////////////////////////////////////////////////////////
+
+static ModuleFactory *gModuleFactory = nullptr;
 
 ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
@@ -102,6 +105,12 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 
 ModuleFactory ::~ModuleFactory()
 {
+}
+
+ModuleFactory *ModuleFactory::GetModuleFactory(sInitializeModule iInitializeModule)
+{
+	gModuleFactory = (gModuleFactory == nullptr) ? new ModuleFactory(iInitializeModule) : gModuleFactory;
+	return gModuleFactory;
 }
 
 void ModuleFactory::loop()

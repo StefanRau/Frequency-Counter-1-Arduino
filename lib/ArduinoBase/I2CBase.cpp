@@ -8,8 +8,6 @@
 
 #include "I2CBase.h"
 
-// Text definitions
-
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>

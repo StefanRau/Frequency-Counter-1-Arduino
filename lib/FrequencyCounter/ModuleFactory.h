@@ -49,7 +49,7 @@ private:
 	ModuleBase *_mSelectedModule = nullptr;	  // Instance of the currently selected module
 	TextModuleFactory *_mText = nullptr;	  // Pointer to current text objekt of the class
 
-public:
+protected:
 	/// <summary>
 	/// Constructor
 	/// </summary>
@@ -57,6 +57,9 @@ public:
 	ModuleFactory(sInitializeModule iInitializeModule);
 
 	~ModuleFactory();
+
+public:
+	static ModuleFactory *GetModuleFactory(sInitializeModule iInitializeModule);
 
 	// Functions that can be called from within main loop
 

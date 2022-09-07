@@ -12,7 +12,7 @@
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 08.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
 // 08.08.2022: add ARDUINO NANO 33 BLE - Stefan Rau
-// 26.08.2022: fix wrong log output - Stefan Rau - Stefan Rau
+// 26.08.2022: fix wrong log output - Stefan Rau
 // 07.09.2022: transient error list removed - Stefan Rau
 
 #include "ErrorHandler.h"
@@ -241,7 +241,6 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 				lReturn += ": ";
 
 				// Timestamp of the error
-				// lTimeStringP = asctime(&lErrorHeader.ErrorHeader.Time);
 				sprintf(lTimeStringP, "%02i.%02i.%04i %02i:%02i:%02i ",
 						lErrorHeader.ErrorHeader.Time.tm_mday,
 						lErrorHeader.ErrorHeader.Time.tm_mon,
@@ -249,12 +248,6 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 						lErrorHeader.ErrorHeader.Time.tm_hour,
 						lErrorHeader.ErrorHeader.Time.tm_min,
 						lErrorHeader.ErrorHeader.Time.tm_sec);
-				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_mday) + ".";
-				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_mon) + ".";
-				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_year) + " ";
-				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_hour) + ":";
-				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_min) + ":";
-				// lReturn += String(lErrorHeader.ErrorHeader.Time.tm_sec) + " ";
 				lReturn += String(lTimeStringP);
 
 				// Severity

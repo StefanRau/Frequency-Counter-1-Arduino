@@ -71,7 +71,7 @@ private:
 
 	eFunctionCode _mFunctionCode; // Code of the currently selected function
 
-protected:
+private:
 	/// <summary>
 	/// Constructor
 	/// </summary>

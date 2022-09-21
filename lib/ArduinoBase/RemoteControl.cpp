@@ -4,6 +4,7 @@
 // History
 // 18.10.2021: 1st version - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 
 #ifdef ARDUINO_AVR_NANO_EVERY
 #include <SoftwareSerial.h>
@@ -46,7 +47,7 @@ String TextRemoteControl::Start()
 
 /////////////////////////////////////////////////////////////
 
-static RemoteControl *gRemoteControl = nullptr;
+static RemoteControl *gInstance = nullptr;
 
 RemoteControl::RemoteControl()
 {
@@ -66,11 +67,11 @@ RemoteControl::~RemoteControl()
 {
 }
 
-RemoteControl *RemoteControl::GetRemoteControl()
+RemoteControl *RemoteControl::GetInstance()
 {
     // returns a pointer to singleton instance
-    gRemoteControl = (gRemoteControl == nullptr) ? new RemoteControl : gRemoteControl;
-    return gRemoteControl;
+    gInstance = (gInstance == nullptr) ? new RemoteControl : gInstance;
+    return gInstance;
 }
 
 String RemoteControl::GetCommand()

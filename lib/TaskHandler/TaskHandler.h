@@ -87,7 +87,6 @@ private:
     /// Constructor
     /// </summary>
     TaskHandler();
-
     ~TaskHandler();
 
 public:
@@ -95,7 +94,7 @@ public:
     /// Factory for managing single instances
     /// </summary>
     /// <returns>Instance of the task handler</returns>
-    static TaskHandler *GetTaskHandler();
+    static TaskHandler *GetInstance();
 
     /// <summary>
     /// Initialize hardware timer depending on hardware

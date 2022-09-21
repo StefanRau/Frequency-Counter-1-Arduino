@@ -14,6 +14,7 @@
 // 08.08.2022: add ARDUINO NANO 33 BLE - Stefan Rau
 // 26.08.2022: fix wrong log output - Stefan Rau
 // 07.09.2022: transient error list removed - Stefan Rau
+// 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 
 #include "ErrorHandler.h"
 
@@ -148,7 +149,7 @@ Error::sErrorEntry Error::GetErrorEntry()
 
 /////////////////////////////////////////////////////////////
 
-static ErrorHandler *gErrorHandler = nullptr;
+static ErrorHandler *gInstance = nullptr;
 
 ErrorHandler::ErrorHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
@@ -195,13 +196,13 @@ ErrorHandler::~ErrorHandler()
 {
 }
 
-ErrorHandler *ErrorHandler::GetErrorHandler()
+ErrorHandler *ErrorHandler::GetInstance()
 {
 	// returns a pointer to singleton instance
 	sInitializeModule lInitializeModule = {-1, -1};
 
-	gErrorHandler = (gErrorHandler == nullptr) ? new ErrorHandler(lInitializeModule) : gErrorHandler;
-	return gErrorHandler;
+	gInstance = (gInstance == nullptr) ? new ErrorHandler(lInitializeModule) : gInstance;
+	return gInstance;
 }
 
 void ErrorHandler::loop()

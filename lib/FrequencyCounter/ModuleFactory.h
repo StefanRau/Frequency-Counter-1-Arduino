@@ -55,11 +55,10 @@ protected:
 	/// </summary>
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	ModuleFactory(sInitializeModule iInitializeModule);
-
 	~ModuleFactory();
 
 public:
-	static ModuleFactory *GetModuleFactory(sInitializeModule iInitializeModule);
+	static ModuleFactory *GetInstance(sInitializeModule iInitializeModule);
 
 	// Functions that can be called from within main loop
 

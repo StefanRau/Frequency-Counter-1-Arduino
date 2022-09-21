@@ -7,6 +7,7 @@
 // 16.03.2022: ARDUINO_NANO_RP2040_CONNECT removed - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 08.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
+// 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 
 #include "TaskHandler.h"
 #include <Arduino.h>
@@ -42,18 +43,18 @@ static SAMDTimer lTimer(TIMER_TC3);
 static NRF52_MBED_Timer lTimer(NRF_TIMER_1);
 #endif
 
-static TaskHandler *gTaskHandler = nullptr;
+static TaskHandler *gInstance = nullptr;
 
 void TaskDispatcher()
 {
 	Task *lTaskIterator;
 
-	TaskHandler::GetTaskHandler()->GetTaskList()->IterateStart();
+	TaskHandler::GetInstance()->GetTaskList()->IterateStart();
 
 	do
 	{
 		// Ping each single task
-		lTaskIterator = (Task *)TaskHandler::GetTaskHandler()->GetTaskList()->Iterate();
+		lTaskIterator = (Task *)TaskHandler::GetInstance()->GetTaskList()->Iterate();
 		if (lTaskIterator != nullptr)
 		{
 			lTaskIterator->Process();
@@ -79,11 +80,11 @@ TaskHandler::~TaskHandler()
 {
 }
 
-TaskHandler *TaskHandler::GetTaskHandler()
+TaskHandler *TaskHandler::GetInstance()
 {
 	// Returns a pointer to singleton instance
-	gTaskHandler = (gTaskHandler == nullptr) ? new TaskHandler : gTaskHandler;
-	return gTaskHandler;
+	gInstance = (gInstance == nullptr) ? new TaskHandler : gInstance;
+	return gInstance;
 }
 
 void TaskHandler::SetCycleTimeInMs(unsigned long iCycleTimeInMs)
@@ -129,7 +130,7 @@ Task *Task::GetNewTask(eTaskType iTaskType, int iTicks, void (*iCallback)())
 	lTask = new Task(iTaskType, iTicks, iCallback);
 
 	// add to task list
-	TaskHandler::GetTaskHandler()->GetTaskList()->Add(lTask);
+	TaskHandler::GetInstance()->GetTaskList()->Add(lTask);
 
 	return lTask;
 }

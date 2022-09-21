@@ -11,9 +11,9 @@
 
 // Either debugger uses serial interface or remote control
 #ifndef _DebugApplication
-#define RemoteControlInstance() RemoteControl::GetRemoteControl()
-#define RemoteControlGetCommand() RemoteControl::GetRemoteControl()->GetCommand()
-#define RemoteControlPrint(Text) RemoteControl::GetRemoteControl()->Print(Text)
+#define RemoteControlInstance() RemoteControl::GetInstance()
+#define RemoteControlGetCommand() RemoteControl::GetInstance()->GetCommand()
+#define RemoteControlPrint(Text) RemoteControl::GetInstance()->Print(Text)
 #else
 #define RemoteControlInstance()
 #define RemoteControlGetCommand() ""
@@ -54,7 +54,7 @@ public:
 	/// Gets a singleton
 	/// </summary>
 	/// <returns>Instance of remote control</returns>
-	static RemoteControl *GetRemoteControl();
+	static RemoteControl *GetInstance();
 
 	/// <summary>
 	/// Receives a command string from serial interface. Must be called in a cycle.

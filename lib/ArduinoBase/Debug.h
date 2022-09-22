@@ -13,18 +13,18 @@
 #define _DebugMethodCalls
 #define _DebugInstantiation
 
-#define DebugPrint(Text) Debug::GetDebug()->Print(Text)
-#define DebugPrintFromTask(Text) Debug::GetDebug()->PrintFromTask(Text)
-#define DebugLoop() Debug::GetDebug()->loop()
+#define DebugPrint(Text) Debug::GetInstance()->Print(Text)
+#define DebugPrintFromTask(Text) Debug::GetInstance()->PrintFromTask(Text)
+#define DebugLoop() Debug::GetInstance()->loop()
 
 #ifdef _DebugMethodCalls
-#define DebugMethodCalls(Text) Debug::GetDebug()->Print(Text)
+#define DebugMethodCalls(Text) Debug::GetInstance()->Print(Text)
 #else
 #define DebugMethodCalls(Text)
 #endif
 
 #ifdef _DebugInstantiation
-#define DebugInstantiation(Text) Debug::GetDebug()->Print(Text)
+#define DebugInstantiation(Text) Debug::GetInstance()->Print(Text)
 #else
 #define DebugInstantiation(Text)
 #endif
@@ -64,7 +64,7 @@ public:
     /// Gets a singleton
     /// </summary>
     /// <returns>Instance of debugger</returns>
-    static Debug *GetDebug();
+    static Debug *GetInstance();
 
     /// <summary>
     /// Writes debugging text to output

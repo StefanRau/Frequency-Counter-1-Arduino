@@ -92,7 +92,7 @@ public:
 	sErrorEntry GetErrorEntry();
 };
 
-#define ErrorPrint(iSeverity, iErrorMessage) ErrorHandler::GetErrorHandler()->Print(iSeverity, iErrorMessage)
+#define ErrorPrint(iSeverity, iErrorMessage) ErrorHandler::GetInstance()->Print(iSeverity, iErrorMessage)
 
 #ifdef ARDUINO_AVR_NANO_EVERY
 #define ErrorHandlerStartAddress 0x000 // nano uses internal EEPROM for settings
@@ -142,7 +142,6 @@ private:
 	/// </summary>
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	ErrorHandler(sInitializeModule iInitializeModule);
-
 	~ErrorHandler();
 
 public:
@@ -190,7 +189,7 @@ public:
 	/// Gets a singleton. If InitializeErrorHandler was not called before, logging isn't be used.
 	/// </summary>
 	/// <returns>Instance of the error handler</returns>
-	static ErrorHandler *GetErrorHandler();
+	static ErrorHandler *GetInstance();
 
 	/// <summary>
 	/// Write a new error message

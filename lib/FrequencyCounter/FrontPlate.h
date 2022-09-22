@@ -108,11 +108,10 @@ protected:
 	/// <param name="iModuleFactory">Reference of the module factory</param>
 	/// <param name="iCounter">Reference of counter module</param>
 	FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter);
-
 	~FrontPlate();
 
 public:
-	static FrontPlate *GetFrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter);
+	static FrontPlate *GetInstance(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter);
 
 	/////////////////////////////////////////////////////
 	// Functions that can be called from within main loop

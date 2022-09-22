@@ -53,7 +53,6 @@ public:
 	/// </summary>
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	ModuleAnalog(sInitializeModule iInitializeModule);
-
 	~ModuleAnalog();
 
 	// Functions that can be called from within main loop

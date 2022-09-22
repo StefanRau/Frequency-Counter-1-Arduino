@@ -9,6 +9,7 @@
 // 17.11.2021: LED of module did not work => fixed - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 06.09.2022: Singleton instantiation - Stefan Rau
+// 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 
 #include "ModuleFactory.h"
 
@@ -46,7 +47,7 @@ String TextModuleFactory::Unknown()
 
 /////////////////////////////////////////////////////////////
 
-static ModuleFactory *gModuleFactory = nullptr;
+static ModuleFactory *gInstance = nullptr;
 
 ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
@@ -107,10 +108,10 @@ ModuleFactory ::~ModuleFactory()
 {
 }
 
-ModuleFactory *ModuleFactory::GetModuleFactory(sInitializeModule iInitializeModule)
+ModuleFactory *ModuleFactory::GetInstance(sInitializeModule iInitializeModule)
 {
-	gModuleFactory = (gModuleFactory == nullptr) ? new ModuleFactory(iInitializeModule) : gModuleFactory;
-	return gModuleFactory;
+	gInstance = (gInstance == nullptr) ? new ModuleFactory(iInitializeModule) : gInstance;
+	return gInstance;
 }
 
 void ModuleFactory::loop()

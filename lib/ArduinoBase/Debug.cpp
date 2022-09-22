@@ -4,16 +4,17 @@
 // History
 // 18.10.2021: 1st version - Stefan Rau
 // 14.01.2022: using macros from timer interrupts for writing debugger output - Stefan Rau
+// 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 
-#ifdef ARDUINO_AVR_NANO_EVERY
-#include <SoftwareSerial.h> // For debug reasons
-#endif
+// #ifdef ARDUINO_AVR_NANO_EVERY
+// #include <SoftwareSerial.h> // For debug reasons
+// #endif
 
 #include "Debug.h"
 
 #ifdef _DebugApplication
 
-static Debug *gDebug = nullptr;
+static Debug *gInstance = nullptr;
 
 Debug::Debug()
 {
@@ -29,11 +30,11 @@ Debug::~Debug()
 {
 }
 
-Debug *Debug::GetDebug()
+Debug *Debug::GetInstance()
 {
 	// returns a pointer to singleton instance
-	gDebug = (gDebug == nullptr) ? new Debug : gDebug;
-	return gDebug;
+	gInstance = (gInstance == nullptr) ? new Debug : gInstance;
+	return gInstance;
 }
 
 void Debug::Print(String iOutput)

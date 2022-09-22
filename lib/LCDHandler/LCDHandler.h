@@ -69,11 +69,10 @@ protected:
 	/// </summary>
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	LCDHandler(sInitializeModule iInitializeModule);
-
 	~LCDHandler();
 
 public:
-	static LCDHandler *GetLCDHandler(sInitializeModule iInitializeModule);
+	static LCDHandler *GetInstance(sInitializeModule iInitializeModule);
 
 	/////////////////////////////////////////////////////
 	// Functions that can be called from within main loop

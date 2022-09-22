@@ -10,6 +10,7 @@
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 24.08.2022: Use new LCD library - Stefan Rau
 // 06.09.2022: Singleton instantiation - Stefan Rau
+// 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 
 #include "LCDHandler.h"
 #include "ErrorHandler.h"
@@ -78,7 +79,7 @@ String TextLCDHandler::InitError()
 // Module implementation
 
 static LCDHandler::_eStateCode _mStateCode; // State of LCD handler for synchronization
-static LCDHandler *gLCDHandler = nullptr;
+static LCDHandler *gInstance = nullptr;
 
 LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
@@ -119,10 +120,10 @@ LCDHandler::~LCDHandler()
 {
 }
 
-LCDHandler *LCDHandler::GetLCDHandler(sInitializeModule iInitializeModule)
+LCDHandler *LCDHandler::GetInstance(sInitializeModule iInitializeModule)
 {
-	gLCDHandler = (gLCDHandler == nullptr) ? new LCDHandler(iInitializeModule) : gLCDHandler;
-	return gLCDHandler;
+	gInstance = (gInstance == nullptr) ? new LCDHandler(iInitializeModule) : gInstance;
+	return gInstance;
 }
 
 void LCDHandler::loop()

@@ -95,30 +95,30 @@ void setup()
 	pinMode(cOResetFF, OUTPUT);
 
 	// LCD
-	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
+	if (!ErrorHandler::GetInstance()->ContainsErrors())
 	{
-		mLCDHandler = LCDHandler::GetLCDHandler(mInitializeSystem.LCDHandler);
+		mLCDHandler = LCDHandler::GetInstance(mInitializeSystem.LCDHandler);
 	}
 
 	// Reset input modules and start lamp test
-	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
+	if (!ErrorHandler::GetInstance()->ContainsErrors())
 	{
-		mModuleFactory = ModuleFactory::GetModuleFactory(mInitializeSystem.ModuleFactory);
+		mModuleFactory = ModuleFactory::GetInstance(mInitializeSystem.ModuleFactory);
 		mModuleFactory->I2ELampTestOn();
 	}
 
 	// Initialize main counter
-	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
+	if (!ErrorHandler::GetInstance()->ContainsErrors())
 	{
-		mCounter = Counter::GetCounter(mInitializeSystem.Counter);
+		mCounter = Counter::GetInstance(mInitializeSystem.Counter);
 		mCounter->I2ESetFunctionCode(Counter::eFunctionCode::TFrequency);
 	}
 
 	// Initialize front plate
-	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
+	if (!ErrorHandler::GetInstance()->ContainsErrors())
 	{
 		// Reset selection and start
-		mFrontPlate = FrontPlate::GetFrontPlate(mInitializeSystem.FrontPlate, mLCDHandler, mModuleFactory, mCounter);
+		mFrontPlate = FrontPlate::GetInstance(mInitializeSystem.FrontPlate, mLCDHandler, mModuleFactory, mCounter);
 	}
 
 	// Initialize task management and all tasks
@@ -136,7 +136,7 @@ void setup()
 	mLCDRefreshCycleTime->DefinePrevious(mLampTestTime);
 
 	// Initialize task handler
-	TaskHandler::GetTaskHandler()->SetCycleTimeInMs(100);
+	TaskHandler::GetInstance()->SetCycleTimeInMs(100);
 
 	// Reset
 	ResetCounters();
@@ -144,13 +144,13 @@ void setup()
 	RestartPulsDetection();
 
 	// Initialize remote control
-	if (!ErrorHandler::GetErrorHandler()->ContainsErrors())
+	if (!ErrorHandler::GetInstance()->ContainsErrors())
 	{
 		RemoteControlInstance();
 	}
 
 	// Output potential errors
-	if (ErrorHandler::GetErrorHandler()->ContainsErrors())
+	if (ErrorHandler::GetInstance()->ContainsErrors())
 	{
 		if (mLCDHandler != nullptr)
 		{
@@ -216,7 +216,7 @@ void loop()
 				case 'V':
 					// Reads version and lists all hardware components and their state
 					lReturn = String(VERSION) + ", compiled at: " + String(__DATE__) + "\n";
-					lReturn += ErrorHandler::GetErrorHandler()->GetStatus();
+					lReturn += ErrorHandler::GetInstance()->GetStatus();
 					lReturn += mLCDHandler->GetStatus();
 					lReturn += mFrontPlate->GetStatus();
 					lReturn += mCounter->GetStatus();
@@ -253,7 +253,7 @@ void loop()
 				// lParameter = '0' : Reset Log Pointer
 				// lParameter = 'R' : Read log
 				// lParameter = 'S' : Read log size
-				lReturn = ErrorHandler::GetErrorHandler()->Dispatch(lModule, lParameter);
+				lReturn = ErrorHandler::GetInstance()->Dispatch(lModule, lParameter);
 			}
 
 			if (lReturn == "")
@@ -313,7 +313,7 @@ void loop()
 #endif
 
 	// In case of an error, the program stops here
-	if (ErrorHandler::GetErrorHandler()->ContainsErrors())
+	if (ErrorHandler::GetInstance()->ContainsErrors())
 	{
 		if (!mErrorPrinted)
 		{

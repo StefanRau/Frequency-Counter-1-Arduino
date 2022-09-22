@@ -71,7 +71,7 @@ private:
 
 	eFunctionCode _mFunctionCode; // Code of the currently selected function
 
-protected:
+private:
 	/// <summary>
 	/// Constructor
 	/// </summary>
@@ -81,7 +81,7 @@ protected:
 	~Counter();
 
 public:
-	static Counter *GetCounter(sInitializeModule iInitializeModule);
+	static Counter *GetInstance(sInitializeModule iInitializeModule);
 
 	// Functions that can be called from within main loop
 

@@ -157,7 +157,7 @@ String TextCounter::FunctionNameUnknown()
 
 /////////////////////////////////////////////////////////////
 
-static Counter *gCounter = nullptr;
+static Counter *gInstance = nullptr;
 
 Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
@@ -242,10 +242,10 @@ Counter::~Counter()
 {
 }
 
-Counter *Counter::GetCounter(sInitializeModule iInitializeModule)
+Counter *Counter::GetInstance(sInitializeModule iInitializeModule)
 {
-	gCounter = (gCounter == nullptr) ? new Counter(iInitializeModule) : gCounter;
-	return gCounter;
+	gInstance = (gInstance == nullptr) ? new Counter(iInitializeModule) : gInstance;
+	return gInstance;
 }
 
 void Counter::loop()

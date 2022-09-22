@@ -7,7 +7,6 @@
 #ifndef _TextBase_h
 #define _TextBase_h
 
-//#include <Arduino.h>
 #include "Debug.h"
 #include "ProjectBase.h"
 

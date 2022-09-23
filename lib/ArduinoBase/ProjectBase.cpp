@@ -19,40 +19,6 @@
 static bool _mVerboseMode = false; // returns results of dispatcher - true: in details, false: as single letter code
 #endif
 
-// // Text definitions
-
-// /// <summary>
-// /// There is no new EEPROM address required
-// /// </summary>
-// TextProjectBase::TextProjectBase() : TextBase(-1)
-// {
-//     DebugInstantiation("New TextProjectBase");
-// }
-
-// TextProjectBase::~TextProjectBase()
-// {
-// }
-
-// String TextProjectBase::GetObjectName()
-// {
-//     switch (GetLanguage())
-//     {
-//         TextLangE("Project base class");
-//         TextLangD("Projekt Basis Klasse");
-//     }
-// }
-
-// String TextProjectBase::InconsistentParameters()
-// {
-//     switch (GetLanguage())
-//     {
-//         TextLangE("Implementation error: parameter iNumberOfSettings must be set to a value > 0");
-//         TextLangD("Implementierungsfehler: Parameter iNumberOfSettings muss größer 0 sein");
-//     }
-// }
-
-/////////////////////////////////////////////////////////////
-
 static short gI2CAddressGlobalEEPROM = -1;
 static I2C_eeprom *gI2CGlobalEEPROM = nullptr;
 static bool gGlobalEEPROMIsInitialized = false;
@@ -60,8 +26,6 @@ static bool gGlobalEEPROMIsInitialized = false;
 ProjectBase::ProjectBase(int iSettingsAddress, int iNumberOfSettings)
 {
     DebugInstantiation("New ProjectBase: iInitializeModule[SettingsAddress, NumberOfSettings]=[" + String(iSettingsAddress) + ", " + String(iNumberOfSettings) + "]");
-
-    // _mText = new TextProjectBase();
 
     // try only once to instantiate the EEPROM: with the 1st call of this constructor
     if (!gGlobalEEPROMIsInitialized)

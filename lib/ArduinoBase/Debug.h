@@ -7,27 +7,13 @@
 #ifndef _Debug_h
 #define _Debug_h
 
-//#define _DebugApplication
-
-#ifdef _DebugApplication
-#define _DebugMethodCalls
-#define _DebugInstantiation
+#ifdef DEBUG_APPLICATION
 
 #define DebugPrint(Text) Debug::GetInstance()->Print(Text)
+#define DebugMethodCalls(Text) Debug::GetInstance()->Print(Text)
+#define DebugInstantiation(Text) Debug::GetInstance()->Print(Text)
 #define DebugPrintFromTask(Text) Debug::GetInstance()->PrintFromTask(Text)
 #define DebugLoop() Debug::GetInstance()->loop()
-
-#ifdef _DebugMethodCalls
-#define DebugMethodCalls(Text) Debug::GetInstance()->Print(Text)
-#else
-#define DebugMethodCalls(Text)
-#endif
-
-#ifdef _DebugInstantiation
-#define DebugInstantiation(Text) Debug::GetInstance()->Print(Text)
-#else
-#define DebugInstantiation(Text)
-#endif
 
 #else
 
@@ -39,12 +25,8 @@
 
 #endif
 
-#define TIMER_INTERRUPT_DEBUG 0
-#define _TIMERINTERRUPT_LOGLEVEL_ 0
-
-#ifdef _DebugApplication
+#ifdef DEBUG_APPLICATION
 #include <Arduino.h>
-#include "TimerInterrupt_Generic_Debug.h"
 
 /// <summary>
 /// Enables output of text via serial interface if debugging is not simply possible on that device

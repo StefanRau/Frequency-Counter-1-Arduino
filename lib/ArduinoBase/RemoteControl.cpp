@@ -11,7 +11,7 @@
 #endif
 #include "RemoteControl.h"
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 
 // Text definitions
 

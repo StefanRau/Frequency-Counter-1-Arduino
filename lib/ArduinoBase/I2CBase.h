@@ -11,6 +11,8 @@
 #include "ProjectBase.h"
 #include "TextBase.h"
 
+#define MAX_SETTINGS 8
+
 /// <summary>
 /// Local text class of the module
 /// </summary>
@@ -35,9 +37,9 @@ class I2CBase : public ProjectBase
 public:
 	struct sInitializeModule
 	{
-		int SettingsAddress;
-		int NumberOfSettings;
-		short I2CAddress;
+		int SettingsAddress;   // EEPROM address of the setting
+		int NumberOfSettings;  // number of setting entries in EEPROM
+		short I2CAddress;	   // I2C address of connectied device
 	};
 
 private:

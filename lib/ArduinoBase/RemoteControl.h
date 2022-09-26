@@ -10,7 +10,7 @@
 #include "Debug.h"
 
 // Either debugger uses serial interface or remote control
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 #define RemoteControlInstance() RemoteControl::GetInstance()
 #define RemoteControlGetCommand() RemoteControl::GetInstance()->GetCommand()
 #define RemoteControlPrint(Text) RemoteControl::GetInstance()->Print(Text)
@@ -20,7 +20,7 @@
 #define RemoteControlPrint(Text)
 #endif
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 
 #include <Arduino.h>
 #include "TextBase.h"

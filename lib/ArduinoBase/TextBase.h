@@ -33,7 +33,7 @@ private:
 	char _mLanguage = _cDefaultLanguage;  // Current language
 	const int _cEepromIndexLanguage = 1;  // Entry used for language
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 										 // Remote commands
 	enum eFunctionCode : char
 	{
@@ -74,7 +74,7 @@ public:
 	/// <returns>Readable name</returns>
 	String GetSelectedLanguageName();
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface
 	/// </summary>

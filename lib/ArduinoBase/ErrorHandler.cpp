@@ -41,6 +41,7 @@ String TextErrorHandler::GetObjectName()
 	}
 }
 
+#ifdef EXTERNAL_EEPROM
 String TextErrorHandler::FunctionNameUnknown(char iModuleIdentifyer, char iParameter)
 {
 	switch (GetLanguage())
@@ -121,6 +122,7 @@ String TextErrorHandler::SeverityUnknown()
 		TextLangD("Unbekannt");
 	}
 }
+#endif
 
 /////////////////////////////////////////////////////////////
 
@@ -153,11 +155,12 @@ static ErrorHandler *gInstance = nullptr;
 
 ErrorHandler::ErrorHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	union uErrorEEPROMHeader lBuffer;
 
 	DebugInstantiation("New ErrorHandler: iInitializeModule[SettingsAddress, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.I2CAddress) + "]");
-
 	_mText = new TextErrorHandler();
+
+#ifdef EXTERNAL_EEPROM
+	union uErrorEEPROMHeader lBuffer;
 
 	if (GetI2CGlobalEEPROM() != nullptr)
 	{
@@ -188,6 +191,7 @@ ErrorHandler::ErrorHandler(sInitializeModule iInitializeModule) : I2CBase(iIniti
 		// Error handler works also without EEPROM but does not persist errors in a log
 		DebugPrint("EEPROM for logger can't be initialized");
 	}
+#endif
 
 	mModuleIsInitialized = true;
 }
@@ -210,9 +214,10 @@ void ErrorHandler::loop()
 	// nothing implemented => read errors via remote control
 }
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 {
+#ifdef EXTERNAL_EEPROM
 	union uErrorEEPROMHeader lErrorEepromHeader;
 	String lReturn = "";
 
@@ -235,7 +240,7 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 				lTimeStringP = lTimeString;
 
 				GetI2CGlobalEEPROM()->readBlock(_mEEPROMMemoryIterator, lErrorHeader.Buffer, sizeof(Error::sErrorHeader));
-				_mEEPROMMemoryIterator += sizeof(Error::sErrorHeader);// + ErrorHandlerStartAddress;
+				_mEEPROMMemoryIterator += sizeof(Error::sErrorHeader); // + ErrorHandlerStartAddress;
 
 				// Error count
 				lReturn = String(_mEEPROMErrorIterator);
@@ -323,11 +328,13 @@ String ErrorHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 			return _mText->FunctionNameUnknown(iModuleIdentifyer, iParameter);
 		}
 	}
+#endif
 
 	return String("");
 }
 #endif
 
+#ifdef EXTERNAL_EEPROM
 bool ErrorHandler::_I2ECheckEEPROMHeader()
 {
 	union uErrorEEPROMHeader lBuffer;
@@ -381,6 +388,7 @@ char ErrorHandler::_GetEEPROMHeaderChecksum(union uErrorEEPROMHeader iBuffer)
 
 	return lChecksum;
 }
+#endif
 
 String ErrorHandler::GetName()
 {
@@ -389,6 +397,13 @@ String ErrorHandler::GetName()
 
 void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 {
+	// write transient - no log messages
+	if (iSeverity != Error::eSeverity::TMessage)
+	{
+		_mErrorDetected = false;
+	}
+
+#ifdef EXTERNAL_EEPROM
 	union uErrorEEPROMHeader lErrorEEPROMHeader;
 	uint16_t lMessageLength = iErrorMessage.length();
 
@@ -403,12 +418,6 @@ void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 	}
 
 	Error *lError = new Error(lErrorEEPROMHeader.ErrorHeader.NumberOfErrors, iSeverity, iErrorMessage);
-
-	// write transient - no log messages
-	if (iSeverity != Error::eSeverity::TMessage)
-	{
-		_mErrorDetected = true;
-	}
 
 	// write persistent
 	if (GetI2CGlobalEEPROM() != nullptr)
@@ -457,6 +466,7 @@ void ErrorHandler::Print(Error::eSeverity iSeverity, String iErrorMessage)
 			return;
 		};
 	}
+#endif
 }
 
 bool ErrorHandler::ContainsErrors()

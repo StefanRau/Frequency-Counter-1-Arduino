@@ -200,6 +200,7 @@ void FrontPlate::loop()
 	bool lIsEventCountingPossible;
 	bool lMenuUpKeyPressed;
 	bool lMenuDownKeyPressed;
+	char lSetting;
 
 	if (!mModuleIsInitialized)
 	{
@@ -209,8 +210,13 @@ void FrontPlate::loop()
 	// switch off LEDs and show the current function on the LCD
 	if (_mTriggerLampTestOff)
 	{
-		_I2ESelectFunction((Counter::eFunctionCode)GetSetting(_cEepromIndexFunction)); // Read setting from processor internal EEPROM
-		_mLCDHandler->SetSelectedFunction(_mCounter->GetSelectedFunctionName());	   // Output at LCD
+		lSetting = GetSetting(_cEepromIndexFunction); // Read setting from processor internal EEPROM
+		if (lSetting == cNullSetting)				  // Defaulting, if EEPROM does not exist
+		{
+			lSetting = Counter::eFunctionCode::TFrequency;
+		}
+		_I2ESelectFunction((Counter::eFunctionCode)lSetting);
+		_mLCDHandler->SetSelectedFunction(_mCounter->GetSelectedFunctionName()); // Output at LCD
 		_mCurrentModuleCode = _mModuleFactory->GetSelectedModule()->GetModuleCode();
 		_mTriggerLampTestOff = false;
 		return;
@@ -353,7 +359,7 @@ void FrontPlate::loop()
 	}
 }
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 {
 	String lReturn = "";

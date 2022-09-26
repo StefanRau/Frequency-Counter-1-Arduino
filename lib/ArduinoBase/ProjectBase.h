@@ -8,9 +8,18 @@
 #define _ProjectBase_h
 
 #include <Arduino.h>
+
+#ifdef EXTERNAL_EEPROM
 #include <I2C_eeprom.h>
+#endif
+
 #ifdef ARDUINO_AVR_NANO_EVERY
 #include <EEPROM.h>
+#else
+#ifndef EXTERNAL_EEPROM
+#define NO_EEPROM
+#warning "No storage for settings"
+#endif
 #endif
 
 #include "Debug.h"
@@ -18,7 +27,7 @@
 class ProjectBase
 {
 public:
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	// Global commands for remote control
 	enum eFunctionCode : char
 	{
@@ -28,7 +37,7 @@ public:
 	};
 #endif
 
-	const unsigned char cNullSetting = ' '; // Used to signal a value that must never be stored in EEPROM
+	const unsigned char cNullSetting = 255; // There is either no setting in EEPROM or no EEPROM defined
 
 private:
 	int _mSettingAdddress = -1; // EEPROM Address of the settings of this module. Per default, the setting is inactive.
@@ -46,10 +55,11 @@ protected:
 	/// Constructor without setting
 	/// </summary>
 	ProjectBase();
-	
+
 	~ProjectBase();
 
 public:
+#ifdef EXTERNAL_EEPROM
 	/// <summary>
 	/// Sets the I2C address of the large EEPROM
 	/// </summary>
@@ -61,8 +71,9 @@ public:
 	/// </summary>
 	/// <returns>Instance of the EEPROM</returns>
 	static I2C_eeprom *GetI2CGlobalEEPROM();
+#endif
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface
 	/// </summary>
@@ -85,6 +96,7 @@ public:
 	static bool GetVerboseMode();
 
 protected:
+	//#ifndef NO_EEPROM
 	/// <summary>
 	/// Saves a setting parameter in the internal EEPROM, if the settings address is larger or equal than 0
 	/// </summary>
@@ -98,6 +110,7 @@ protected:
 	/// <param name="iNumberOfSetting">The number of the current setting.</param>
 	/// <returns>Value from EEPROM. Returns blank for settings address is smaller than 0.</returns>
 	char GetSetting(int iNumberOfSetting);
+	//#endif
 };
 
 #endif

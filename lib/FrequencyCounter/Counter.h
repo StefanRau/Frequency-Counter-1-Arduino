@@ -90,7 +90,7 @@ public:
 	/// </summary>
 	void loop() override;
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface - only a dummy implementation here
 	/// </summary>

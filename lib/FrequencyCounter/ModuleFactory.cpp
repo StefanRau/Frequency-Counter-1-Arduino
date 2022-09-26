@@ -54,7 +54,6 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 	DebugInstantiation("New ModuleFactory: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	sInitializeModule lInitializeModule = iInitializeModule;
-	lInitializeModule.NumberOfSettings = 2;
 
 	_mText = new TextModuleFactory();
 
@@ -64,17 +63,17 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 
 	// 100 MHz analog
 	lInitializeModule.I2CAddress += 1;
-	lInitializeModule.SettingsAddress += 2;
+	lInitializeModule.SettingsAddress += iInitializeModule.NumberOfSettings;
 	_mModuleAnalog = new ModuleAnalog(lInitializeModule);
 
 	// 10GHz
 	lInitializeModule.I2CAddress += 1;
-	lInitializeModule.SettingsAddress += 2;
+	lInitializeModule.SettingsAddress += iInitializeModule.NumberOfSettings;
 	_mModuleHF = new ModuleHF(lInitializeModule);
 
 	// Dummy module
 	lInitializeModule.I2CAddress = -1;
-	lInitializeModule.SettingsAddress += 2;
+	lInitializeModule.SettingsAddress += iInitializeModule.NumberOfSettings;
 	_mModuleNone = new ModuleNone(lInitializeModule);
 
 	if (_mModuleTTLCMOS->IsModuleInitialized())
@@ -158,7 +157,7 @@ void ModuleFactory::loop()
 	}
 }
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 String ModuleFactory::Dispatch(char iModuleIdentifyer, char iParameter)
 {
 	String lReturn = "";

@@ -89,7 +89,7 @@ public:
 	/// <returns>Gets the current name depending on current language</returns>
 	String GetName() override;
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface - only a dummy implementation here
 	/// </summary>

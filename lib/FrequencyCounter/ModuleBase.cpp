@@ -40,12 +40,16 @@ String TextModuleBase::GetObjectName()
 
 ModuleBase::ModuleBase(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-    DebugInstantiation("New ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("New ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleBase();
 
 	mI2EModule = new Adafruit_MCP23X17();
 	mCurrentMenuEntryNumber = GetSetting(_cEepromIndexMenu);
+	if (mCurrentMenuEntryNumber == cNullSetting)
+	{
+		mCurrentMenuEntryNumber = 0;
+	}
 }
 
 ModuleBase::~ModuleBase()
@@ -56,7 +60,7 @@ void ModuleBase::loop()
 {
 }
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 String ModuleBase::Dispatch(char iModuleIdentifyer, char iParameter)
 {
 	return String("");
@@ -82,7 +86,7 @@ void ModuleBase::I2EScrollFunctionUp()
 	if (mCurrentMenuEntryNumber < (mLastMenuEntryNumber - 1))
 	{
 		mCurrentMenuEntryNumber += 1;
-		SetSetting(_cEepromIndexMenu,mCurrentMenuEntryNumber);
+		SetSetting(_cEepromIndexMenu, mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -92,7 +96,7 @@ void ModuleBase::I2EScrollFunctionDown()
 	if (mCurrentMenuEntryNumber > 0)
 	{
 		mCurrentMenuEntryNumber -= 1;
-		SetSetting(_cEepromIndexMenu,mCurrentMenuEntryNumber);
+		SetSetting(_cEepromIndexMenu, mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -117,7 +121,7 @@ void ModuleBase::I2ESetCurrentMenuEntryNumber(int iCurrentMenuEntryNumber)
 	// Something changed?
 	if (lCurrentMenuEntryNumber != mCurrentMenuEntryNumber)
 	{
-		SetSetting(_cEepromIndexMenu,mCurrentMenuEntryNumber);
+		SetSetting(_cEepromIndexMenu, mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -197,7 +201,7 @@ bool ModuleBase::I2EInitialize()
 		return false;
 	}
 	DebugPrint(GetName() + " is initialized at address: " + String(mI2CAddress));
-	//mI2EModule->enableAddrPins();
+	// mI2EModule->enableAddrPins();
 
 	// set common I/O
 	mI2EModule->pinMode(_cOSelectionFrequency, OUTPUT);
@@ -224,7 +228,7 @@ int ModuleBase::GetLastMenuEntryNumber()
 	return mLastMenuEntryNumber;
 }
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 String ModuleBase::GetAllMenuEntryItems()
 {
 	String lReturn = "";

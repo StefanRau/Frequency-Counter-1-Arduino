@@ -74,7 +74,9 @@ void setup()
 	Wire.begin();
 	delay(10);
 
+#ifdef EXTERNAL_EEPROM
 	ProjectBase::SetI2CAddressGlobalEEPROM(mInitializeSystem.EEPROM.I2CAddress);
+#endif
 	mText = new TextMain(mInitializeSystem.Text.SettingsAddress);
 
 	DebugPrint("Start Setup");
@@ -95,27 +97,27 @@ void setup()
 	pinMode(cOResetFF, OUTPUT);
 
 	// LCD
-	if (!ErrorHandler::GetInstance()->ContainsErrors())
+	if (!ErrorDetected())
 	{
 		mLCDHandler = LCDHandler::GetInstance(mInitializeSystem.LCDHandler);
 	}
 
 	// Reset input modules and start lamp test
-	if (!ErrorHandler::GetInstance()->ContainsErrors())
+	if (!ErrorDetected())
 	{
 		mModuleFactory = ModuleFactory::GetInstance(mInitializeSystem.ModuleFactory);
 		mModuleFactory->I2ELampTestOn();
 	}
 
 	// Initialize main counter
-	if (!ErrorHandler::GetInstance()->ContainsErrors())
+	if (!ErrorDetected())
 	{
 		mCounter = Counter::GetInstance(mInitializeSystem.Counter);
 		mCounter->I2ESetFunctionCode(Counter::eFunctionCode::TFrequency);
 	}
 
 	// Initialize front plate
-	if (!ErrorHandler::GetInstance()->ContainsErrors())
+	if (!ErrorDetected())
 	{
 		// Reset selection and start
 		mFrontPlate = FrontPlate::GetInstance(mInitializeSystem.FrontPlate, mLCDHandler, mModuleFactory, mCounter);
@@ -125,7 +127,7 @@ void setup()
 	DebugPrint("Initialize tasks");
 
 	// Task for lamp test end
-	mLampTestTime = Task::GetNewTask(Task::TOneTime, 30, TaskLampTestEnd);
+	mLampTestTime = Task::GetNewTask(Task::TOneTime, 20, TaskLampTestEnd);
 
 	// Task timer for switching off the menue in LCD
 	mMenuSwitchOfTime = Task::GetNewTask(Task::TTriggerOneTime, 20, TaskMenuSwitchOff);
@@ -144,13 +146,13 @@ void setup()
 	RestartPulsDetection();
 
 	// Initialize remote control
-	if (!ErrorHandler::GetInstance()->ContainsErrors())
+	if (!ErrorDetected())
 	{
 		RemoteControlInstance();
 	}
 
 	// Output potential errors
-	if (ErrorHandler::GetInstance()->ContainsErrors())
+	if (ErrorDetected())
 	{
 		if (mLCDHandler != nullptr)
 		{
@@ -184,7 +186,7 @@ void loop()
 		return;
 	}
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	// dispatch the different modules
 	lCommand = RemoteControlGetCommand();
 	if (lCommand != "")
@@ -245,6 +247,7 @@ void loop()
 				break;
 			}
 
+#ifdef EXTERNAL_EEPROM
 			if (lReturn == "")
 			{
 				// Manage error handling
@@ -255,6 +258,7 @@ void loop()
 				// lParameter = 'S' : Read log size
 				lReturn = ErrorHandler::GetInstance()->Dispatch(lModule, lParameter);
 			}
+#endif
 
 			if (lReturn == "")
 			{

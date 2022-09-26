@@ -15,18 +15,21 @@
 
 #include "ProjectBase.h"
 
-#ifndef _DebugApplication
-static bool _mVerboseMode = false; // returns results of dispatcher - true: in details, false: as single letter code
+#ifndef DEBUG_APPLICATION
+static bool _gVerboseMode = false; // returns results of dispatcher - true: in details, false: as single letter code
 #endif
 
+#ifdef EXTERNAL_EEPROM
 static short gI2CAddressGlobalEEPROM = -1;
 static I2C_eeprom *gI2CGlobalEEPROM = nullptr;
 static bool gGlobalEEPROMIsInitialized = false;
+#endif
 
 ProjectBase::ProjectBase(int iSettingsAddress, int iNumberOfSettings)
 {
     DebugInstantiation("New ProjectBase: iInitializeModule[SettingsAddress, NumberOfSettings]=[" + String(iSettingsAddress) + ", " + String(iNumberOfSettings) + "]");
 
+#ifdef EXTERNAL_EEPROM
     // try only once to instantiate the EEPROM: with the 1st call of this constructor
     if (!gGlobalEEPROMIsInitialized)
     {
@@ -59,6 +62,7 @@ ProjectBase::ProjectBase(int iSettingsAddress, int iNumberOfSettings)
 
         gGlobalEEPROMIsInitialized = true;
     }
+#endif
 
     // Stores settings address of the object only if address is valid
     if (iSettingsAddress >= 0)
@@ -87,6 +91,7 @@ ProjectBase::~ProjectBase()
 {
 }
 
+#ifdef EXTERNAL_EEPROM
 void ProjectBase::SetI2CAddressGlobalEEPROM(short iI2CAddress)
 {
     gI2CAddressGlobalEEPROM = iI2CAddress;
@@ -96,54 +101,66 @@ I2C_eeprom *ProjectBase::GetI2CGlobalEEPROM()
 {
     return gI2CGlobalEEPROM;
 }
+#endif
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 void ProjectBase::SetVerboseMode(bool iVerboseMode)
 {
-    _mVerboseMode = iVerboseMode;
+    _gVerboseMode = iVerboseMode;
 }
 
 bool ProjectBase::GetVerboseMode()
 {
-    return _mVerboseMode;
+    return _gVerboseMode;
 }
 #endif
 
-void ProjectBase::SetSetting(int iNumberOfSetting, char iValue)
+//#ifndef NO_EEPROM
+void ProjectBase::SetSetting(int iSettingNumber, char iValue)
 {
+#ifndef NO_EEPROM
     // Settings address and value must be valid
-    if ((_mSettingAdddress >= 0) && (iNumberOfSetting > 0) && (iNumberOfSetting <= _mNumberOfSettings) && (iValue != cNullSetting))
+    if ((_mSettingAdddress >= 0) && (iSettingNumber > 0) && (iSettingNumber <= _mNumberOfSettings) && (iValue != cNullSetting))
     {
 #ifdef ARDUINO_AVR_NANO_EVERY
-        EEPROM.update(_mSettingAdddress + iNumberOfSetting - 1, iValue);
+        EEPROM.update(_mSettingAdddress + iSettingNumber - 1, iValue);
 #endif
+#ifdef EXTERNAL_EEPROM
 #if defined(ARDUINO_SAMD_NANO_33_IOT) or defined(ARDUINO_ARDUINO_NANO33BLE)
         if (gI2CGlobalEEPROM != nullptr)
         {
-            gI2CGlobalEEPROM->updateByte(_mSettingAdddress + iNumberOfSetting - 1, iValue);
+            gI2CGlobalEEPROM->updateByte(_mSettingAdddress + iSettingNumber - 1, iValue);
         }
+#endif
 #endif
     }
     DebugPrint("Set Setting: " + String(_mSettingAdddress) + ", " + String(iValue));
+#endif
 }
 
-char ProjectBase::GetSetting(int iNumberOfSetting)
+char ProjectBase::GetSetting(int iSettingNumber)
 {
     char lSetting = cNullSetting;
 
-    if ((_mSettingAdddress >= 0) && (iNumberOfSetting > 0) && (iNumberOfSetting <= _mNumberOfSettings))
+#ifndef NO_EEPROM
+    if ((_mSettingAdddress >= 0) && (iSettingNumber > 0) && (iSettingNumber <= _mNumberOfSettings))
     {
 #ifdef ARDUINO_AVR_NANO_EVERY
-        lSetting = EEPROM.read(_mSettingAdddress + iNumberOfSetting - 1);
+        lSetting = EEPROM.read(_mSettingAdddress + iSettingNumber - 1);
 #endif
+#ifdef EXTERNAL_EEPROM
 #if defined(ARDUINO_SAMD_NANO_33_IOT) or defined(ARDUINO_ARDUINO_NANO33BLE)
         if (gI2CGlobalEEPROM != nullptr)
         {
-            lSetting = gI2CGlobalEEPROM->readByte(_mSettingAdddress + iNumberOfSetting - 1);
+            lSetting = gI2CGlobalEEPROM->readByte(_mSettingAdddress + iSettingNumber - 1);
         }
+#endif
 #endif
     }
 
     DebugPrint("Get Setting: " + String(_mSettingAdddress) + ", " + String(lSetting));
+
+#endif
+
     return lSetting;
 }

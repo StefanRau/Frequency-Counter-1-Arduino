@@ -193,7 +193,7 @@ String LCDHandler::GetName()
     return _mText->GetObjectName();
 }
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 String LCDHandler::Dispatch(char iModuleIdentifyer, char iParameter)
 {
     return String("");

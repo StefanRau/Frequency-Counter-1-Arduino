@@ -23,6 +23,7 @@ public:
 	~TextErrorHandler();
 
 	String GetObjectName() override;
+#ifdef EXTERNAL_EEPROM
 	String FunctionNameUnknown(char iModuleIdentifyer, char iParameter);
 	String FormatDone();
 	String FormatFailed();
@@ -32,6 +33,7 @@ public:
 	String SeverityError();
 	String SeverityFatal();
 	String SeverityUnknown();
+#endif
 };
 
 /////////////////////////////////////////////////////////////
@@ -93,6 +95,7 @@ public:
 };
 
 #define ErrorPrint(iSeverity, iErrorMessage) ErrorHandler::GetInstance()->Print(iSeverity, iErrorMessage)
+#define ErrorDetected() ErrorHandler::GetInstance()->ContainsErrors()
 
 #ifdef ARDUINO_AVR_NANO_EVERY
 #define ErrorHandlerStartAddress 0x000 // nano uses internal EEPROM for settings
@@ -125,7 +128,7 @@ private:
 	int _mEEPROMErrorIterator = 0;														// number of next error log item
 	bool _mErrorDetected = false;														// signals that an error was detected
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	// Commands for remote control
 	enum eFunctionCode : char
 	{
@@ -152,7 +155,7 @@ public:
 	/// </summary>
 	void loop() override;
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface - only a dummy implementation here
 	/// </summary>
@@ -163,6 +166,7 @@ public:
 #endif
 
 private:
+#ifdef EXTERNAL_EEPROM
 	/// <summary>
 	/// Checks the header of the logger EEPROM
 	/// </summary>
@@ -183,6 +187,7 @@ private:
 	/// </summary>
 	/// <returns>checksum value</returns>
 	char _GetEEPROMHeaderChecksum(union uErrorEEPROMHeader iBuffer);
+#endif
 
 public:
 	/// <summary>

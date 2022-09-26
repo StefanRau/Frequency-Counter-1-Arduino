@@ -22,10 +22,6 @@
 #define USE_TIMER_3 false
 #endif
 
-#define TIMER_INTERRUPT_DEBUG 0
-#define _TIMERINTERRUPT_LOGLEVEL_ 0
-#define LOCAL_DEBUG 0
-
 #include <TimerInterrupt_Generic.h>
 
 #ifdef ARDUINO_AVR_NANO_EVERY

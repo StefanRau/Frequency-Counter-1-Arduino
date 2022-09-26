@@ -78,7 +78,7 @@ private:
 	const uint8_t _cB6Unassigned = 14;
 	const uint8_t _cB7Unassigned = 15;
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	// Remote commands
 	enum eFunctionCode : char
 	{
@@ -122,7 +122,7 @@ public:
 	/// </summary>
 	void loop() override;
 
-#ifndef _DebugApplication
+#ifndef DEBUG_APPLICATION
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface - only a dummy implementation here
 	/// </summary>

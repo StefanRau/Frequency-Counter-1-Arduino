@@ -6,6 +6,7 @@
 // 14.01.2022: using macros from timer interrupts for writing debugger output - Stefan Rau
 // 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 // 23.09.2022: Get rid of TimerInterrupt_Generic_Debug - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "Debug.h"
 

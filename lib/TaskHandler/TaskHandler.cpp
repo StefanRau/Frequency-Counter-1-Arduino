@@ -8,6 +8,7 @@
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 08.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
 // 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "TaskHandler.h"
 #include <Arduino.h>

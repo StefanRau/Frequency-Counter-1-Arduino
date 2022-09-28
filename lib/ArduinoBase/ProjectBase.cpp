@@ -11,7 +11,9 @@
 // 16.03.2022: ARDUINO_NANO_RP2040_CONNECT removed - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 09.08.2022: Switch to ARDUINO NANO IOT due to memory issues - Stefan Rau
-// 09.08.2022: add ARDUINO NANO 33 BLE
+// 09.08.2022: add ARDUINO NANO 33 BLE - Stefan Rau
+// 26.09.2022: EXTERNAL_EEPROM defined in platform.ini - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "ProjectBase.h"
 

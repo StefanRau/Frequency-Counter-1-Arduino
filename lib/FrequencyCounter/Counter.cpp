@@ -10,6 +10,7 @@
 // 13.06.2022: Use constants for bits 12 - 15 of 2nd input expander and other renamings - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 06.09.2022: Singleton instantiation - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "ErrorHandler.h"
 #include "Counter.h"

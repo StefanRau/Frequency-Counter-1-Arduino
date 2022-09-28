@@ -5,6 +5,7 @@
 // 18.10.2021: 1st version - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #ifdef ARDUINO_AVR_NANO_EVERY
 #include <SoftwareSerial.h>

@@ -14,6 +14,7 @@
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 06.09.2022: Singleton instantiation - Stefan Rau
 // 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "FrontPlate.h"
 #include "ErrorHandler.h"

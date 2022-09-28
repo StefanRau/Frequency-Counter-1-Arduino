@@ -5,6 +5,7 @@
 // 18.10.2021: 1st version - Stefan Rau
 // 21.10.2021: Dispatcher has now chars as input - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "TextBase.h"
 

@@ -10,6 +10,7 @@
 // 17.11.2021: LED of module did not work => fixed - Stefan Rau
 // 21.03.2022: Event counting added - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "ModuleBase.h"
 

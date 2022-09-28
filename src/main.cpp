@@ -18,6 +18,8 @@
 // 29.03.2022: Get name of device - Stefan Rau
 // 24.08.2022: Trigger reading of event counter in sync to display refresh - Stefan Rau
 // 07.09.2022: Transient error log removed - Stefan Rau
+// 26.09.2022: EXTERNAL_EEPROM defined in platform.ini - Stefan Rau
+// 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 
 #include "main.h"
 

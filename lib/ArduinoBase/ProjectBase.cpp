@@ -117,7 +117,6 @@ bool ProjectBase::GetVerboseMode()
 }
 #endif
 
-//#ifndef NO_EEPROM
 void ProjectBase::SetSetting(int iSettingNumber, char iValue)
 {
 #ifndef NO_EEPROM

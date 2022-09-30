@@ -32,7 +32,9 @@ public:
 	~TextMain();
 
 	String GetObjectName() override;
+#ifndef DEBUG_APPLICATION
 	String FreeMemory(int iFreeMemory);
+#endif
 	String ErrorInSetup();
 	String ErrorInLoop();
 };
@@ -55,14 +57,14 @@ extern "C"
 	const uint8_t cIDone = 6;
 	// Input 0.5Hz counter
 	const uint8_t cI0_5Hz = 7;
+	// Reset counter input driver
+	const uint8_t cOResetFF = 10;
+	// Reset counter
+	const uint8_t cOResetCounter = 11;
 	// Reset period detection
 	const uint8_t cONotResetPeriod = 12;
 	// Reset 0.5Hz counter
 	const uint8_t cOReset0_5Hz = 13;
-	// Reset counter
-	const uint8_t cOResetCounter = 11;
-	// Reset counter input driver
-	const uint8_t cOResetFF = 10;
 
 	struct sInitializeSystem
 	{

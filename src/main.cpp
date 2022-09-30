@@ -41,6 +41,7 @@ String TextMain::GetObjectName()
 	return "Main";
 }
 
+#ifndef DEBUG_APPLICATION
 String TextMain::FreeMemory(int iFreeMemory)
 {
 	switch (GetLanguage())
@@ -49,6 +50,7 @@ String TextMain::FreeMemory(int iFreeMemory)
 		TextLangD("Freier Speicher: " + String(iFreeMemory) + " Byte");
 	}
 }
+#endif
 
 String TextMain::ErrorInSetup()
 {

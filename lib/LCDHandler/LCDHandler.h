@@ -11,7 +11,6 @@
 #include <hd44780.h>					   // main hd44780 header; use this library because others have issues
 #include <hd44780ioClass/hd44780_I2Cexp.h> // i2c expander i/o class header
 #include "I2CBase.h"
-//#include "Debug.h"
 #include "TextBase.h"
 
 /// <summary>

@@ -96,7 +96,6 @@ public:
 	static bool GetVerboseMode();
 
 protected:
-	//#ifndef NO_EEPROM
 	/// <summary>
 	/// Saves a setting parameter in the internal EEPROM, if the settings address is larger or equal than 0
 	/// </summary>
@@ -110,7 +109,6 @@ protected:
 	/// <param name="iNumberOfSetting">The number of the current setting.</param>
 	/// <returns>Value from EEPROM. Returns blank for settings address is smaller than 0.</returns>
 	char GetSetting(int iNumberOfSetting);
-	//#endif
 };
 
 #endif

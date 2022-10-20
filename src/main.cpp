@@ -149,11 +149,13 @@ void setup()
 	RestartGateTimer();
 	RestartPulsDetection();
 
+#ifndef DEBUG_APPLICATION
 	// Initialize remote control
 	if (!ErrorDetected())
 	{
-		RemoteControlInstance();
+		mRemoteControl = RemoteControl::GetInstance(mRemoteControlBuffer, 80);
 	}
+#endif
 
 	// Output potential errors
 	if (ErrorDetected())
@@ -192,7 +194,8 @@ void loop()
 
 #ifndef DEBUG_APPLICATION
 	// dispatch the different modules
-	lCommand = RemoteControlGetCommand();
+	mRemoteControl->Read();
+	lCommand = String(mRemoteControlBuffer);
 	if (lCommand != "")
 	{
 		int lSeparatorIndex;

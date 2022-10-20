@@ -82,6 +82,12 @@ extern "C"
 	bool mEventCountingInitialized; // Event counting shall be initialized only once after selected
 	long mFreeMemory;
 	bool mReadEventCounter;
+	
+	#ifndef DEBUG_APPLICATION
+	RemoteControl *mRemoteControl = nullptr;
+	#define RemoteControlBufferSize 80
+	char mRemoteControlBuffer[RemoteControlBufferSize];
+	#endif
 
 	// Module
 	Counter *mCounter = nullptr;

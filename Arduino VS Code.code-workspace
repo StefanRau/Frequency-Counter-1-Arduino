@@ -1,5 +1,9 @@
 {
-	"folders": [],
+	"folders": [
+		{
+			"path": "../../../Alarmanlage/AlarmMaster"
+		}
+	],
 	"settings": {
 		"files.associations": {
 			"chrono": "cpp",

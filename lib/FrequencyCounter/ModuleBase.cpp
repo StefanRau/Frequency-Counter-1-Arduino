@@ -70,13 +70,13 @@ String ModuleBase::Dispatch(char iModuleIdentifyer, char iParameter)
 
 void ModuleBase::I2EActivate()
 {
-	DebugPrint("Switch on module: " + GetName());
+	DebugPrintLn("Switch on module: " + GetName());
 	I2ESwitchLamp(true);
 }
 
 void ModuleBase::I2EDeactivate()
 {
-	DebugPrint("Switch off module: " + GetName());
+	DebugPrintLn("Switch off module: " + GetName());
 	mI2EModule->digitalWrite(_cOSelectionFrequency, LOW);
 	mI2EModule->digitalWrite(_cOSelectionPeriod, LOW);
 	I2ESwitchLamp(false);
@@ -169,7 +169,7 @@ void ModuleBase::I2ESelectFrequencyCounter()
 		return;
 	}
 
-	DebugPrint("Switch on frequency measurement for: " + GetName());
+	DebugPrintLn("Switch on frequency measurement for: " + GetName());
 	mI2EModule->digitalWrite(_cOSelectionFrequency, HIGH);
 	mI2EModule->digitalWrite(_cOSelectionPeriod, LOW);
 }
@@ -181,7 +181,7 @@ void ModuleBase::I2ESelectPeriodMeasurement()
 		return;
 	}
 
-	DebugPrint("Switch on period measurement for: " + GetName());
+	DebugPrintLn("Switch on period measurement for: " + GetName());
 	mI2EModule->digitalWrite(_cOSelectionFrequency, LOW);
 	mI2EModule->digitalWrite(_cOSelectionPeriod, HIGH);
 }
@@ -192,16 +192,16 @@ bool ModuleBase::I2EInitialize()
 
 	if (mI2CAddress < 0)
 	{
-		DebugPrint(GetName() + " I2C address is not defined");
+		DebugPrintLn(GetName() + " I2C address is not defined");
 		return false;
 	}
 
 	if (!mI2EModule->begin_I2C(mI2CAddress, &Wire))
 	{
-		DebugPrint(GetName() + " is not initialized");
+		DebugPrintLn(GetName() + " is not initialized");
 		return false;
 	}
-	DebugPrint(GetName() + " is initialized at address: " + String(mI2CAddress));
+	DebugPrintLn(GetName() + " is initialized at address: " + String(mI2CAddress));
 	// mI2EModule->enableAddrPins();
 
 	// set common I/O

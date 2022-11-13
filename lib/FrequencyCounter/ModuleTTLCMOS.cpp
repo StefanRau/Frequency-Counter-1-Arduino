@@ -96,14 +96,14 @@ ModuleTTLCMOS::~ModuleTTLCMOS()
 
 void ModuleTTLCMOS::I2EActivate()
 {
-	DebugPrint("Switch on derived: " + GetName());
+	DebugPrintLn("Switch on derived: " + GetName());
 	ModuleBase::I2EActivate();
 	I2ESelectFunction();
 }
 
 void ModuleTTLCMOS::I2EDeactivate()
 {
-	DebugPrint("Switch off derived: " + GetName());
+	DebugPrintLn("Switch off derived: " + GetName());
 	ModuleBase::I2EDeactivate();
 
 	// Switch off all relais for input selection
@@ -131,7 +131,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 	{
 	case 0:
 		// TTL Eingang
-		DebugPrint("TTL input");
+		DebugPrintLn("TTL input");
 		mI2EModule->digitalWrite(_cOInputSelection0, LOW);
 		mI2EModule->digitalWrite(_cOInputSelection1, LOW);
 		mI2EModule->digitalWrite(_cOSelectTTL, HIGH); // Relais
@@ -139,7 +139,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 	case 1:
 		// CMOS Eingang
-		DebugPrint("CMOS input");
+		DebugPrintLn("CMOS input");
 		mI2EModule->digitalWrite(_cOInputSelection0, HIGH);
 		mI2EModule->digitalWrite(_cOInputSelection1, LOW);
 		mI2EModule->digitalWrite(_cOSelectCMOS, HIGH); // Relais
@@ -147,7 +147,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 	case 2:
 		// Open Emitter Eingang
-		DebugPrint("Open emitter input");
+		DebugPrintLn("Open emitter input");
 		mI2EModule->digitalWrite(_cOInputSelection0, LOW);
 		mI2EModule->digitalWrite(_cOInputSelection1, HIGH);
 		mI2EModule->digitalWrite(_cOSelectOpenEmitter, HIGH); // Relais
@@ -155,7 +155,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 	case 3:
 		// Open Kollektor Eingang
-		DebugPrint("Open collector input");
+		DebugPrintLn("Open collector input");
 		mI2EModule->digitalWrite(_cOInputSelection0, HIGH);
 		mI2EModule->digitalWrite(_cOInputSelection1, HIGH);
 		mI2EModule->digitalWrite(_cOSelectOpenCollector, HIGH); // Relais

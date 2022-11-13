@@ -66,7 +66,7 @@ ModuleNone::ModuleNone(sInitializeModule iInitializeModule) : ModuleBase(iInitia
 	_mText = new TextModuleNone();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
 
-	DebugPrint(GetName() + " module is initialized");
+	DebugPrintLn(GetName() + " module is initialized");
 	mModuleIsInitialized = true;
 }
 

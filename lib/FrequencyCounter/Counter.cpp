@@ -172,7 +172,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 
 	if (lI2CAddress < 0)
 	{
-		DebugPrint("Counter I2C address is not defined");
+		DebugPrintLn("Counter I2C address is not defined");
 		return;
 	}
 
@@ -181,10 +181,10 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	if (!_mI2LowerWord->begin_I2C(lI2CAddress, &Wire))
 	{
 		ErrorPrint(Error::eSeverity::TFatal, _mText->InitError("lower word"));
-		DebugPrint("Counter IC for lower word can't be initialized");
+		DebugPrintLn("Counter IC for lower word can't be initialized");
 		return;
 	}
-	DebugPrint("Counter IC for lower word is initialized at address: " + String(lI2CAddress));
+	DebugPrintLn("Counter IC for lower word is initialized at address: " + String(lI2CAddress));
 	//_mI2LowerWord->enableAddrPins();
 	lI2CAddress += 1;
 
@@ -193,10 +193,10 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	if (!_mI2UpperWord->begin_I2C(lI2CAddress, &Wire))
 	{
 		ErrorPrint(Error::eSeverity::TFatal, _mText->InitError("upper word"));
-		DebugPrint("Counter IC for upper word can't be initialized");
+		DebugPrintLn("Counter IC for upper word can't be initialized");
 		return;
 	}
-	DebugPrint("Counter IC for upper word is initialized at address: " + String(lI2CAddress));
+	DebugPrintLn("Counter IC for upper word is initialized at address: " + String(lI2CAddress));
 	//_mI2UpperWord->enableAddrPins();
 
 	_mI2LowerWord->pinMode(0, INPUT);
@@ -324,14 +324,14 @@ String Counter::I2EGetCounterValue()
 		lResultString = _mText->Overflow();
 	}
 
-	// DebugPrint("Counter value: " + lResultString);
+	// DebugPrintLn("Counter value: " + lResultString);
 	return lResultString;
 }
 
 void Counter::I2ESetFunctionCode(eFunctionCode iFunctionCode)
 {
 
-	DebugPrint("Counter::I2ESetFunctionCode:" + String(iFunctionCode));
+	DebugPrintLn("Counter::I2ESetFunctionCode:" + String(iFunctionCode));
 
 	if (!mModuleIsInitialized)
 	{

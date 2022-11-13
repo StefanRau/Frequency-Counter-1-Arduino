@@ -101,7 +101,7 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 	}
 
 	_mSelectedModule->I2ESelectFunction();
-	DebugPrint("Module factory is initialized");
+	DebugPrintLn("Module factory is initialized");
 }
 
 ModuleFactory ::~ModuleFactory()
@@ -122,7 +122,7 @@ void ModuleFactory::loop()
 	{
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleTTLCMOS)
 		{
-			DebugPrint("\nModule TTL/CMOS key pressed");
+			DebugPrintLn("\nModule TTL/CMOS key pressed");
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleTTLCMOS);
 			delay(100);
 		}
@@ -132,7 +132,7 @@ void ModuleFactory::loop()
 	{
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleAnalog)
 		{
-			DebugPrint("\nModule Analog key pressed");
+			DebugPrintLn("\nModule Analog key pressed");
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleAnalog);
 			delay(100);
 		}
@@ -142,7 +142,7 @@ void ModuleFactory::loop()
 	{
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleHF)
 		{
-			DebugPrint("\nModule HF key pressed");
+			DebugPrintLn("\nModule HF key pressed");
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleHF);
 			delay(100);
 		}

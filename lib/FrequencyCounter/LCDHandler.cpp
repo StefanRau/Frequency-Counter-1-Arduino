@@ -97,12 +97,12 @@ LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 
     if (_mI2ELCD->begin(16, 2) != 0)
     {
-        DebugPrint("LCD can't be initialized");
+        DebugPrintLn("LCD can't be initialized");
         ErrorPrint(Error::eSeverity::TFatal, _mText->InitError());
         return;
     }
 
-    DebugPrint("LCD is initialized at address: " + String(mI2CAddress));
+    DebugPrintLn("LCD is initialized at address: " + String(mI2CAddress));
 
     _mI2ELCD->noCursor();
     _mI2ELCD->noBlink();

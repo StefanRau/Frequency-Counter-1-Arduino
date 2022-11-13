@@ -105,7 +105,7 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	if (iLCDHandler == nullptr)
 	{
 		ErrorPrint(Error::eSeverity::TFatal, _mText->InitErrorLCDRequired());
-		DebugPrint("Front Plate: LCD is required");
+		DebugPrintLn("Front Plate: LCD is required");
 		return;
 	}
 	_mLCDHandler = iLCDHandler;
@@ -113,7 +113,7 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	if (iCounter == nullptr)
 	{
 		ErrorPrint(Error::eSeverity::TFatal, _mText->InitErrorCounterRequired());
-		DebugPrint("Front Plate: Counter is required");
+		DebugPrintLn("Front Plate: Counter is required");
 		return;
 	}
 	_mCounter = iCounter;
@@ -121,14 +121,14 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	if (iModuleFactory == nullptr)
 	{
 		ErrorPrint(Error::eSeverity::TFatal, _mText->InitErrorModuleFactoryRequired());
-		DebugPrint("Front Plate: ModuleFactory is required");
+		DebugPrintLn("Front Plate: ModuleFactory is required");
 		return;
 	}
 	_mModuleFactory = iModuleFactory;
 
 	if (mI2CAddress < 0)
 	{
-		DebugPrint("Front Plate I2C address not defined");
+		DebugPrintLn("Front Plate I2C address not defined");
 		return;
 	}
 
@@ -136,10 +136,10 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	if (!_mI2EModule->begin_I2C(mI2CAddress, &Wire))
 	{
 		ErrorPrint(Error::eSeverity::TWarning, _mText->InitError());
-		DebugPrint("Front Plate can't be initialized");
+		DebugPrintLn("Front Plate can't be initialized");
 		return;
 	}
-	DebugPrint("Front Plate is initialized at address: " + String(mI2CAddress));
+	DebugPrintLn("Front Plate is initialized at address: " + String(mI2CAddress));
 	//	_mI2EModule->enableAddrPins();
 
 	// Key frequency measurement
@@ -227,10 +227,10 @@ void FrontPlate::loop()
 	// e.g. HF module does not support periode measurement
 	if (_mCurrentModuleCode != _mModuleFactory->GetSelectedModule()->GetModuleCode())
 	{
-		DebugPrint("Old Function code:" + String(_mCurrentModuleCode));
+		DebugPrintLn("Old Function code:" + String(_mCurrentModuleCode));
 		_I2ESelectFunction(Counter::eFunctionCode::TFrequency);
 		_mCurrentModuleCode = _mModuleFactory->GetSelectedModule()->GetModuleCode();
-		DebugPrint("New Function code:" + String(_mCurrentModuleCode));
+		DebugPrintLn("New Function code:" + String(_mCurrentModuleCode));
 		return;
 	}
 
@@ -246,7 +246,7 @@ void FrontPlate::loop()
 		if (lFunctionKeyFrequencyPressed && lFunctionKeyPositivePressed && lFunctionKeyNegativePressed && lFunctionKeyEdgePositivePressed && lFunctionKeyEdgeNegativePressed)
 		{
 			// Crash of MCP23X17 detected
-			// DebugPrint("\nCrash");
+			// DebugPrintLn("\nCrash");
 			return;
 		}
 
@@ -257,7 +257,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TFrequency)
 			{
-				DebugPrint("\nFrequency selected");
+				DebugPrintLn("\nFrequency selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TFrequency);
 				delay(100);
 			}
@@ -267,7 +267,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TPositive)
 			{
-				DebugPrint("\nLevel positive selected");
+				DebugPrintLn("\nLevel positive selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TPositive);
 				delay(100);
 			}
@@ -277,7 +277,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TNegative)
 			{
-				DebugPrint("\nLevel negative selected");
+				DebugPrintLn("\nLevel negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TNegative);
 				delay(100);
 			}
@@ -287,7 +287,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgePositive)
 			{
-				DebugPrint("\nEdge negative selected");
+				DebugPrintLn("\nEdge negative selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgePositive);
 				delay(100);
 			}
@@ -297,7 +297,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgeNegative)
 			{
-				DebugPrint("\nEdge positive selected");
+				DebugPrintLn("\nEdge positive selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEdgeNegative);
 				delay(100);
 			}
@@ -307,7 +307,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEventCounting)
 			{
-				DebugPrint("\nEvent counting selected");
+				DebugPrintLn("\nEvent counting selected");
 				_I2ESelectFunction(Counter::eFunctionCode::TEventCounting);
 				delay(500);
 			}
@@ -331,7 +331,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyUp)
 			{
-				DebugPrint("\nMenu up");
+				DebugPrintLn("\nMenu up");
 				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionUp();
 				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyUp;
 				_mChangeMenuDecected = true;
@@ -344,7 +344,7 @@ void FrontPlate::loop()
 		{
 			if (_mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyDown)
 			{
-				DebugPrint("\nMenu down");
+				DebugPrintLn("\nMenu down");
 				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionDown();
 				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyDown;
 				_mChangeMenuDecected = true;
@@ -466,7 +466,7 @@ String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
 
 void FrontPlate::_I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
 {
-	DebugPrint("FrontPlate::_I2ESelectFunction:" + String(iFunctionCode));
+	DebugPrintLn("FrontPlate::_I2ESelectFunction:" + String(iFunctionCode));
 
 	_I2ESwitchLEDs(LOW);
 
@@ -504,7 +504,7 @@ void FrontPlate::_I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
 
 void FrontPlate::_I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
 {
-	DebugPrint("FrontPlate::_I2ESelectSingleFunction:" + String(iFunctionCode));
+	DebugPrintLn("FrontPlate::_I2ESelectSingleFunction:" + String(iFunctionCode));
 
 	_mSelectedCounterFunctionCode = iFunctionCode;
 	_mCounter->I2ESetFunctionCode(_mSelectedCounterFunctionCode);
@@ -528,7 +528,7 @@ void FrontPlate::_I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
 
 	_mChangeFunctionDetected = true;
 	SetSetting(_cEepromIndexFunction, iFunctionCode);
-	DebugPrint("New function selected: " + _mCounter->GetSelectedFunctionName());
+	DebugPrintLn("New function selected: " + _mCounter->GetSelectedFunctionName());
 }
 
 void FrontPlate::_I2ESwitchLEDs(uint8_t iTest)

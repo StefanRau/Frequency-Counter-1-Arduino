@@ -91,7 +91,7 @@ void Application::setup()
 #endif
     mText = new TextMain(mInitializeSystem.Text.SettingsAddress);
 
-    DebugPrint("Start Setup");
+    DebugPrintLn("Start Setup");
 
     //// CPU board
 
@@ -136,7 +136,7 @@ void Application::setup()
     }
 
     // Initialize task management and all tasks
-    DebugPrint("Initialize tasks");
+    DebugPrintLn("Initialize tasks");
 
     // Task for lamp test end
     mLampTestTime = Task::GetNewTask(Task::TOneTime, 20, TaskLampTestEnd);
@@ -172,10 +172,10 @@ void Application::setup()
         {
             gLCDHandler->SetErrorText(mText->ErrorInSetup());
         }
-        DebugPrint("Error in setup");
+        DebugPrintLn("Error in setup");
     }
 
-    DebugPrint("End setup");
+    DebugPrintLn("End setup");
 }
 
 void Application::loop()
@@ -187,7 +187,7 @@ void Application::loop()
     if (mFreeMemory != lFreeMemory)
     {
         mFreeMemory = lFreeMemory;
-        DebugPrint("Free Memory: " + String(mFreeMemory));
+        DebugPrintLn("Free Memory: " + String(mFreeMemory));
     }
 
     if (gLCDHandler != nullptr)
@@ -337,7 +337,7 @@ void Application::loop()
         if (!mErrorPrinted)
         {
             gLCDHandler->SetErrorText(mText->ErrorInLoop());
-            DebugPrint("Error in runtime => processing stopped");
+            DebugPrintLn("Error in runtime => processing stopped");
             mErrorPrinted = true;
         }
         return;
@@ -353,17 +353,17 @@ void Application::loop()
     {
         Wire.end();
         Wire.begin();
-        DebugPrint("Reset I2C");
+        DebugPrintLn("Reset I2C");
     }
 
     // Get current menu item if a new one was selected
     if (gFrontPlate->IsNewMenuSelected())
     {
-        DebugPrint("Trigger TaskMenuSwitchOff");
+        DebugPrintLn("Trigger TaskMenuSwitchOff");
         mMenuSwitchOfTime->Restart();
         ModuleBase *lModuleBase = gModuleFactory->GetSelectedModule();
         gLCDHandler->TriggerMenuSelectedFunction(lModuleBase->GetCurrentMenuEntry(-1), lModuleBase->GetCurrentMenuEntryNumber(), lModuleBase->GetLastMenuEntryNumber());
-        DebugPrint("Selected menu entry: " + lModuleBase->GetCurrentMenuEntry(-1));
+        DebugPrintLn("Selected menu entry: " + lModuleBase->GetCurrentMenuEntry(-1));
     }
 
     // Reset counter if a new function is selected

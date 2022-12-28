@@ -5,6 +5,7 @@
 // 27.10.2021: Constructor requires structure - Stefan Rau
 // 21.03.2022: Event counting added - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "ModuleHF.h"
 
@@ -15,11 +16,12 @@
 /// </summary>
 TextModuleHF::TextModuleHF() : TextBase(-1)
 {
-    DebugInstantiation("New TextModuleHF");
+    DebugInstantiation("TextModuleHF");
 }
 
 TextModuleHF::~TextModuleHF()
 {
+    DebugDestroy("TextModuleHF");
 }
 
 String TextModuleHF::GetObjectName()
@@ -35,7 +37,7 @@ String TextModuleHF::GetObjectName()
 
 ModuleHF::ModuleHF(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-    DebugInstantiation("New ModuleHF: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DebugInstantiation("ModuleHF: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
     _mText = new TextModuleHF();
     mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -49,6 +51,7 @@ ModuleHF::ModuleHF(sInitializeModule iInitializeModule) : ModuleBase(iInitialize
 
 ModuleHF::~ModuleHF()
 {
+    DebugDestroy("ModuleHF");
 }
 
 void ModuleHF::I2EActivate()

@@ -11,6 +11,7 @@
 // 06.09.2022: Singleton instantiation - Stefan Rau
 // 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "ModuleFactory.h"
 
@@ -21,11 +22,12 @@
 /// </summary>
 TextModuleFactory::TextModuleFactory() : TextBase(-1)
 {
-	DebugInstantiation("New TextModuleFactory");
+	DebugInstantiation("TextModuleFactory");
 }
 
 TextModuleFactory::~TextModuleFactory()
 {
+	DebugDestroy("TextModuleFactory");
 }
 
 String TextModuleFactory::GetObjectName()
@@ -52,7 +54,7 @@ static ModuleFactory *gInstance = nullptr;
 
 ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("New ModuleFactory: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("ModuleFactory: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	sInitializeModule lInitializeModule = iInitializeModule;
 
@@ -106,6 +108,7 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 
 ModuleFactory ::~ModuleFactory()
 {
+	DebugDestroy("ModuleFactory");
 }
 
 ModuleFactory *ModuleFactory::GetInstance(sInitializeModule iInitializeModule)

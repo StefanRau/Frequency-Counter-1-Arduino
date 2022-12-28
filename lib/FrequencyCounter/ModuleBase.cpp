@@ -11,6 +11,7 @@
 // 21.03.2022: Event counting added - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "ModuleBase.h"
 
@@ -21,11 +22,12 @@
 /// </summary>
 TextModuleBase::TextModuleBase() : TextBase(-1)
 {
-	DebugInstantiation("New TextModuleBase");
+	DebugInstantiation("TextModuleBase");
 }
 
 TextModuleBase::~TextModuleBase()
 {
+	DebugDestroy("TextModuleBase");
 }
 
 String TextModuleBase::GetObjectName()
@@ -41,7 +43,7 @@ String TextModuleBase::GetObjectName()
 
 ModuleBase::ModuleBase(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("New ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleBase();
 
@@ -55,6 +57,7 @@ ModuleBase::ModuleBase(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 
 ModuleBase::~ModuleBase()
 {
+	DebugDestroy("ModuleBase");
 }
 
 void ModuleBase::loop()

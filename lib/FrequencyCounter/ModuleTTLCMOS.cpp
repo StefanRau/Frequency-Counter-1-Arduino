@@ -6,6 +6,7 @@
 // 27.10.2021: Constructor requires structure - Stefan Rau
 // 21.03.2022: Event counting added - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "ModuleTTLCMOS.h"
 
@@ -16,11 +17,12 @@
 /// </summary>
 TextModuleTTLCMOS::TextModuleTTLCMOS() : TextBase(-1)
 {
-	DebugInstantiation("New TextModuleTTLCMOS");
+	DebugInstantiation("TextModuleTTLCMOS");
 }
 
 TextModuleTTLCMOS::~TextModuleTTLCMOS()
 {
+	DebugDestroy("TextModuleTTLCMOS");
 }
 
 String TextModuleTTLCMOS::GetObjectName()
@@ -64,7 +66,7 @@ String TextModuleTTLCMOS::MenuItemOE()
 
 ModuleTTLCMOS::ModuleTTLCMOS(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-    DebugInstantiation("New ModuleTTLCMOS: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("ModuleTTLCMOS: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleTTLCMOS();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -92,6 +94,7 @@ ModuleTTLCMOS::ModuleTTLCMOS(sInitializeModule iInitializeModule) : ModuleBase(i
 
 ModuleTTLCMOS::~ModuleTTLCMOS()
 {
+	DebugDestroy("ModuleTTLCMOS");
 }
 
 void ModuleTTLCMOS::I2EActivate()

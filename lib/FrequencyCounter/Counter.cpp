@@ -11,6 +11,7 @@
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 06.09.2022: Singleton instantiation - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "ErrorHandler.h"
 #include "Counter.h"
@@ -22,11 +23,12 @@
 /// </summary>
 TextCounter::TextCounter() : TextBase(-1)
 {
-	DebugInstantiation("New TextCounter");
+	DebugInstantiation("TextCounter");
 }
 
 TextCounter::~TextCounter()
 {
+	DebugDestroy("TextCounter");
 }
 
 String TextCounter::GetObjectName()
@@ -162,7 +164,7 @@ static Counter *gInstance = nullptr;
 
 Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("New Counter: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("Counter: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	short lI2CAddress = mI2CAddress;
 	// Initialize hardware
@@ -241,6 +243,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 
 Counter::~Counter()
 {
+	DebugDestroy("Counter");
 }
 
 Counter *Counter::GetInstance(sInitializeModule iInitializeModule)

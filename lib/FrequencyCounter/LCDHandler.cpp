@@ -12,6 +12,7 @@
 // 06.09.2022: Singleton instantiation - Stefan Rau
 // 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "LCDHandler.h"
 #include "ErrorHandler.h"
@@ -23,11 +24,12 @@
 /// </summary>
 TextLCDHandler::TextLCDHandler() : TextBase(-1)
 {
-    DebugInstantiation("New TextLCDHandler");
+    DebugInstantiation("TextLCDHandler");
 }
 
 TextLCDHandler::~TextLCDHandler()
 {
+    DebugDestroy("TextLCDHandler");
 }
 
 String TextLCDHandler::GetObjectName()
@@ -84,7 +86,7 @@ static LCDHandler *gInstance = nullptr;
 
 LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-    DebugInstantiation("New LCDHandler: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DebugInstantiation("LCDHandler: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
     uint8_t lUp[8] = {0x04, 0x0A, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t lDown[8] = {0x00, 0x00, 0x00, 0x00, 0x11, 0x0A, 0x04, 0x00};
@@ -119,12 +121,13 @@ LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 
 LCDHandler::~LCDHandler()
 {
+    DebugDestroy("LCDHandler");
 }
 
 LCDHandler *LCDHandler::GetInstance(sInitializeModule iInitializeModule)
 {
-	gInstance = (gInstance == nullptr) ? new LCDHandler(iInitializeModule) : gInstance;
-	return gInstance;
+    gInstance = (gInstance == nullptr) ? new LCDHandler(iInitializeModule) : gInstance;
+    return gInstance;
 }
 
 void LCDHandler::loop()

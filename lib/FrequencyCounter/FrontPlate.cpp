@@ -15,6 +15,7 @@
 // 06.09.2022: Singleton instantiation - Stefan Rau
 // 21.09.2022: use GetInstance instead of Get<Typename> - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "FrontPlate.h"
 #include "ErrorHandler.h"
@@ -29,11 +30,12 @@
 /// </summary>
 TextFrontPlate::TextFrontPlate() : TextBase(-1)
 {
-	DebugInstantiation("New TextI2CBase");
+	DebugInstantiation("TextI2CBase");
 }
 
 TextFrontPlate::~TextFrontPlate()
 {
+	DebugDestroy("TextFrontPlate");
 }
 
 String TextFrontPlate::GetObjectName()
@@ -96,7 +98,7 @@ static FrontPlate *gInstance = nullptr;
 
 FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("New FrontPlate: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("FrontPlate: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	// Initialize hardware
 	_mText = new TextFrontPlate();
@@ -182,6 +184,7 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 
 FrontPlate::~FrontPlate()
 {
+	DebugDestroy("FrontPlate");
 }
 
 FrontPlate *FrontPlate::GetInstance(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter)

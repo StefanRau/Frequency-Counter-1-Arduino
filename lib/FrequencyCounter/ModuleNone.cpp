@@ -4,6 +4,7 @@
 // History
 // 27.10.2021: Constructor requires structure - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "ModuleNone.h"
 
@@ -14,11 +15,12 @@
 /// </summary>
 TextModuleNone::TextModuleNone() : TextBase(-1)
 {
-	DebugInstantiation("New TextModuleNone");
+	DebugInstantiation("TextModuleNone");
 }
 
 TextModuleNone::~TextModuleNone()
 {
+	     	DebugDestroy("TextModuleNone");
 }
 
 String TextModuleNone::GetObjectName()
@@ -61,7 +63,7 @@ String TextModuleNone::MenuItemEnd()
 
 ModuleNone::ModuleNone(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-	DebugInstantiation("New ModuleNone: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("ModuleNone: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleNone();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -72,6 +74,7 @@ ModuleNone::ModuleNone(sInitializeModule iInitializeModule) : ModuleBase(iInitia
 
 ModuleNone::~ModuleNone()
 {
+	  	DebugDestroy("ModuleNone");
 }
 
 void ModuleNone::I2EActivate()

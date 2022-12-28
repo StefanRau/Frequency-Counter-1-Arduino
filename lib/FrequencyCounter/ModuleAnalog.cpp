@@ -5,6 +5,7 @@
 // 27.10.2021: Constructor requires structure - Stefan Rau
 // 21.03.2022: Event counting added - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "ModuleAnalog.h"
 
@@ -15,11 +16,12 @@
 /// </summary>
 TextModuleAnalog::TextModuleAnalog() : TextBase(-1)
 {
-	DebugInstantiation("New TextModuleAnalog");
+	DebugInstantiation("TextModuleAnalog");
 }
 
 TextModuleAnalog::~TextModuleAnalog()
 {
+	DebugDestroy("TextModuleAnalog");
 }
 
 String TextModuleAnalog::GetObjectName()
@@ -70,7 +72,7 @@ String TextModuleAnalog::MenuItem100V()
 
 ModuleAnalog::ModuleAnalog(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-	DebugInstantiation("New ModuleAnalog: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DebugInstantiation("ModuleAnalog: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleAnalog();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -84,6 +86,7 @@ ModuleAnalog::ModuleAnalog(sInitializeModule iInitializeModule) : ModuleBase(iIn
 
 ModuleAnalog::~ModuleAnalog()
 {
+	DebugDestroy("ModuleAnalog");
 }
 
 void ModuleAnalog::I2EActivate()

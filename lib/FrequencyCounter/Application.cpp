@@ -3,6 +3,7 @@
 // Stefan Rau
 // History
 // 31.10.2022: 1st version - Stefan Rau
+// 21.12.2022: extend destructor - Stefan Rau
 
 #include "Application.h"
 
@@ -24,10 +25,12 @@ static bool gReadEventCounter;
 /// </summary>
 TextMain::TextMain(int iSettingsAddress) : TextBase(iSettingsAddress)
 {
+    DebugInstantiation("TextMain");
 }
 
 TextMain::~TextMain()
 {
+    DebugDestroy("TextMain");
 }
 
 String TextMain::GetObjectName()
@@ -74,10 +77,12 @@ String TextMain::ErrorInLoop()
 
 Application::Application()
 {
+    DebugInstantiation("Application");
 }
 
 Application::~Application()
 {
+    DebugDestroy("Application");
 }
 
 void Application::setup()
@@ -139,18 +144,18 @@ void Application::setup()
     DebugPrintLn("Initialize tasks");
 
     // Task for lamp test end
-    mLampTestTime = Task::GetNewTask(Task::TOneTime, 20, TaskLampTestEnd);
+    mLampTestTime = Task::GetNewTask(Task::TOneTime, 20, Application::TaskLampTestEnd);
 
     // Task timer for switching off the menue in LCD
-    mMenuSwitchOfTime = Task::GetNewTask(Task::TTriggerOneTime, 20, TaskMenuSwitchOff);
+    mMenuSwitchOfTime = Task::GetNewTask(Task::TTriggerOneTime, 20, Application::TaskMenuSwitchOff);
     mMenuSwitchOfTime->DefinePrevious(mLampTestTime);
 
     // Task timer LCD refresh
-    mLCDRefreshCycleTime = Task::GetNewTask(Task::TFollowUpCyclic, 10, TaskLCDRefresh);
+    mLCDRefreshCycleTime = Task::GetNewTask(Task::TFollowUpCyclic, 10, Application::TaskLCDRefresh);
     mLCDRefreshCycleTime->DefinePrevious(mLampTestTime);
 
     // Initialize task handler
-    TaskHandler::GetInstance()->SetCycleTimeInMs(100);
+    TaskHandler::GetInstance()->SetCycleTimeInMs(100.0f);
 
     // Reset
     ResetCounters();
@@ -175,6 +180,7 @@ void Application::setup()
         DebugPrintLn("Error in setup");
     }
 
+    mFreeMemory = 0;
     DebugPrintLn("End setup");
 }
 

@@ -198,7 +198,7 @@ String LCDHandler::GetName()
 }
 
 #ifndef DEBUG_APPLICATION
-String LCDHandler::Dispatch(char iModuleIdentifyer, char iParameter)
+String LCDHandler::DispatchSerial(char iModuleIdentifyer, char iParameter)
 {
     return String("");
 }

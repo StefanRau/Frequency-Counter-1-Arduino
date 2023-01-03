@@ -117,6 +117,13 @@ public:
     /// </summary>
     void loop();
 
+#ifndef DEBUG_APPLICATION
+    /// <summary>
+    /// Dispatches commands got from an serial input
+    /// </summary>
+    void DispatchSerial();
+#endif
+
     /// <summary>
     /// Task that stops initialization phase: switches off LEDs, switches off initialization message on LCD
     /// </summary>

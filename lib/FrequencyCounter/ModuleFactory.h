@@ -74,7 +74,7 @@ public:
 	/// <param name="iModuleIdentifyer">If this matches with the identifyer of this module, then iParameter is analyzed</param>
 	/// <param name="iParameter">Parameter or command that is to be analyzed</param>
 	/// <returns>Reaction of dispatching</returns>
-	String Dispatch(char iModuleIdentifyer, char iParameter) override;
+	String DispatchSerial(char iModuleIdentifyer, char iParameter) override;
 #endif
 
 	/// <summary>

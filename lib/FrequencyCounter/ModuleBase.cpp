@@ -65,7 +65,7 @@ void ModuleBase::loop()
 }
 
 #ifndef DEBUG_APPLICATION
-String ModuleBase::Dispatch(char iModuleIdentifyer, char iParameter)
+String ModuleBase::DispatchSerial(char iModuleIdentifyer, char iParameter)
 {
 	return String("");
 }

@@ -186,7 +186,7 @@ void Application::setup()
 
 void Application::loop()
 {
-    String lCommand = "";
+    // String lCommand = "";
     long lFreeMemory;
 
     lFreeMemory = GetFreeRAM();
@@ -207,137 +207,7 @@ void Application::loop()
     }
 
 #ifndef DEBUG_APPLICATION
-    // dispatch the different modules
-    if (mRemoteControl->Available())
-    {
-        lCommand = String(mRemoteControlBuffer);
-        mRemoteControl->Read();
-        if (lCommand != "")
-        {
-            int lSeparatorIndex;
-            char lModule;
-            char lParameter;
-            String lReturn = "";
-
-            lSeparatorIndex = lCommand.indexOf(':');
-
-            if (lSeparatorIndex == 1)
-            {
-                lModule = lCommand[0];
-                lParameter = lCommand[2];
-
-                switch (lModule)
-                {
-                case 'S':
-
-                    switch (lParameter)
-                    {
-
-                    case 'N':
-                        // Reads the name of the device
-                        lReturn = String(DEVICENAME);
-                        break;
-
-                    case 'V':
-                        // Reads version and lists all hardware components and their state
-                        lReturn = String(VERSION) + ", compiled at: " + String(__DATE__) + "\n";
-                        lReturn += ErrorHandler::GetInstance()->GetStatus();
-                        lReturn += gLCDHandler->GetStatus();
-                        lReturn += gFrontPlate->GetStatus();
-                        lReturn += gCounter->GetStatus();
-                        lReturn += gModuleFactory->GetStatus();
-                        lReturn += mText->FreeMemory(GetFreeRAM());
-                        break;
-
-                    case 'v':
-                        // verbose mode
-                        ProjectBase::SetVerboseMode(true);
-                        lReturn = String(lParameter);
-                        break;
-
-                    case 's':
-                        // short mode
-                        ProjectBase::SetVerboseMode(false);
-                        lReturn = String(lParameter);
-                        break;
-                    }
-                    break;
-
-                case 'D':
-
-                    // Reads the current measurement value
-                    lReturn = mMeasurementValue;
-                    break;
-                }
-
-#ifdef EXTERNAL_EEPROM
-                if (lReturn == "")
-                {
-                    // Manage error handling
-                    // lModule = 'E'	: Code for this class, if controlled remotely
-                    // lParameter = 'F' : Formatting EEPROM
-                    // lParameter = '0' : Reset Log Pointer
-                    // lParameter = 'R' : Read log
-                    // lParameter = 'S' : Read log size
-                    lReturn = ErrorHandler::GetInstance()->Dispatch(lModule, lParameter);
-                }
-#endif
-
-                if (lReturn == "")
-                {
-                    // Select or get the current input module
-                    // lModule = 'M'	: Code for this class, if controlled remotely
-                    // lParameter = 'T' : 100 MHz TTL / CMOS module
-                    // lParameter = 'A' : 100 MHz analog module
-                    // lParameter = 'H' : 10GHz module
-                    // lParameter = 'N' : no module - dummymodule for test purposes and fallback if no module is installed
-                    // lParameter = '*' : codes of all installed modules "TAHN" - returns comma separated, readable text in verbose mode
-                    // lParameter = '?' : returns the code of the selected module: 'T', 'A', 'H' or 'N' - returns readable text in verbose mode
-                    lReturn = gModuleFactory->Dispatch(lModule, lParameter);
-                }
-
-                if (lReturn == "")
-                {
-                    // Select / display function
-                    // lModule = 'F'	: Code for this class, if controlled remotely
-                    // lParameter = 'f' : Frequenz
-                    // lParameter = 'P' : Duration of positive level
-                    // lParameter = 'N' : Duration of negative level
-                    // lParameter = 'p' : Period triggered by positive edge
-                    // lParameter = 'n' : Period triggered by negative edge
-                    // lParameter = 'C' : Event counting
-                    // lParameter = '*' : codes of all functions supported by the module "fnpNP" - returns comma separated, readable text in verbose mode
-                    // lParameter = '?' : returns the code of the selected function: 'f', 'n', 'p', 'N', 'P', 'C' or '-' (if no function is selected)
-
-                    // Select / display menue entry
-                    // lModule = 'K'
-                    // lParameter = '0' .. '9'	: Number of the menu item to select
-                    // lParameter = '*' 		: codes of all menu items "123..." - returns comma separated, readable text in verbose mode
-                    // lParameter = '?'			: returns the number of the currently selected menu item - returK:0ns readable text in verbose mode
-                    lReturn = gFrontPlate->Dispatch(lModule, lParameter);
-                }
-
-                if (lReturn == "")
-                {
-                    // Select or get the current language
-                    // lModule = 'L'			: Code for this class, if controlled remotely
-                    // lParameter = 'D', 'E'	: Select language
-                    // lParameter = '*'			: Lists all installed language as string of language codes - todo: im verbose mode komagetrennte Texte
-                    // lParameter = '?'			: Shows the current language code: 'D', 'E' - todo: im verbose mode den Klartext
-                    lReturn = mText->Dispatch(lModule, lParameter);
-                    if ((lReturn != "") && (lParameter != '*') && (lParameter != '?'))
-                    {
-                        gFrontPlate->TriggerLampTestOff(); // Reload displayed texts
-                    }
-                }
-
-                if (lReturn != "")
-                {
-                    Serial.println(lReturn + "#");
-                }
-            }
-        }
-    }
+    DispatchSerial();
 #endif
 
     // In case of an error, the program stops here
@@ -450,6 +320,144 @@ void Application::loop()
 
     gLCDHandler->SetMeasurementValue(mMeasurementValue);
 }
+
+#ifndef DEBUG_APPLICATION
+void Application::DispatchSerial()
+{
+    String lCommand;
+    int lSeparatorIndex;
+    char lModule;
+    char lParameter;
+    String lReturn = "";
+
+    // dispatch the different modules
+    if (mRemoteControl->Available())
+    {
+        lCommand = String(mRemoteControlBuffer);
+        mRemoteControl->Read();
+        if (lCommand != "")
+        {
+            lSeparatorIndex = lCommand.indexOf(':');
+
+            if (lSeparatorIndex == 1)
+            {
+                lModule = lCommand[0];
+                lParameter = lCommand[2];
+
+                switch (lModule)
+                {
+                case 'S':
+
+                    switch (lParameter)
+                    {
+
+                    case 'N':
+                        // Reads the name of the device
+                        lReturn = String(DEVICENAME);
+                        break;
+
+                    case 'V':
+                        // Reads version and lists all hardware components and their state
+                        lReturn = String(VERSION) + ", compiled at: " + String(__DATE__) + "\n";
+                        lReturn += ErrorHandler::GetInstance()->GetStatus();
+                        lReturn += gLCDHandler->GetStatus();
+                        lReturn += gFrontPlate->GetStatus();
+                        lReturn += gCounter->GetStatus();
+                        lReturn += gModuleFactory->GetStatus();
+                        lReturn += mText->FreeMemory(GetFreeRAM());
+                        break;
+
+                    case 'v':
+                        // verbose mode
+                        ProjectBase::SetVerboseMode(true);
+                        lReturn = String(lParameter);
+                        break;
+
+                    case 's':
+                        // short mode
+                        ProjectBase::SetVerboseMode(false);
+                        lReturn = String(lParameter);
+                        break;
+                    }
+                    break;
+
+                case 'D':
+
+                    // Reads the current measurement value
+                    lReturn = mMeasurementValue;
+                    break;
+                }
+
+#ifdef EXTERNAL_EEPROM
+                if (lReturn == "")
+                {
+                    // Manage error handling
+                    // lModule = 'E'	: Code for this class, if controlled remotely
+                    // lParameter = 'F' : Formatting EEPROM
+                    // lParameter = '0' : Reset Log Pointer
+                    // lParameter = 'R' : Read log
+                    // lParameter = 'S' : Read log size
+                    lReturn = ErrorHandler::GetInstance()->DispatchSerial(lModule, lParameter);
+                }
+#endif
+
+                if (lReturn == "")
+                {
+                    // Select or get the current input module
+                    // lModule = 'M'	: Code for this class, if controlled remotely
+                    // lParameter = 'T' : 100 MHz TTL / CMOS module
+                    // lParameter = 'A' : 100 MHz analog module
+                    // lParameter = 'H' : 10GHz module
+                    // lParameter = 'N' : no module - dummymodule for test purposes and fallback if no module is installed
+                    // lParameter = '*' : codes of all installed modules "TAHN" - returns comma separated, readable text in verbose mode
+                    // lParameter = '?' : returns the code of the selected module: 'T', 'A', 'H' or 'N' - returns readable text in verbose mode
+                    lReturn = gModuleFactory->DispatchSerial(lModule, lParameter);
+                }
+
+                if (lReturn == "")
+                {
+                    // Select / display function
+                    // lModule = 'F'	: Code for this class, if controlled remotely
+                    // lParameter = 'f' : Frequenz
+                    // lParameter = 'P' : Duration of positive level
+                    // lParameter = 'N' : Duration of negative level
+                    // lParameter = 'p' : Period triggered by positive edge
+                    // lParameter = 'n' : Period triggered by negative edge
+                    // lParameter = 'C' : Event counting
+                    // lParameter = '*' : codes of all functions supported by the module "fnpNP" - returns comma separated, readable text in verbose mode
+                    // lParameter = '?' : returns the code of the selected function: 'f', 'n', 'p', 'N', 'P', 'C' or '-' (if no function is selected)
+
+                    // Select / display menue entry
+                    // lModule = 'K'
+                    // lParameter = '0' .. '9'	: Number of the menu item to select
+                    // lParameter = '*' 		: codes of all menu items "123..." - returns comma separated, readable text in verbose mode
+                    // lParameter = '?'			: returns the number of the currently selected menu item - returK:0ns readable text in verbose mode
+                    lReturn = gFrontPlate->DispatchSerial(lModule, lParameter);
+                }
+
+                if (lReturn == "")
+                {
+                    // Select or get the current language
+                    // lModule = 'L'			: Code for this class, if controlled remotely
+                    // lParameter = 'D', 'E'	: Select language
+                    // lParameter = '*'			: Lists all installed language as string of language codes - todo: im verbose mode komagetrennte Texte
+                    // lParameter = '?'			: Shows the current language code: 'D', 'E' - todo: im verbose mode den Klartext
+                    lReturn = mText->DispatchSerial(lModule, lParameter);
+                    if ((lReturn != "") && (lParameter != '*') && (lParameter != '?'))
+                    {
+                        gFrontPlate->TriggerLampTestOff(); // Reload displayed texts
+                    }
+                }
+
+                if (lReturn != "")
+                {
+                    Serial.println(lReturn + "#");
+                }
+            }
+        }
+    }
+}
+#endif
 
 void Application::TaskLampTestEnd()
 {

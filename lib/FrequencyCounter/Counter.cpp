@@ -257,7 +257,7 @@ void Counter::loop()
 }
 
 #ifndef DEBUG_APPLICATION
-String Counter::Dispatch(char iModuleIdentifyer, char iParameter)
+String Counter::DispatchSerial(char iModuleIdentifyer, char iParameter)
 {
 	return String("");
 }

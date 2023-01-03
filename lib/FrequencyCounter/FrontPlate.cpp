@@ -364,7 +364,7 @@ void FrontPlate::loop()
 }
 
 #ifndef DEBUG_APPLICATION
-String FrontPlate::Dispatch(char iModuleIdentifyer, char iParameter)
+String FrontPlate::DispatchSerial(char iModuleIdentifyer, char iParameter)
 {
 	String lReturn = "";
 

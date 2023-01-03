@@ -138,7 +138,7 @@ public:
 	/// '?' : Returns the currently selected function, 'f', 'n', 'p', 'N', 'P', 'C' or '-' (nothing is selected)
 	/// </param>
 	/// <returns>Reaction of dispatching</returns>
-	String Dispatch(char iModuleIdentifyer, char iParameter) override;
+	String DispatchSerial(char iModuleIdentifyer, char iParameter) override;
 #endif
 
 private:

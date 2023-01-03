@@ -162,7 +162,7 @@ void ModuleFactory::loop()
 }
 
 #ifndef DEBUG_APPLICATION
-String ModuleFactory::Dispatch(char iModuleIdentifyer, char iParameter)
+String ModuleFactory::DispatchSerial(char iModuleIdentifyer, char iParameter)
 {
 	String lReturn = "";
 

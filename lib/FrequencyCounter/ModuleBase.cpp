@@ -12,6 +12,7 @@
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
+// 20.01.2023: Improve debug handling - Stefan Rau
 
 #include "ModuleBase.h"
 
@@ -64,7 +65,7 @@ void ModuleBase::loop()
 {
 }
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 String ModuleBase::DispatchSerial(char iModuleIdentifyer, char iParameter)
 {
 	return String("");
@@ -232,7 +233,7 @@ int ModuleBase::GetLastMenuEntryNumber()
 	return mLastMenuEntryNumber;
 }
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 String ModuleBase::GetAllMenuEntryItems()
 {
 	String lReturn = "";

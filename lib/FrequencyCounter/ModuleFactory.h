@@ -33,7 +33,7 @@ public:
 class ModuleFactory : public I2CBase
 {
 private:
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 	// Commands for remote control
 	enum eFunctionCode : char
 	{
@@ -67,7 +67,7 @@ public:
 	/// </summary>
 	void loop() override;
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface
 	/// </summary>

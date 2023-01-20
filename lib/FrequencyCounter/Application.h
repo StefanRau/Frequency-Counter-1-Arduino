@@ -81,7 +81,7 @@ private:
     bool mEventCountingInitialized; // Event counting shall be initialized only once after selected
     long mFreeMemory;
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
     RemoteControl *mRemoteControl = nullptr;
 #define RemoteControlBufferSize 80
     char mRemoteControlBuffer[RemoteControlBufferSize];
@@ -117,7 +117,7 @@ public:
     /// </summary>
     void loop();
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
     /// <summary>
     /// Dispatches commands got from an serial input
     /// </summary>

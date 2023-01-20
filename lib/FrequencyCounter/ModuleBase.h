@@ -70,7 +70,7 @@ public:
 	/// </summary>
 	void loop() override;
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 	/// <summary>
 	/// Dispatches commands got from en external input, e.g. a serial interface - only a dummy implementation here
 	/// </summary>
@@ -192,7 +192,7 @@ public:
 	/// <returns>Number of menu entry</returns>
 	int GetLastMenuEntryNumber();
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 	/// <summary>
 	/// Gets a list of all menu entries
 	/// </summary>

@@ -20,7 +20,8 @@
 // 07.09.2022: Transient error log removed - Stefan Rau
 // 26.09.2022: EXTERNAL_EEPROM defined in platform.ini - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
-// 31.10.2022: Switch to minimal main program
+// 31.10.2022: Switch to minimal main program - Stefan Rau
+// 20.01.2023: Improve debug handling - Stefan Rau
 
 #include "Application.h"
 
@@ -28,6 +29,7 @@ Application *gApplication;
 
 void setup()
 {
+	DebugPrintLn("Start Main");
 	gApplication = Application::GetInstance();
 	gApplication->setup();
 }

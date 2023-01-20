@@ -4,6 +4,7 @@
 // History
 // 31.10.2022: 1st version - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
+// 20.01.2023: Improve debug handling - Stefan Rau
 
 #include "Application.h"
 
@@ -44,7 +45,7 @@ Application *Application::GetInstance()
     return gInstance;
 }
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 String TextMain::FreeMemory(int iFreeMemory)
 {
     switch (GetLanguage())
@@ -162,7 +163,7 @@ void Application::setup()
     RestartGateTimer();
     RestartPulsDetection();
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
     // Initialize remote control
     if (!ErrorDetected())
     {
@@ -206,7 +207,7 @@ void Application::loop()
         return;
     }
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
     DispatchSerial();
 #endif
 
@@ -321,7 +322,7 @@ void Application::loop()
     gLCDHandler->SetMeasurementValue(mMeasurementValue);
 }
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 void Application::DispatchSerial()
 {
     String lCommand;

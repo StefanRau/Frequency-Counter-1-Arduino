@@ -108,11 +108,6 @@ public:
     static Application *GetInstance();
 
     /// <summary>
-    /// Called by framework one time
-    /// </summary>
-    void setup();
-
-    /// <summary>
     /// Called by framework periodically
     /// </summary>
     void loop();

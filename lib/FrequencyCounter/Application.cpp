@@ -79,16 +79,8 @@ String TextMain::ErrorInLoop()
 Application::Application()
 {
     DebugInstantiation("Application");
-}
 
-Application::~Application()
-{
-    DebugDestroy("Application");
-}
-
-void Application::setup()
-{
-    // Set clock frequency of I2C to 100kHz
+        // Set clock frequency of I2C to 100kHz
     Wire.begin();
     delay(10);
 
@@ -96,8 +88,6 @@ void Application::setup()
     ProjectBase::SetI2CAddressGlobalEEPROM(mInitializeSystem.EEPROM.I2CAddress);
 #endif
     mText = new TextMain(mInitializeSystem.Text.SettingsAddress);
-
-    DebugPrintLn("Start Setup");
 
     //// CPU board
 
@@ -183,6 +173,11 @@ void Application::setup()
 
     mFreeMemory = 0;
     DebugPrintLn("End setup");
+}
+
+Application::~Application()
+{
+    DebugDestroy("Application");
 }
 
 void Application::loop()

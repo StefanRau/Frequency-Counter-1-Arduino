@@ -31,7 +31,6 @@ void setup()
 {
 	DebugPrintLn("Start Main");
 	gApplication = Application::GetInstance();
-	gApplication->setup();
 }
 
 void loop()

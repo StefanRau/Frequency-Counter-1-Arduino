@@ -23,6 +23,17 @@
 // 31.10.2022: Switch to minimal main program - Stefan Rau
 // 20.01.2023: Improve debug handling - Stefan Rau
 
+// Nano 33 IOT
+// https://docs.arduino.cc/hardware/nano-33-iot
+// https://ww1.microchip.com/downloads/aemDocuments/documents/MCU32/ProductDocuments/DataSheets/SAM-D21DA1-Family-Data-Sheet-DS40001882G.pdf
+
+// Todo: implement web interface: web UI only
+// Todo: use internal RTC for counting time - get time from web
+// Todo: control I2C regarding crashes
+// Todo: use own timer implementation for cyclic task timer
+// Todo: use watchdog timer raising a reset after 10s? without trigger
+
+
 #include "Application.h"
 
 Application *gApplication;

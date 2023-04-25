@@ -103,7 +103,7 @@ public:
 	/// <summary>
 	/// Gets the current value of the counter. The caller must be sure, that the counter is not counting in this moment.
 	/// </summary>
-	/// <returns>Value with unit.</returns>
+	/// <returns>Value with unit</returns>
 	String I2EGetCounterValue();
 
 	/// <summary>

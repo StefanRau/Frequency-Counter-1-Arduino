@@ -80,7 +80,7 @@ Application::Application()
 {
     DebugInstantiation("Application");
 
-        // Set clock frequency of I2C to 100kHz
+    // Set clock frequency of I2C to 100kHz
     Wire.begin();
     delay(10);
 

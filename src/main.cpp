@@ -32,6 +32,7 @@
 // Todo: control I2C regarding crashes
 // Todo: use own timer implementation for cyclic task timer
 // Todo: use watchdog timer raising a reset after 10s? without trigger
+// Todo: use DebugMethodCalls
 
 
 #include "Application.h"

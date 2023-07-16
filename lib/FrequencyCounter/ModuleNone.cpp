@@ -5,6 +5,7 @@
 // 27.10.2021: Constructor requires structure - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "ModuleNone.h"
 
@@ -20,11 +21,13 @@ TextModuleNone::TextModuleNone() : TextBase(-1)
 
 TextModuleNone::~TextModuleNone()
 {
-	     	DebugDestroy("TextModuleNone");
+	DebugDestroy("TextModuleNone");
 }
 
 String TextModuleNone::GetObjectName()
 {
+	DebugMethodCalls("TextModuleNone::GetObjectName");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Dummy module");
@@ -34,6 +37,8 @@ String TextModuleNone::GetObjectName()
 
 String TextModuleNone::MenuItemStart()
 {
+	DebugMethodCalls("TextModuleNone::MenuItemStart");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Start");
@@ -43,6 +48,8 @@ String TextModuleNone::MenuItemStart()
 
 String TextModuleNone::MenuItemCenter()
 {
+	DebugMethodCalls("TextModuleNone::MenuItemCenter");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Center");
@@ -52,6 +59,8 @@ String TextModuleNone::MenuItemCenter()
 
 String TextModuleNone::MenuItemEnd()
 {
+	DebugMethodCalls("TextModuleNone::MenuItemEnd");
+
 	switch (GetLanguage())
 	{
 		TextLangE("End");
@@ -74,38 +83,49 @@ ModuleNone::ModuleNone(sInitializeModule iInitializeModule) : ModuleBase(iInitia
 
 ModuleNone::~ModuleNone()
 {
-	  	DebugDestroy("ModuleNone");
+	DebugDestroy("ModuleNone");
 }
 
 void ModuleNone::I2EActivate()
 {
+	DebugMethodCalls("ModuleNone::I2EActivate");
 }
 
 void ModuleNone::I2EDeactivate()
 {
+	DebugMethodCalls("ModuleNone::I2EDeactivate");
 }
 
 void ModuleNone::I2ESelectFunction()
 {
+	DebugMethodCalls("ModuleNone::I2ESelectFunction");
 }
 
 String ModuleNone::GetName()
 {
+	DebugMethodCalls("ModuleNone::GetName");
+
 	return _mText->GetObjectName();
 }
 
 bool ModuleNone::IsPeriodMeasurementPossible()
 {
+	DebugMethodCalls("ModuleNone::IsPeriodMeasurementPossible");
+
 	return true;
 }
 
 bool ModuleNone::IsEventCountingPossible()
 {
+	DebugMethodCalls("ModuleNone::IsEventCountingPossible");
+
 	return true;
 }
 
 String ModuleNone::GetCurrentMenuEntry(int iMenuEntry)
 {
+	DebugMethodCalls("ModuleNone::GetCurrentMenuEntry");
+
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
 	case 0:
@@ -120,5 +140,7 @@ String ModuleNone::GetCurrentMenuEntry(int iMenuEntry)
 
 ModuleBase::eModuleCode ModuleNone::GetModuleCode()
 {
+	DebugMethodCalls("ModuleNone::GetModuleCode");
+
 	return ModuleBase::eModuleCode::TModuleNone;
 }

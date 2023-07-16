@@ -32,7 +32,7 @@ public:
     ~TextMain();
 
     String GetObjectName() override;
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
     String FreeMemory(int iFreeMemory);
 #endif
     String ErrorInSetup();

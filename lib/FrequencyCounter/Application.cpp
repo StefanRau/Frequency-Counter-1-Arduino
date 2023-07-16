@@ -5,6 +5,7 @@
 // 31.10.2022: 1st version - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
 // 20.01.2023: Improve debug handling - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "Application.h"
 
@@ -36,11 +37,15 @@ TextMain::~TextMain()
 
 String TextMain::GetObjectName()
 {
+    DebugMethodCalls("TextMain::GetObjectName");
+
     return "Main";
 }
 
 Application *Application::GetInstance()
 {
+    DebugMethodCalls("Application::GetInstance");
+
     gInstance = (gInstance == nullptr) ? new Application() : gInstance;
     return gInstance;
 }
@@ -48,6 +53,8 @@ Application *Application::GetInstance()
 #if DEBUG_APPLICATION == 0
 String TextMain::FreeMemory(int iFreeMemory)
 {
+    DebugMethodCalls("TextMain::FreeMemory");
+
     switch (GetLanguage())
     {
         TextLangE("Free memory: " + String(iFreeMemory) + " byte");
@@ -58,6 +65,8 @@ String TextMain::FreeMemory(int iFreeMemory)
 
 String TextMain::ErrorInSetup()
 {
+    DebugMethodCalls("TextMain::ErrorInSetup");
+
     switch (GetLanguage())
     {
         TextLangE("Error in setup");
@@ -67,6 +76,8 @@ String TextMain::ErrorInSetup()
 
 String TextMain::ErrorInLoop()
 {
+    DebugMethodCalls("TextMain::ErrorInLoop");
+
     switch (GetLanguage())
     {
         TextLangE("Error in loop");
@@ -182,6 +193,8 @@ Application::~Application()
 
 void Application::loop()
 {
+    // DebugMethodCalls("Application::loop");
+
     // String lCommand = "";
     long lFreeMemory;
 
@@ -505,6 +518,8 @@ void Application::TaskLCDRefresh()
 
 long Application::GetFreeRAM()
 {
+    DebugMethodCalls("Application::GetFreeRAM");
+
     char top;
 #ifdef __arm__
     return &top - reinterpret_cast<char *>(sbrk(0));
@@ -518,6 +533,8 @@ long Application::GetFreeRAM()
 
 void Application::ResetCounters()
 {
+    DebugMethodCalls("Application::ResetCounters");
+
     // reset counters
     digitalWrite(cOResetCounter, HIGH);
     delayMicroseconds(10);
@@ -527,6 +544,8 @@ void Application::ResetCounters()
 
 void Application::RestartPulsDetection()
 {
+    DebugMethodCalls("Application::RestartPulsDetection");
+
     // Restart puls detection
     digitalWrite(cONotResetPeriod, LOW);
     delayMicroseconds(10);
@@ -536,6 +555,8 @@ void Application::RestartPulsDetection()
 
 void Application::RestartGateTimer()
 {
+    DebugMethodCalls("Application::RestartGateTimer");
+
     // restart 0.5Hz
     digitalWrite(cOReset0_5Hz, HIGH);
     delayMicroseconds(10);

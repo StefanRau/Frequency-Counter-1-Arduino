@@ -12,6 +12,7 @@
 // 06.09.2022: Singleton instantiation - Stefan Rau
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "ErrorHandler.h"
 #include "Counter.h"
@@ -33,6 +34,8 @@ TextCounter::~TextCounter()
 
 String TextCounter::GetObjectName()
 {
+	DebugMethodCalls("TextCounter::GetObjectName");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Counter");
@@ -42,6 +45,8 @@ String TextCounter::GetObjectName()
 
 String TextCounter::InitError(String iICName)
 {
+	DebugMethodCalls("TextCounter::InitError");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Counter IC" + iICName + " defect");
@@ -51,11 +56,15 @@ String TextCounter::InitError(String iICName)
 
 String TextCounter::ResultFrequency(float iNumber)
 {
+	DebugMethodCalls("TextCounter::ResultFrequency");
+
 	return String(iNumber, 0) + " Hz";
 }
 
 String TextCounter::ResultPeriod(float iNumber)
 {
+	DebugMethodCalls("TextCounter::ResultPeriod");
+
 	if (iNumber >= 1)
 	{
 		return String(iNumber, 7) + " s";
@@ -74,11 +83,15 @@ String TextCounter::ResultPeriod(float iNumber)
 
 String TextCounter::ResultEventCount(float iNumber)
 {
+	DebugMethodCalls("TextCounter::ResultEventCount");
+
 	return String(iNumber, 0);
 }
 
 String TextCounter::Overflow()
 {
+	DebugMethodCalls("TextCounter::Overflow");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Overflow");
@@ -88,6 +101,8 @@ String TextCounter::Overflow()
 
 String TextCounter::FunctionNameFrequency()
 {
+	DebugMethodCalls("TextCounter::FunctionNameFrequency");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Frequency");
@@ -97,6 +112,8 @@ String TextCounter::FunctionNameFrequency()
 
 String TextCounter::FunctionNameEdgeNegative()
 {
+	DebugMethodCalls("TextCounter::FunctionNameEdgeNegative");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Dur. neg. edge");
@@ -106,6 +123,8 @@ String TextCounter::FunctionNameEdgeNegative()
 
 String TextCounter::FunctionNameEdgePositive()
 {
+	DebugMethodCalls("TextCounter::FunctionNameEdgePositive");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Dur. pos. edge");
@@ -115,6 +134,8 @@ String TextCounter::FunctionNameEdgePositive()
 
 String TextCounter::FunctionNameNegative()
 {
+	DebugMethodCalls("TextCounter::FunctionNameNegative");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Length neg.level");
@@ -124,6 +145,8 @@ String TextCounter::FunctionNameNegative()
 
 String TextCounter::FunctionNamePositive()
 {
+	DebugMethodCalls("TextCounter::FunctionNamePositive");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Length pos.level");
@@ -133,6 +156,8 @@ String TextCounter::FunctionNamePositive()
 
 String TextCounter::FunctionNameEventCounting()
 {
+	DebugMethodCalls("TextCounter::FunctionNameEventCounting");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Event counting");
@@ -142,6 +167,8 @@ String TextCounter::FunctionNameEventCounting()
 
 String TextCounter::FunctionNameNoSelection()
 {
+	DebugMethodCalls("");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Initial");
@@ -151,6 +178,8 @@ String TextCounter::FunctionNameNoSelection()
 
 String TextCounter::FunctionNameUnknown()
 {
+	DebugMethodCalls("TextCounter::FunctionNameUnknown");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Unknown function");
@@ -248,15 +277,18 @@ Counter::~Counter()
 
 Counter *Counter::GetInstance(sInitializeModule iInitializeModule)
 {
+	DebugMethodCalls("Counter::GetInstance");
+
 	gInstance = (gInstance == nullptr) ? new Counter(iInitializeModule) : gInstance;
 	return gInstance;
 }
 
 void Counter::loop()
 {
+	DebugMethodCalls("Counter::loop");
 }
 
-#ifndef DEBUG_APPLICATION
+#if DEBUG_APPLICATION == 0
 String Counter::DispatchSerial(char iModuleIdentifyer, char iParameter)
 {
 	return String("");
@@ -265,6 +297,8 @@ String Counter::DispatchSerial(char iModuleIdentifyer, char iParameter)
 
 String Counter::I2EGetCounterValue()
 {
+	DebugMethodCalls("Counter::I2EGetCounterValue");
+
 	uint16_t lLowerWord;
 	uint16_t lUpperWord;
 	uint32_t lResultInt32;
@@ -333,8 +367,7 @@ String Counter::I2EGetCounterValue()
 
 void Counter::I2ESetFunctionCode(eFunctionCode iFunctionCode)
 {
-
-	DebugPrintLn("Counter::I2ESetFunctionCode:" + String(iFunctionCode));
+	DebugMethodCalls("Counter::I2ESetFunctionCode");
 
 	if (!mModuleIsInitialized)
 	{
@@ -381,11 +414,15 @@ void Counter::I2ESetFunctionCode(eFunctionCode iFunctionCode)
 
 Counter::eFunctionCode Counter::GetFunctionCode()
 {
+	DebugMethodCalls("Counter::GetFunctionCode");
+
 	return _mFunctionCode;
 }
 
 String Counter::GetSelectedFunctionName()
 {
+	DebugMethodCalls("Counter::GetSelectedFunctionName");
+
 	switch (_mFunctionCode)
 	{
 	case Counter::eFunctionCode::TFrequency:
@@ -408,5 +445,7 @@ String Counter::GetSelectedFunctionName()
 
 String Counter::GetName()
 {
+	DebugMethodCalls("Counter::GetName");
+
 	return _mText->GetObjectName();
 }

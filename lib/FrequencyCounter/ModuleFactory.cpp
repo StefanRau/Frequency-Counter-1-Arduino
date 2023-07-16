@@ -13,6 +13,7 @@
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
 // 20.01.2023: Improve debug handling - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "ModuleFactory.h"
 
@@ -33,6 +34,8 @@ TextModuleFactory::~TextModuleFactory()
 
 String TextModuleFactory::GetObjectName()
 {
+	DebugMethodCalls("TextModuleFactory::GetObjectName");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Module factory");
@@ -42,6 +45,8 @@ String TextModuleFactory::GetObjectName()
 
 String TextModuleFactory::Unknown()
 {
+	DebugMethodCalls("TextModuleFactory::Unknown");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Unknown function");
@@ -114,12 +119,15 @@ ModuleFactory ::~ModuleFactory()
 
 ModuleFactory *ModuleFactory::GetInstance(sInitializeModule iInitializeModule)
 {
+	DebugMethodCalls("ModuleFactory::GetInstance");
+
 	gInstance = (gInstance == nullptr) ? new ModuleFactory(iInitializeModule) : gInstance;
 	return gInstance;
 }
 
 void ModuleFactory::loop()
 {
+	DebugMethodCalls("ModuleFactory::loop");
 
 	// check the state of the key of all modules
 	if (_mModuleTTLCMOS->I2EIsKeySelected())
@@ -231,6 +239,8 @@ String ModuleFactory::DispatchSerial(char iModuleIdentifyer, char iParameter)
 
 void ModuleFactory::I2ELampTestOn()
 {
+	DebugMethodCalls("ModuleFactory::I2ELampTestOn");
+
 	_mModuleTTLCMOS->I2ESwitchLamp(true); // 100 MHz TTL / CMOS
 	_mModuleAnalog->I2ESwitchLamp(true);  // 100 MHz Analog
 	_mModuleHF->I2ESwitchLamp(true);	  // 10GHz
@@ -238,11 +248,15 @@ void ModuleFactory::I2ELampTestOn()
 
 String ModuleFactory::GetName()
 {
+	DebugMethodCalls("ModuleFactory::GetName");
+
 	return _mText->GetObjectName();
 }
 
 String ModuleFactory::GetStatus()
 {
+	DebugMethodCalls("ModuleFactory::GetStatus");
+
 	String lReturn;
 
 	lReturn = _mModuleTTLCMOS->GetStatus();
@@ -255,16 +269,22 @@ String ModuleFactory::GetStatus()
 
 void ModuleFactory::TriggerLampTestOff()
 {
+	DebugMethodCalls("ModuleFactory::TriggerLampTestOff");
+
 	_mTriggerLampTestOff = true;
 }
 
 ModuleBase *ModuleFactory::GetSelectedModule()
 {
+	DebugMethodCalls("ModuleFactory::GetSelectedModule");
+
 	return _mSelectedModule;
 }
 
 void ModuleFactory::_I2ESelectModule(char iModuleCode)
 {
+	DebugMethodCalls("ModuleFactory::_I2ESelectModule");
+
 	// switch 1st all modules off, before a new one is switched on
 	switch (iModuleCode)
 	{

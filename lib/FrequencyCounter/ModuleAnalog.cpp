@@ -6,6 +6,7 @@
 // 21.03.2022: Event counting added - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "ModuleAnalog.h"
 
@@ -26,6 +27,8 @@ TextModuleAnalog::~TextModuleAnalog()
 
 String TextModuleAnalog::GetObjectName()
 {
+	DebugMethodCalls("TextModuleAnalog::GetObjectName");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Analog module");
@@ -35,36 +38,50 @@ String TextModuleAnalog::GetObjectName()
 
 String TextModuleAnalog::MenuItem100uV()
 {
+	DebugMethodCalls("TextModuleAnalog::MenuItem100uV");
+
 	return ("100uV");
 }
 
 String TextModuleAnalog::MenuItem1mV()
 {
+	DebugMethodCalls("TextModuleAnalog::MenuItem1mV");
+
 	return ("1mV");
 }
 
 String TextModuleAnalog::MenuItem10mV()
 {
+	DebugMethodCalls("TextModuleAnalog::MenuItem10mV");
+
 	return ("10mV");
 }
 
 String TextModuleAnalog::MenuItem100mV()
 {
+	DebugMethodCalls("TextModuleAnalog::MenuItem100mV");
+
 	return ("100mV");
 }
 
 String TextModuleAnalog::MenuItem1V()
 {
+	DebugMethodCalls("TextModuleAnalog::MenuItem1V");
+
 	return ("1V");
 }
 
 String TextModuleAnalog::MenuItem10V()
 {
+	DebugMethodCalls("TextModuleAnalog::MenuItem10V");
+
 	return ("10V");
 }
 
 String TextModuleAnalog::MenuItem100V()
 {
+	DebugMethodCalls("TextModuleAnalog::MenuItem100V");
+
 	return ("100V");
 }
 
@@ -91,14 +108,18 @@ ModuleAnalog::~ModuleAnalog()
 
 void ModuleAnalog::I2EActivate()
 {
+	DebugMethodCalls("ModuleAnalog::I2EActivate");
 }
 
 void ModuleAnalog::I2EDeactivate()
 {
+	DebugMethodCalls("ModuleAnalog::I2EDeactivate");
 }
 
 void ModuleAnalog::I2ESelectFunction()
 {
+	DebugMethodCalls("ModuleAnalog::I2ESelectFunction");
+
 	if (!mModuleIsInitialized)
 	{
 		return;
@@ -132,21 +153,29 @@ void ModuleAnalog::I2ESelectFunction()
 
 String ModuleAnalog::GetName()
 {
+	DebugMethodCalls("ModuleAnalog::GetName");
+
 	return _mText->GetObjectName();
 }
 
 bool ModuleAnalog::IsPeriodMeasurementPossible()
 {
+	DebugMethodCalls("ModuleAnalog::IsPeriodMeasurementPossible");
+
 	return true;
 }
 
 bool ModuleAnalog::IsEventCountingPossible()
 {
+	DebugMethodCalls("ModuleAnalog::IsEventCountingPossible");
+
 	return true;
 }
 
 String ModuleAnalog::GetCurrentMenuEntry(int iMenuEntry)
 {
+	DebugMethodCalls("ModuleAnalog::GetCurrentMenuEntry");
+
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
 	case 0:
@@ -176,5 +205,7 @@ String ModuleAnalog::GetCurrentMenuEntry(int iMenuEntry)
 
 ModuleBase::eModuleCode ModuleAnalog::GetModuleCode()
 {
+	DebugMethodCalls("ModuleAnalog::GetModuleCode");
+
 	return ModuleBase::eModuleCode::TModuleAnalog;
 }

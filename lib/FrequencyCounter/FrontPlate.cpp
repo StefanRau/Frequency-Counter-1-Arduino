@@ -17,6 +17,7 @@
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
 // 20.01.2023: Improve debug handling - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "FrontPlate.h"
 #include "ErrorHandler.h"
@@ -41,6 +42,8 @@ TextFrontPlate::~TextFrontPlate()
 
 String TextFrontPlate::GetObjectName()
 {
+	DebugMethodCalls("TextFrontPlate::GetObjectName");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Front plate");
@@ -50,6 +53,8 @@ String TextFrontPlate::GetObjectName()
 
 String TextFrontPlate::InitError()
 {
+	DebugMethodCalls("TextFrontPlate::InitError");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Keyb/LEDs defect");
@@ -59,6 +64,8 @@ String TextFrontPlate::InitError()
 
 String TextFrontPlate::InitErrorCounterRequired()
 {
+	DebugMethodCalls("TextFrontPlate::InitErrorCounterRequired");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Counter is required");
@@ -68,6 +75,8 @@ String TextFrontPlate::InitErrorCounterRequired()
 
 String TextFrontPlate::InitErrorModuleFactoryRequired()
 {
+	DebugMethodCalls("TextFrontPlate::InitErrorModuleFactoryRequired");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Module factory required");
@@ -77,6 +86,8 @@ String TextFrontPlate::InitErrorModuleFactoryRequired()
 
 String TextFrontPlate::InitErrorLCDRequired()
 {
+	DebugMethodCalls("TextFrontPlate::InitErrorLCDRequired");
+
 	switch (GetLanguage())
 	{
 		TextLangE("LCD is required");
@@ -86,6 +97,8 @@ String TextFrontPlate::InitErrorLCDRequired()
 
 String TextFrontPlate::ErrorPlausibilityViolation()
 {
+	DebugMethodCalls("TextFrontPlate::ErrorPlausibilityViolation");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Frontplate plausibility violation");
@@ -190,12 +203,16 @@ FrontPlate::~FrontPlate()
 
 FrontPlate *FrontPlate::GetInstance(sInitializeModule iInitializeModule, LCDHandler *iLCDHandler, ModuleFactory *iModuleFactory, Counter *iCounter)
 {
+	DebugMethodCalls("FrontPlate::GetInstance");
+
 	gInstance = (gInstance == nullptr) ? new FrontPlate(iInitializeModule, iLCDHandler, iModuleFactory, iCounter) : gInstance;
 	return gInstance;
 }
 
 void FrontPlate::loop()
 {
+	DebugMethodCalls("FrontPlate::loop");
+
 	bool lFunctionKeyFrequencyPressed;
 	bool lFunctionKeyPositivePressed;
 	bool lFunctionKeyNegativePressed;
@@ -470,7 +487,7 @@ String FrontPlate::DispatchSerial(char iModuleIdentifyer, char iParameter)
 
 void FrontPlate::_I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
 {
-	DebugPrintLn("FrontPlate::_I2ESelectFunction:" + String(iFunctionCode));
+	DebugMethodCalls("FrontPlate::_I2ESelectFunction");
 
 	_I2ESwitchLEDs(LOW);
 
@@ -508,7 +525,7 @@ void FrontPlate::_I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
 
 void FrontPlate::_I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
 {
-	DebugPrintLn("FrontPlate::_I2ESelectSingleFunction:" + String(iFunctionCode));
+	DebugMethodCalls("FrontPlate::_I2ESelectSingleFunction");
 
 	_mSelectedCounterFunctionCode = iFunctionCode;
 	_mCounter->I2ESetFunctionCode(_mSelectedCounterFunctionCode);
@@ -537,6 +554,8 @@ void FrontPlate::_I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
 
 void FrontPlate::_I2ESwitchLEDs(uint8_t iTest)
 {
+	DebugMethodCalls("FrontPlate::_I2ESwitchLEDs");
+
 	_mI2EModule->digitalWrite(_cOLEDSelectFrequency, iTest);
 	_mI2EModule->digitalWrite(_cOLEDSelectTPositive, iTest);
 	_mI2EModule->digitalWrite(_cOLEDSelectTNegative, iTest);
@@ -546,16 +565,22 @@ void FrontPlate::_I2ESwitchLEDs(uint8_t iTest)
 
 String FrontPlate::GetName()
 {
+	DebugMethodCalls("FrontPlate::GetName");
+
 	return _mText->GetObjectName();
 }
 
 void FrontPlate::TriggerLampTestOff()
 {
+	DebugMethodCalls("FrontPlate::TriggerLampTestOff");
+
 	_mTriggerLampTestOff = true;
 }
 
 bool FrontPlate::IsNewFunctionSelected()
 {
+	DebugMethodCalls("FrontPlate::IsNewFunctionSelected");
+
 	// the result is only one time valid
 	bool lReturn = _mChangeFunctionDetected;
 
@@ -565,6 +590,8 @@ bool FrontPlate::IsNewFunctionSelected()
 
 bool FrontPlate::IsNewMenuSelected()
 {
+	DebugMethodCalls("FrontPlate::IsNewMenuSelected");
+
 	// the result is only one time valid
 	bool lReturn = _mChangeMenuDecected;
 

@@ -13,6 +13,7 @@
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
 // 20.01.2023: Improve debug handling - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "ModuleBase.h"
 
@@ -33,6 +34,8 @@ TextModuleBase::~TextModuleBase()
 
 String TextModuleBase::GetObjectName()
 {
+	DebugMethodCalls("TextModuleBase::GetObjectName");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Base");
@@ -63,6 +66,7 @@ ModuleBase::~ModuleBase()
 
 void ModuleBase::loop()
 {
+	DebugMethodCalls("ModuleBase::loop");
 }
 
 #if DEBUG_APPLICATION == 0
@@ -74,12 +78,16 @@ String ModuleBase::DispatchSerial(char iModuleIdentifyer, char iParameter)
 
 void ModuleBase::I2EActivate()
 {
+	DebugMethodCalls("ModuleBase::I2EActivate");
+
 	DebugPrintLn("Switch on module: " + GetName());
 	I2ESwitchLamp(true);
 }
 
 void ModuleBase::I2EDeactivate()
 {
+	DebugMethodCalls("ModuleBase::I2EDeactivate");
+
 	DebugPrintLn("Switch off module: " + GetName());
 	mI2EModule->digitalWrite(_cOSelectionFrequency, LOW);
 	mI2EModule->digitalWrite(_cOSelectionPeriod, LOW);
@@ -88,6 +96,8 @@ void ModuleBase::I2EDeactivate()
 
 void ModuleBase::I2EScrollFunctionUp()
 {
+	DebugMethodCalls("ModuleBase::I2EScrollFunctionUp");
+
 	if (mCurrentMenuEntryNumber < (mLastMenuEntryNumber - 1))
 	{
 		mCurrentMenuEntryNumber += 1;
@@ -98,6 +108,8 @@ void ModuleBase::I2EScrollFunctionUp()
 
 void ModuleBase::I2EScrollFunctionDown()
 {
+	DebugMethodCalls("ModuleBase::I2EScrollFunctionDown");
+
 	if (mCurrentMenuEntryNumber > 0)
 	{
 		mCurrentMenuEntryNumber -= 1;
@@ -108,6 +120,8 @@ void ModuleBase::I2EScrollFunctionDown()
 
 void ModuleBase::I2ESetCurrentMenuEntryNumber(int iCurrentMenuEntryNumber)
 {
+	DebugMethodCalls("ModuleBase::I2ESetCurrentMenuEntryNumber");
+
 	int lCurrentMenuEntryNumber = mCurrentMenuEntryNumber;
 
 	if (iCurrentMenuEntryNumber < 0)
@@ -133,6 +147,8 @@ void ModuleBase::I2ESetCurrentMenuEntryNumber(int iCurrentMenuEntryNumber)
 
 void ModuleBase::I2ESwitchLamp(bool iState)
 {
+	DebugMethodCalls("ModuleBase::I2ESwitchLamp");
+
 	if (!mModuleIsInitialized)
 	{
 		return;
@@ -143,6 +159,8 @@ void ModuleBase::I2ESwitchLamp(bool iState)
 
 bool ModuleBase::I2EIsKeySelected()
 {
+	DebugMethodCalls("ModuleBase::I2EIsKeySelected");
+
 	if (!mModuleIsInitialized)
 	{
 		return false;
@@ -158,6 +176,8 @@ bool ModuleBase::I2EIsKeySelected()
 
 void ModuleBase::I2ESelectModule(bool iSelect)
 {
+	DebugMethodCalls("ModuleBase::I2ESelectModule");
+
 	if (!mModuleIsInitialized)
 	{
 		return;
@@ -168,6 +188,8 @@ void ModuleBase::I2ESelectModule(bool iSelect)
 
 void ModuleBase::I2ESelectFrequencyCounter()
 {
+	DebugMethodCalls("ModuleBase::I2ESelectFrequencyCounter");
+
 	if (!mModuleIsInitialized)
 	{
 		return;
@@ -180,6 +202,8 @@ void ModuleBase::I2ESelectFrequencyCounter()
 
 void ModuleBase::I2ESelectPeriodMeasurement()
 {
+	DebugMethodCalls("ModuleBase::I2ESelectPeriodMeasurement");
+
 	if (!mModuleIsInitialized)
 	{
 		return;
@@ -192,6 +216,8 @@ void ModuleBase::I2ESelectPeriodMeasurement()
 
 bool ModuleBase::I2EInitialize()
 {
+	DebugMethodCalls("ModuleBase::I2EInitialize");
+
 	mModuleIsInitialized = false;
 
 	if (mI2CAddress < 0)
@@ -220,16 +246,22 @@ bool ModuleBase::I2EInitialize()
 
 bool ModuleBase::IsModuleInitialized()
 {
+	DebugMethodCalls("ModuleBase::IsModuleInitialized");
+
 	return mModuleIsInitialized;
 }
 
 int ModuleBase::GetCurrentMenuEntryNumber()
 {
+	DebugMethodCalls("ModuleBase::GetCurrentMenuEntryNumber");
+
 	return mCurrentMenuEntryNumber;
 }
 
 int ModuleBase::GetLastMenuEntryNumber()
 {
+	DebugMethodCalls("ModuleBase::GetLastMenuEntryNumber");
+
 	return mLastMenuEntryNumber;
 }
 

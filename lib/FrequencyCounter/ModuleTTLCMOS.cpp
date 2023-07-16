@@ -7,6 +7,7 @@
 // 21.03.2022: Event counting added - Stefan Rau
 // 20.06.2022: Debug instantiation of classes - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "ModuleTTLCMOS.h"
 
@@ -27,6 +28,8 @@ TextModuleTTLCMOS::~TextModuleTTLCMOS()
 
 String TextModuleTTLCMOS::GetObjectName()
 {
+	DebugMethodCalls("TextModuleTTLCMOS::GetObjectName");
+
 	switch (GetLanguage())
 	{
 		TextLangE("TTL/CMOS module");
@@ -36,16 +39,22 @@ String TextModuleTTLCMOS::GetObjectName()
 
 String TextModuleTTLCMOS::MenuItemTTL()
 {
+	DebugMethodCalls("TextModuleTTLCMOS::MenuItemTTL");
+
 	return ("TTL");
 }
 
 String TextModuleTTLCMOS::MenuItemCMOS()
 {
+	DebugMethodCalls("TextModuleTTLCMOS::MenuItemCMOS");
+
 	return ("CMOS");
 }
 
 String TextModuleTTLCMOS::MenuItemOC()
 {
+	DebugMethodCalls("TextModuleTTLCMOS::MenuItemOC");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Open collector");
@@ -55,6 +64,8 @@ String TextModuleTTLCMOS::MenuItemOC()
 
 String TextModuleTTLCMOS::MenuItemOE()
 {
+	DebugMethodCalls("TextModuleTTLCMOS::MenuItemOE");
+
 	switch (GetLanguage())
 	{
 		TextLangE("Open emitter");
@@ -99,6 +110,8 @@ ModuleTTLCMOS::~ModuleTTLCMOS()
 
 void ModuleTTLCMOS::I2EActivate()
 {
+	DebugMethodCalls("ModuleTTLCMOS::I2EActivate");
+
 	DebugPrintLn("Switch on derived: " + GetName());
 	ModuleBase::I2EActivate();
 	I2ESelectFunction();
@@ -106,6 +119,8 @@ void ModuleTTLCMOS::I2EActivate()
 
 void ModuleTTLCMOS::I2EDeactivate()
 {
+	DebugMethodCalls("ModuleTTLCMOS::I2EDeactivate");
+
 	DebugPrintLn("Switch off derived: " + GetName());
 	ModuleBase::I2EDeactivate();
 
@@ -118,6 +133,8 @@ void ModuleTTLCMOS::I2EDeactivate()
 
 void ModuleTTLCMOS::I2ESelectFunction()
 {
+	DebugMethodCalls("ModuleTTLCMOS::I2ESelectFunction");
+
 	if (!mModuleIsInitialized)
 	{
 		return;
@@ -168,21 +185,29 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 String ModuleTTLCMOS::GetName()
 {
+	DebugMethodCalls("ModuleTTLCMOS::GetName");
+
 	return _mText->GetObjectName();
 }
 
 bool ModuleTTLCMOS::IsPeriodMeasurementPossible()
 {
+	DebugMethodCalls("ModuleTTLCMOS::IsPeriodMeasurementPossible");
+
 	return true;
 }
 
 bool ModuleTTLCMOS::IsEventCountingPossible()
 {
+	DebugMethodCalls("ModuleTTLCMOS::IsEventCountingPossible");
+
 	return true;
 }
 
 String ModuleTTLCMOS::GetCurrentMenuEntry(int iMenuEntry)
 {
+	DebugMethodCalls("ModuleTTLCMOS::GetCurrentMenuEntry");
+
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
 	case 0:
@@ -199,5 +224,7 @@ String ModuleTTLCMOS::GetCurrentMenuEntry(int iMenuEntry)
 
 ModuleBase::eModuleCode ModuleTTLCMOS::GetModuleCode()
 {
+	DebugMethodCalls("ModuleTTLCMOS::GetModuleCode");
+
 	return ModuleBase::eModuleCode::TModuleTTLCMOS;
 }

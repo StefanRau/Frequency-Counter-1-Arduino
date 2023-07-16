@@ -14,6 +14,7 @@
 // 26.09.2022: DEBUG_APPLICATION defined in platform.ini - Stefan Rau
 // 21.12.2022: extend destructor - Stefan Rau
 // 20.01.2023: Improve debug handling - Stefan Rau
+// 16.07.2023: Debugging of method calls is now possible - Stefan Rau
 
 #include "LCDHandler.h"
 #include "ErrorHandler.h"
@@ -35,6 +36,8 @@ TextLCDHandler::~TextLCDHandler()
 
 String TextLCDHandler::GetObjectName()
 {
+    DebugMethodCalls("TextLCDHandler::GetObjectName");
+
     switch (GetLanguage())
     {
         TextLangE("LCD");
@@ -44,6 +47,8 @@ String TextLCDHandler::GetObjectName()
 
 String TextLCDHandler::FrequencyCounter()
 {
+    DebugMethodCalls("TextLCDHandler::FrequencyCounter");
+
     switch (GetLanguage())
     {
         TextLangE("Frequencycounter");
@@ -53,6 +58,8 @@ String TextLCDHandler::FrequencyCounter()
 
 String TextLCDHandler::Selection()
 {
+    DebugMethodCalls("TextLCDHandler::Selection");
+
     switch (GetLanguage())
     {
         TextLangE("Selection");
@@ -62,6 +69,8 @@ String TextLCDHandler::Selection()
 
 String TextLCDHandler::Error()
 {
+    DebugMethodCalls("TextLCDHandler::Error");
+
     switch (GetLanguage())
     {
         TextLangE("Error");
@@ -71,6 +80,8 @@ String TextLCDHandler::Error()
 
 String TextLCDHandler::InitError()
 {
+    DebugMethodCalls("TextLCDHandler::InitError");
+
     switch (GetLanguage())
     {
         TextLangE("Can't init LCD");
@@ -127,12 +138,16 @@ LCDHandler::~LCDHandler()
 
 LCDHandler *LCDHandler::GetInstance(sInitializeModule iInitializeModule)
 {
+    DebugMethodCalls("LCDHandler::GetInstance");
+
     gInstance = (gInstance == nullptr) ? new LCDHandler(iInitializeModule) : gInstance;
     return gInstance;
 }
 
 void LCDHandler::loop()
 {
+    DebugMethodCalls("LCDHandler::loop");
+
     if (!mModuleIsInitialized)
     {
         return;
@@ -195,6 +210,8 @@ void LCDHandler::loop()
 
 String LCDHandler::GetName()
 {
+    DebugMethodCalls("LCDHandler::GetName");
+
     return _mText->GetObjectName();
 }
 
@@ -208,6 +225,8 @@ String LCDHandler::DispatchSerial(char iModuleIdentifyer, char iParameter)
 // This function limits the maximum size of a text to 16
 String LCDHandler::_TrimLine(String iText)
 {
+    DebugMethodCalls("LCDHandler::_TrimLine");
+
     String lLine;
 
     lLine = iText + "                ";
@@ -217,6 +236,8 @@ String LCDHandler::_TrimLine(String iText)
 
 void LCDHandler::_I2EWriteMenuNavigator()
 {
+    DebugMethodCalls("LCDHandler::_I2EWriteMenuNavigator");
+
     if (!mModuleIsInitialized)
     {
         return;
@@ -250,22 +271,30 @@ void LCDHandler::_I2EWriteMenuNavigator()
 
 void LCDHandler::SetSelectedFunction(String iText)
 {
+    DebugMethodCalls("LCDHandler::SetSelectedFunction");
+
     _mInputSelectedFunction = iText;
 }
 
 void LCDHandler::SetMeasurementValue(String iText)
 {
+    DebugMethodCalls("LCDHandler::SetMeasurementValue");
+
     _mInputCurrentValue = iText;
 }
 
 void LCDHandler::SetErrorText(String iText)
 {
+    DebugMethodCalls("LCDHandler::SetErrorText");
+
     _mInputError = iText;
     _mStateCode = TShowError;
 }
 
 void LCDHandler::TriggerMenuSelectedFunction(String iText, int iCurrentMenuEntryNumber, int iLastMenuEntryNumber)
 {
+    DebugMethodCalls("LCDHandler::TriggerMenuSelectedFunction");
+
     _mMenuSelectedFunction = iText;
     _mCurrentMenuEntryNumber = iCurrentMenuEntryNumber;
     _mLastMenuEntryNumber = iLastMenuEntryNumber;
@@ -277,6 +306,8 @@ void LCDHandler::TriggerMenuSelectedFunction(String iText, int iCurrentMenuEntry
 
 void LCDHandler::TriggerShowRefresh()
 {
+    DebugMethodCalls("LCDHandler::TriggerShowRefresh");
+
     switch (_mStateCode)
     {
     case TShowMenuDone:
@@ -292,6 +323,8 @@ void LCDHandler::TriggerShowRefresh()
 
 void LCDHandler::TriggerShowCounter()
 {
+    DebugMethodCalls("LCDHandler::TriggerShowCounter");
+
     switch (_mStateCode)
     {
     case TInitialize:

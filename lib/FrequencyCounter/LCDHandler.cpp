@@ -24,7 +24,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextLCDHandler::TextLCDHandler() : TextBase(-1)
+TextLCDHandler::TextLCDHandler() : TextBase()
 {
     DebugInstantiation("TextLCDHandler");
 }

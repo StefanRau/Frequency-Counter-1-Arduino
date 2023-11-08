@@ -30,7 +30,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextFrontPlate::TextFrontPlate() : TextBase(-1)
+TextFrontPlate::TextFrontPlate() : TextBase()
 {
 	DebugInstantiation("TextI2CBase");
 }

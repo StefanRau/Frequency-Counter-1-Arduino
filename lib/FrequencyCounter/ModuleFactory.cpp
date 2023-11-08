@@ -22,7 +22,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextModuleFactory::TextModuleFactory() : TextBase(-1)
+TextModuleFactory::TextModuleFactory() : TextBase()
 {
 	DebugInstantiation("TextModuleFactory");
 }

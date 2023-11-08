@@ -22,7 +22,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextCounter::TextCounter() : TextBase(-1)
+TextCounter::TextCounter() : TextBase()
 {
 	DebugInstantiation("TextCounter");
 }

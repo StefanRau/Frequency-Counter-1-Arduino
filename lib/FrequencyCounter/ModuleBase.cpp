@@ -22,7 +22,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextModuleBase::TextModuleBase() : TextBase(-1)
+TextModuleBase::TextModuleBase() : TextBase()
 {
 	DebugInstantiation("TextModuleBase");
 }

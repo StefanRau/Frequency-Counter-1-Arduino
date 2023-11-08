@@ -25,7 +25,7 @@ static bool gReadEventCounter;
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextMain::TextMain(int iSettingsAddress) : TextBase(iSettingsAddress)
+TextMain::TextMain() : TextBase()
 {
     DebugInstantiation("TextMain");
 }
@@ -98,7 +98,8 @@ Application::Application()
 #ifdef EXTERNAL_EEPROM
     ProjectBase::SetI2CAddressGlobalEEPROM(mInitializeSystem.EEPROM.I2CAddress);
 #endif
-    mText = new TextMain(mInitializeSystem.Text.SettingsAddress);
+    mTextWrapper = new TextWrapper(mInitializeSystem.Text.SettingsAddress);
+    mText = new TextMain();
 
     //// CPU board
 
@@ -451,7 +452,7 @@ void Application::DispatchSerial()
                     // lParameter = 'D', 'E'	: Select language
                     // lParameter = '*'			: Lists all installed language as string of language codes - todo: im verbose mode komagetrennte Texte
                     // lParameter = '?'			: Shows the current language code: 'D', 'E' - todo: im verbose mode den Klartext
-                    lReturn = mText->DispatchSerial(lModule, lParameter);
+                    lReturn = mTextWrapper->DispatchSerial(lModule, lParameter);
                     if ((lReturn != "") && (lParameter != '*') && (lParameter != '?'))
                     {
                         gFrontPlate->TriggerLampTestOff(); // Reload displayed texts

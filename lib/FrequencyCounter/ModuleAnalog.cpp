@@ -15,7 +15,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextModuleAnalog::TextModuleAnalog() : TextBase(-1)
+TextModuleAnalog::TextModuleAnalog() : TextBase()
 {
 	DebugInstantiation("TextModuleAnalog");
 }

@@ -16,7 +16,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextModuleTTLCMOS::TextModuleTTLCMOS() : TextBase(-1)
+TextModuleTTLCMOS::TextModuleTTLCMOS() : TextBase()
 {
 	DebugInstantiation("TextModuleTTLCMOS");
 }

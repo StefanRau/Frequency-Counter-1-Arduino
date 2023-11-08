@@ -18,6 +18,7 @@
 #include "LCDHandler.h"
 #include "RemoteControl.h"
 #include "ErrorHandler.h"
+#include "TextWrapper.h"
 
 #define VERSION "V 1"
 #define DEVICENAME "Frequenzzaehler 1"
@@ -28,7 +29,7 @@
 class TextMain : public TextBase
 {
 public:
-    TextMain(int iSettingsAddress);
+    TextMain();
     ~TextMain();
 
     String GetObjectName() override;
@@ -76,9 +77,10 @@ public:
     } mInitializeSystem;
 
 private:
-    TextMain *mText = nullptr;      // Pointer to current text objekt of main
-    bool mErrorPrinted;             // Signals than an error in the main loop is outputted
-    bool mEventCountingInitialized; // Event counting shall be initialized only once after selected
+    TextMain *mText = nullptr;           // Pointer to current text objekt of main
+    TextWrapper *mTextWrapper = nullptr; // Textwrapper
+    bool mErrorPrinted;                  // Signals than an error in the main loop is outputted
+    bool mEventCountingInitialized;      // Event counting shall be initialized only once after selected
     long mFreeMemory;
 
 #if DEBUG_APPLICATION == 0

@@ -15,7 +15,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextModuleHF::TextModuleHF() : TextBase(-1)
+TextModuleHF::TextModuleHF() : TextBase()
 {
     DebugInstantiation("TextModuleHF");
 }

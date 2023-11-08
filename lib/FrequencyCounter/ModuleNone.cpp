@@ -14,7 +14,7 @@
 /// <summary>
 /// There is no new EEPROM address required
 /// </summary>
-TextModuleNone::TextModuleNone() : TextBase(-1)
+TextModuleNone::TextModuleNone() : TextBase()
 {
 	DebugInstantiation("TextModuleNone");
 }

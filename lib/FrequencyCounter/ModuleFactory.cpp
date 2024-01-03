@@ -24,17 +24,17 @@
 /// </summary>
 TextModuleFactory::TextModuleFactory() : TextBase()
 {
-	DebugInstantiation("TextModuleFactory");
+	DEBUG_INSTANTIATION("TextModuleFactory");
 }
 
 TextModuleFactory::~TextModuleFactory()
 {
-	DebugDestroy("TextModuleFactory");
+	DEBUG_DESTROY("TextModuleFactory");
 }
 
 String TextModuleFactory::GetObjectName()
 {
-	DebugMethodCalls("TextModuleFactory::GetObjectName");
+	DEBUG_METHOD_CALL("TextModuleFactory::GetObjectName");
 
 	switch (GetLanguage())
 	{
@@ -45,7 +45,7 @@ String TextModuleFactory::GetObjectName()
 
 String TextModuleFactory::Unknown()
 {
-	DebugMethodCalls("TextModuleFactory::Unknown");
+	DEBUG_METHOD_CALL("TextModuleFactory::Unknown");
 
 	switch (GetLanguage())
 	{
@@ -60,7 +60,7 @@ static ModuleFactory *gInstance = nullptr;
 
 ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("ModuleFactory: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DEBUG_INSTANTIATION("ModuleFactory: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	sInitializeModule lInitializeModule = iInitializeModule;
 
@@ -109,17 +109,17 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 	}
 
 	_mSelectedModule->I2ESelectFunction();
-	DebugPrintLn("Module factory is initialized");
+	DEBUG_PRINT_LN("Module factory is initialized");
 }
 
 ModuleFactory ::~ModuleFactory()
 {
-	DebugDestroy("ModuleFactory");
+	DEBUG_DESTROY("ModuleFactory");
 }
 
 ModuleFactory *ModuleFactory::GetInstance(sInitializeModule iInitializeModule)
 {
-	DebugMethodCalls("ModuleFactory::GetInstance");
+	DEBUG_METHOD_CALL("ModuleFactory::GetInstance");
 
 	gInstance = (gInstance == nullptr) ? new ModuleFactory(iInitializeModule) : gInstance;
 	return gInstance;
@@ -127,14 +127,14 @@ ModuleFactory *ModuleFactory::GetInstance(sInitializeModule iInitializeModule)
 
 void ModuleFactory::loop()
 {
-	DebugMethodCalls("ModuleFactory::loop");
+	DEBUG_METHOD_CALL("ModuleFactory::loop");
 
 	// check the state of the key of all modules
 	if (_mModuleTTLCMOS->I2EIsKeySelected())
 	{
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleTTLCMOS)
 		{
-			DebugPrintLn("\nModule TTL/CMOS key pressed");
+			DEBUG_PRINT_LN("\nModule TTL/CMOS key pressed");
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleTTLCMOS);
 			delay(100);
 		}
@@ -144,7 +144,7 @@ void ModuleFactory::loop()
 	{
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleAnalog)
 		{
-			DebugPrintLn("\nModule Analog key pressed");
+			DEBUG_PRINT_LN("\nModule Analog key pressed");
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleAnalog);
 			delay(100);
 		}
@@ -154,7 +154,7 @@ void ModuleFactory::loop()
 	{
 		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleHF)
 		{
-			DebugPrintLn("\nModule HF key pressed");
+			DEBUG_PRINT_LN("\nModule HF key pressed");
 			_I2ESelectModule(ModuleBase::eModuleCode::TModuleHF);
 			delay(100);
 		}
@@ -239,7 +239,7 @@ String ModuleFactory::DispatchSerial(char iModuleIdentifyer, char iParameter)
 
 void ModuleFactory::I2ELampTestOn()
 {
-	DebugMethodCalls("ModuleFactory::I2ELampTestOn");
+	DEBUG_METHOD_CALL("ModuleFactory::I2ELampTestOn");
 
 	_mModuleTTLCMOS->I2ESwitchLamp(true); // 100 MHz TTL / CMOS
 	_mModuleAnalog->I2ESwitchLamp(true);  // 100 MHz Analog
@@ -248,14 +248,14 @@ void ModuleFactory::I2ELampTestOn()
 
 String ModuleFactory::GetName()
 {
-	DebugMethodCalls("ModuleFactory::GetName");
+	DEBUG_METHOD_CALL("ModuleFactory::GetName");
 
 	return _mText->GetObjectName();
 }
 
 String ModuleFactory::GetStatus()
 {
-	DebugMethodCalls("ModuleFactory::GetStatus");
+	DEBUG_METHOD_CALL("ModuleFactory::GetStatus");
 
 	String lReturn;
 
@@ -269,21 +269,21 @@ String ModuleFactory::GetStatus()
 
 void ModuleFactory::TriggerLampTestOff()
 {
-	DebugMethodCalls("ModuleFactory::TriggerLampTestOff");
+	DEBUG_METHOD_CALL("ModuleFactory::TriggerLampTestOff");
 
 	_mTriggerLampTestOff = true;
 }
 
 ModuleBase *ModuleFactory::GetSelectedModule()
 {
-	DebugMethodCalls("ModuleFactory::GetSelectedModule");
+	DEBUG_METHOD_CALL("ModuleFactory::GetSelectedModule");
 
 	return _mSelectedModule;
 }
 
 void ModuleFactory::_I2ESelectModule(char iModuleCode)
 {
-	DebugMethodCalls("ModuleFactory::_I2ESelectModule");
+	DEBUG_METHOD_CALL("ModuleFactory::_I2ESelectModule");
 
 	// switch 1st all modules off, before a new one is switched on
 	switch (iModuleCode)

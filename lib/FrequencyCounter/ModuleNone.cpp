@@ -16,17 +16,17 @@
 /// </summary>
 TextModuleNone::TextModuleNone() : TextBase()
 {
-	DebugInstantiation("TextModuleNone");
+	DEBUG_INSTANTIATION("TextModuleNone");
 }
 
 TextModuleNone::~TextModuleNone()
 {
-	DebugDestroy("TextModuleNone");
+	DEBUG_DESTROY("TextModuleNone");
 }
 
 String TextModuleNone::GetObjectName()
 {
-	DebugMethodCalls("TextModuleNone::GetObjectName");
+	DEBUG_METHOD_CALL("TextModuleNone::GetObjectName");
 
 	switch (GetLanguage())
 	{
@@ -37,7 +37,7 @@ String TextModuleNone::GetObjectName()
 
 String TextModuleNone::MenuItemStart()
 {
-	DebugMethodCalls("TextModuleNone::MenuItemStart");
+	DEBUG_METHOD_CALL("TextModuleNone::MenuItemStart");
 
 	switch (GetLanguage())
 	{
@@ -48,7 +48,7 @@ String TextModuleNone::MenuItemStart()
 
 String TextModuleNone::MenuItemCenter()
 {
-	DebugMethodCalls("TextModuleNone::MenuItemCenter");
+	DEBUG_METHOD_CALL("TextModuleNone::MenuItemCenter");
 
 	switch (GetLanguage())
 	{
@@ -59,7 +59,7 @@ String TextModuleNone::MenuItemCenter()
 
 String TextModuleNone::MenuItemEnd()
 {
-	DebugMethodCalls("TextModuleNone::MenuItemEnd");
+	DEBUG_METHOD_CALL("TextModuleNone::MenuItemEnd");
 
 	switch (GetLanguage())
 	{
@@ -72,59 +72,59 @@ String TextModuleNone::MenuItemEnd()
 
 ModuleNone::ModuleNone(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-	DebugInstantiation("ModuleNone: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DEBUG_INSTANTIATION("ModuleNone: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleNone();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
 
-	DebugPrintLn(GetName() + " module is initialized");
+	DEBUG_PRINT_LN(GetName() + " module is initialized");
 	mModuleIsInitialized = true;
 }
 
 ModuleNone::~ModuleNone()
 {
-	DebugDestroy("ModuleNone");
+	DEBUG_DESTROY("ModuleNone");
 }
 
 void ModuleNone::I2EActivate()
 {
-	DebugMethodCalls("ModuleNone::I2EActivate");
+	DEBUG_METHOD_CALL("ModuleNone::I2EActivate");
 }
 
 void ModuleNone::I2EDeactivate()
 {
-	DebugMethodCalls("ModuleNone::I2EDeactivate");
+	DEBUG_METHOD_CALL("ModuleNone::I2EDeactivate");
 }
 
 void ModuleNone::I2ESelectFunction()
 {
-	DebugMethodCalls("ModuleNone::I2ESelectFunction");
+	DEBUG_METHOD_CALL("ModuleNone::I2ESelectFunction");
 }
 
 String ModuleNone::GetName()
 {
-	DebugMethodCalls("ModuleNone::GetName");
+	DEBUG_METHOD_CALL("ModuleNone::GetName");
 
 	return _mText->GetObjectName();
 }
 
 bool ModuleNone::IsPeriodMeasurementPossible()
 {
-	DebugMethodCalls("ModuleNone::IsPeriodMeasurementPossible");
+	DEBUG_METHOD_CALL("ModuleNone::IsPeriodMeasurementPossible");
 
 	return true;
 }
 
 bool ModuleNone::IsEventCountingPossible()
 {
-	DebugMethodCalls("ModuleNone::IsEventCountingPossible");
+	DEBUG_METHOD_CALL("ModuleNone::IsEventCountingPossible");
 
 	return true;
 }
 
 String ModuleNone::GetCurrentMenuEntry(int iMenuEntry)
 {
-	DebugMethodCalls("ModuleNone::GetCurrentMenuEntry");
+	DEBUG_METHOD_CALL("ModuleNone::GetCurrentMenuEntry");
 
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
@@ -140,7 +140,7 @@ String ModuleNone::GetCurrentMenuEntry(int iMenuEntry)
 
 ModuleBase::eModuleCode ModuleNone::GetModuleCode()
 {
-	DebugMethodCalls("ModuleNone::GetModuleCode");
+	DEBUG_METHOD_CALL("ModuleNone::GetModuleCode");
 
 	return ModuleBase::eModuleCode::TModuleNone;
 }

@@ -17,17 +17,17 @@
 /// </summary>
 TextModuleHF::TextModuleHF() : TextBase()
 {
-    DebugInstantiation("TextModuleHF");
+    DEBUG_INSTANTIATION("TextModuleHF");
 }
 
 TextModuleHF::~TextModuleHF()
 {
-    DebugDestroy("TextModuleHF");
+    DEBUG_DESTROY("TextModuleHF");
 }
 
 String TextModuleHF::GetObjectName()
 {
-    DebugMethodCalls("TextModuleHF::GetObjectName");
+    DEBUG_METHOD_CALL("TextModuleHF::GetObjectName");
 
     switch (GetLanguage())
     {
@@ -40,7 +40,7 @@ String TextModuleHF::GetObjectName()
 
 ModuleHF::ModuleHF(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-    DebugInstantiation("ModuleHF: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DEBUG_INSTANTIATION("ModuleHF: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
     _mText = new TextModuleHF();
     mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -54,57 +54,57 @@ ModuleHF::ModuleHF(sInitializeModule iInitializeModule) : ModuleBase(iInitialize
 
 ModuleHF::~ModuleHF()
 {
-    DebugDestroy("ModuleHF");
+    DEBUG_DESTROY("ModuleHF");
 }
 
 void ModuleHF::I2EActivate()
 {
-    DebugMethodCalls("ModuleHF::I2EActivate");
+    DEBUG_METHOD_CALL("ModuleHF::I2EActivate");
 }
 
 void ModuleHF::I2EDeactivate()
 {
-    DebugMethodCalls("ModuleHF::I2EDeactivate");
+    DEBUG_METHOD_CALL("ModuleHF::I2EDeactivate");
 }
 
 void ModuleHF::I2ESelectFunction()
 {
-    DebugMethodCalls("ModuleHF::I2ESelectFunction");
+    DEBUG_METHOD_CALL("ModuleHF::I2ESelectFunction");
 
     // Beim HF Modul gibt es keine Auswahlmöglichkeiten
 }
 
 String ModuleHF::GetName()
 {
-    DebugMethodCalls("ModuleHF::GetName");
+    DEBUG_METHOD_CALL("ModuleHF::GetName");
 
     return _mText->GetObjectName();
 }
 
 bool ModuleHF::IsPeriodMeasurementPossible()
 {
-    DebugMethodCalls("ModuleHF::IsPeriodMeasurementPossible");
+    DEBUG_METHOD_CALL("ModuleHF::IsPeriodMeasurementPossible");
 
     return false;
 }
 
 bool ModuleHF::IsEventCountingPossible()
 {
-    DebugMethodCalls("ModuleHF::IsEventCountingPossible");
+    DEBUG_METHOD_CALL("ModuleHF::IsEventCountingPossible");
 
     return false;
 }
 
 String ModuleHF::GetCurrentMenuEntry(int iMenuEntry)
 {
-    DebugMethodCalls("ModuleHF::GetCurrentMenuEntry");
+    DEBUG_METHOD_CALL("ModuleHF::GetCurrentMenuEntry");
 
     return "";
 }
 
 ModuleBase::eModuleCode ModuleHF::GetModuleCode()
 {
-    DebugMethodCalls("ModuleHF::GetModuleCode");
+    DEBUG_METHOD_CALL("ModuleHF::GetModuleCode");
 
     return ModuleBase::eModuleCode::TModuleHF;
 }

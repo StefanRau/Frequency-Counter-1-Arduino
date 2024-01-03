@@ -26,17 +26,17 @@
 /// </summary>
 TextLCDHandler::TextLCDHandler() : TextBase()
 {
-    DebugInstantiation("TextLCDHandler");
+    DEBUG_INSTANTIATION("TextLCDHandler");
 }
 
 TextLCDHandler::~TextLCDHandler()
 {
-    DebugDestroy("TextLCDHandler");
+    DEBUG_DESTROY("TextLCDHandler");
 }
 
 String TextLCDHandler::GetObjectName()
 {
-    DebugMethodCalls("TextLCDHandler::GetObjectName");
+    DEBUG_METHOD_CALL("TextLCDHandler::GetObjectName");
 
     switch (GetLanguage())
     {
@@ -47,7 +47,7 @@ String TextLCDHandler::GetObjectName()
 
 String TextLCDHandler::FrequencyCounter()
 {
-    DebugMethodCalls("TextLCDHandler::FrequencyCounter");
+    DEBUG_METHOD_CALL("TextLCDHandler::FrequencyCounter");
 
     switch (GetLanguage())
     {
@@ -58,7 +58,7 @@ String TextLCDHandler::FrequencyCounter()
 
 String TextLCDHandler::Selection()
 {
-    DebugMethodCalls("TextLCDHandler::Selection");
+    DEBUG_METHOD_CALL("TextLCDHandler::Selection");
 
     switch (GetLanguage())
     {
@@ -69,7 +69,7 @@ String TextLCDHandler::Selection()
 
 String TextLCDHandler::Error()
 {
-    DebugMethodCalls("TextLCDHandler::Error");
+    DEBUG_METHOD_CALL("TextLCDHandler::Error");
 
     switch (GetLanguage())
     {
@@ -80,7 +80,7 @@ String TextLCDHandler::Error()
 
 String TextLCDHandler::InitError()
 {
-    DebugMethodCalls("TextLCDHandler::InitError");
+    DEBUG_METHOD_CALL("TextLCDHandler::InitError");
 
     switch (GetLanguage())
     {
@@ -98,7 +98,7 @@ static LCDHandler *gInstance = nullptr;
 
 LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-    DebugInstantiation("LCDHandler: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+    DEBUG_INSTANTIATION("LCDHandler: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
     uint8_t lUp[8] = {0x04, 0x0A, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t lDown[8] = {0x00, 0x00, 0x00, 0x00, 0x11, 0x0A, 0x04, 0x00};
@@ -111,12 +111,12 @@ LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 
     if (_mI2ELCD->begin(16, 2) != 0)
     {
-        DebugPrintLn("LCD can't be initialized");
+        DEBUG_PRINT_LN("LCD can't be initialized");
         ErrorPrint(Error::eSeverity::TFatal, _mText->InitError());
         return;
     }
 
-    DebugPrintLn("LCD is initialized at address: " + String(mI2CAddress));
+    DEBUG_PRINT_LN("LCD is initialized at address: " + String(mI2CAddress));
 
     _mI2ELCD->noCursor();
     _mI2ELCD->noBlink();
@@ -133,12 +133,12 @@ LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 
 LCDHandler::~LCDHandler()
 {
-    DebugDestroy("LCDHandler");
+    DEBUG_DESTROY("LCDHandler");
 }
 
 LCDHandler *LCDHandler::GetInstance(sInitializeModule iInitializeModule)
 {
-    DebugMethodCalls("LCDHandler::GetInstance");
+    DEBUG_METHOD_CALL("LCDHandler::GetInstance");
 
     gInstance = (gInstance == nullptr) ? new LCDHandler(iInitializeModule) : gInstance;
     return gInstance;
@@ -146,7 +146,7 @@ LCDHandler *LCDHandler::GetInstance(sInitializeModule iInitializeModule)
 
 void LCDHandler::loop()
 {
-    DebugMethodCalls("LCDHandler::loop");
+    DEBUG_METHOD_CALL("LCDHandler::loop");
 
     if (!mModuleIsInitialized)
     {
@@ -210,7 +210,7 @@ void LCDHandler::loop()
 
 String LCDHandler::GetName()
 {
-    DebugMethodCalls("LCDHandler::GetName");
+    DEBUG_METHOD_CALL("LCDHandler::GetName");
 
     return _mText->GetObjectName();
 }
@@ -225,7 +225,7 @@ String LCDHandler::DispatchSerial(char iModuleIdentifyer, char iParameter)
 // This function limits the maximum size of a text to 16
 String LCDHandler::_TrimLine(String iText)
 {
-    DebugMethodCalls("LCDHandler::_TrimLine");
+    DEBUG_METHOD_CALL("LCDHandler::_TrimLine");
 
     String lLine;
 
@@ -236,7 +236,7 @@ String LCDHandler::_TrimLine(String iText)
 
 void LCDHandler::_I2EWriteMenuNavigator()
 {
-    DebugMethodCalls("LCDHandler::_I2EWriteMenuNavigator");
+    DEBUG_METHOD_CALL("LCDHandler::_I2EWriteMenuNavigator");
 
     if (!mModuleIsInitialized)
     {
@@ -271,21 +271,21 @@ void LCDHandler::_I2EWriteMenuNavigator()
 
 void LCDHandler::SetSelectedFunction(String iText)
 {
-    DebugMethodCalls("LCDHandler::SetSelectedFunction");
+    DEBUG_METHOD_CALL("LCDHandler::SetSelectedFunction");
 
     _mInputSelectedFunction = iText;
 }
 
 void LCDHandler::SetMeasurementValue(String iText)
 {
-    DebugMethodCalls("LCDHandler::SetMeasurementValue");
+    DEBUG_METHOD_CALL("LCDHandler::SetMeasurementValue");
 
     _mInputCurrentValue = iText;
 }
 
 void LCDHandler::SetErrorText(String iText)
 {
-    DebugMethodCalls("LCDHandler::SetErrorText");
+    DEBUG_METHOD_CALL("LCDHandler::SetErrorText");
 
     _mInputError = iText;
     _mStateCode = TShowError;
@@ -293,7 +293,7 @@ void LCDHandler::SetErrorText(String iText)
 
 void LCDHandler::TriggerMenuSelectedFunction(String iText, int iCurrentMenuEntryNumber, int iLastMenuEntryNumber)
 {
-    DebugMethodCalls("LCDHandler::TriggerMenuSelectedFunction");
+    DEBUG_METHOD_CALL("LCDHandler::TriggerMenuSelectedFunction");
 
     _mMenuSelectedFunction = iText;
     _mCurrentMenuEntryNumber = iCurrentMenuEntryNumber;
@@ -306,7 +306,7 @@ void LCDHandler::TriggerMenuSelectedFunction(String iText, int iCurrentMenuEntry
 
 void LCDHandler::TriggerShowRefresh()
 {
-    DebugMethodCalls("LCDHandler::TriggerShowRefresh");
+    DEBUG_METHOD_CALL("LCDHandler::TriggerShowRefresh");
 
     switch (_mStateCode)
     {
@@ -323,7 +323,7 @@ void LCDHandler::TriggerShowRefresh()
 
 void LCDHandler::TriggerShowCounter()
 {
-    DebugMethodCalls("LCDHandler::TriggerShowCounter");
+    DEBUG_METHOD_CALL("LCDHandler::TriggerShowCounter");
 
     switch (_mStateCode)
     {

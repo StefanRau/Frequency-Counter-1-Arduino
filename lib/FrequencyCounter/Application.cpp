@@ -27,33 +27,25 @@ static bool gReadEventCounter;
 /// </summary>
 TextMain::TextMain() : TextBase()
 {
-    DebugInstantiation("TextMain");
+    DEBUG_INSTANTIATION("TextMain");
 }
 
 TextMain::~TextMain()
 {
-    DebugDestroy("TextMain");
+    DEBUG_DESTROY("TextMain");
 }
 
 String TextMain::GetObjectName()
 {
-    DebugMethodCalls("TextMain::GetObjectName");
+    DEBUG_METHOD_CALL("TextMain::GetObjectName");
 
     return "Main";
-}
-
-Application *Application::GetInstance()
-{
-    DebugMethodCalls("Application::GetInstance");
-
-    gInstance = (gInstance == nullptr) ? new Application() : gInstance;
-    return gInstance;
 }
 
 #if DEBUG_APPLICATION == 0
 String TextMain::FreeMemory(int iFreeMemory)
 {
-    DebugMethodCalls("TextMain::FreeMemory");
+    DEBUG_METHOD_CALL("TextMain::FreeMemory");
 
     switch (GetLanguage())
     {
@@ -65,7 +57,7 @@ String TextMain::FreeMemory(int iFreeMemory)
 
 String TextMain::ErrorInSetup()
 {
-    DebugMethodCalls("TextMain::ErrorInSetup");
+    DEBUG_METHOD_CALL("TextMain::ErrorInSetup");
 
     switch (GetLanguage())
     {
@@ -76,7 +68,7 @@ String TextMain::ErrorInSetup()
 
 String TextMain::ErrorInLoop()
 {
-    DebugMethodCalls("TextMain::ErrorInLoop");
+    DEBUG_METHOD_CALL("TextMain::ErrorInLoop");
 
     switch (GetLanguage())
     {
@@ -89,7 +81,7 @@ String TextMain::ErrorInLoop()
 
 Application::Application()
 {
-    DebugInstantiation("Application");
+    DEBUG_INSTANTIATION("Application");
 
     // Set clock frequency of I2C to 100kHz
     Wire.begin();
@@ -144,7 +136,7 @@ Application::Application()
     }
 
     // Initialize task management and all tasks
-    DebugPrintLn("Initialize tasks");
+    DEBUG_PRINT_LN("Initialize tasks");
 
     // Task for lamp test end
     mLampTestTime = Task::GetNewTask(Task::TOneTime, 20, Application::TaskLampTestEnd);
@@ -180,21 +172,29 @@ Application::Application()
         {
             gLCDHandler->SetErrorText(mText->ErrorInSetup());
         }
-        DebugPrintLn("Error in setup");
+        DEBUG_PRINT_LN("Error in setup");
     }
 
     mFreeMemory = 0;
-    DebugPrintLn("End setup");
+    DEBUG_PRINT_LN("End setup");
 }
 
 Application::~Application()
 {
-    DebugDestroy("Application");
+    DEBUG_DESTROY("Application");
+}
+
+Application *Application::GetInstance()
+{
+    DEBUG_METHOD_CALL("Application::GetInstance");
+
+    gInstance = (gInstance == nullptr) ? new Application() : gInstance;
+    return gInstance;
 }
 
 void Application::loop()
 {
-    // DebugMethodCalls("Application::loop");
+    // DEBUG_METHOD_CALL("Application::loop");
 
     // String lCommand = "";
     long lFreeMemory;
@@ -203,7 +203,7 @@ void Application::loop()
     if (mFreeMemory != lFreeMemory)
     {
         mFreeMemory = lFreeMemory;
-        DebugPrintLn("Free Memory: " + String(mFreeMemory));
+        DEBUG_PRINT_LN("Free Memory: " + String(mFreeMemory));
     }
 
     if (gLCDHandler != nullptr)
@@ -226,13 +226,13 @@ void Application::loop()
         if (!mErrorPrinted)
         {
             gLCDHandler->SetErrorText(mText->ErrorInLoop());
-            DebugPrintLn("Error in runtime => processing stopped");
+            DEBUG_PRINT_LN("Error in runtime => processing stopped");
             mErrorPrinted = true;
         }
         return;
     }
 
-    DebugLoop();
+    DEBUG_LOOP();
     gFrontPlate->loop();
     gModuleFactory->loop();
     gCounter->loop();
@@ -242,17 +242,17 @@ void Application::loop()
     {
         Wire.end();
         Wire.begin();
-        DebugPrintLn("Reset I2C");
+        DEBUG_PRINT_LN("Reset I2C");
     }
 
     // Get current menu item if a new one was selected
     if (gFrontPlate->IsNewMenuSelected())
     {
-        DebugPrintLn("Trigger TaskMenuSwitchOff");
+        DEBUG_PRINT_LN("Trigger TaskMenuSwitchOff");
         mMenuSwitchOfTime->Restart();
         ModuleBase *lModuleBase = gModuleFactory->GetSelectedModule();
         gLCDHandler->TriggerMenuSelectedFunction(lModuleBase->GetCurrentMenuEntry(-1), lModuleBase->GetCurrentMenuEntryNumber(), lModuleBase->GetLastMenuEntryNumber());
-        DebugPrintLn("Selected menu entry: " + lModuleBase->GetCurrentMenuEntry(-1));
+        DEBUG_PRINT_LN("Selected menu entry: " + lModuleBase->GetCurrentMenuEntry(-1));
     }
 
     // Reset counter if a new function is selected
@@ -471,7 +471,7 @@ void Application::DispatchSerial()
 
 void Application::TaskLampTestEnd()
 {
-    DebugPrintFromTask("TaskLampTestEnd\n");
+    DEBUG_PRINT_FROM_TASK("TaskLampTestEnd\n");
 
     // Switch off initialization message of LCD
     if (gLCDHandler != nullptr)
@@ -483,15 +483,15 @@ void Application::TaskLampTestEnd()
     if (gFrontPlate != nullptr)
     {
         gFrontPlate->TriggerLampTestOff();
-        DebugPrintFromTask("Initial function: " + gCounter->GetSelectedFunctionName() + "\n");
+        DEBUG_PRINT_FROM_TASK("Initial function: " + gCounter->GetSelectedFunctionName() + "\n");
     }
 
     // End lamp test at all modules
     if (gModuleFactory != nullptr)
     {
         gModuleFactory->TriggerLampTestOff();
-        DebugPrintFromTask("Initial module: " + gModuleFactory->GetSelectedModule()->GetName() + "\n");
-        DebugPrintFromTask("Initial menu entry: " + gModuleFactory->GetSelectedModule()->GetCurrentMenuEntry(-1) + "\n");
+        DEBUG_PRINT_FROM_TASK("Initial module: " + gModuleFactory->GetSelectedModule()->GetName() + "\n");
+        DEBUG_PRINT_FROM_TASK("Initial menu entry: " + gModuleFactory->GetSelectedModule()->GetCurrentMenuEntry(-1) + "\n");
     }
 
     gIsInitialized = true;
@@ -500,7 +500,7 @@ void Application::TaskLampTestEnd()
 void Application::TaskMenuSwitchOff()
 {
     // Switch off menu message on display
-    // DebugPrintFromTask("TaskMenuSwitchOff\n");
+    // DEBUG_PRINT_FROM_TASK("TaskMenuSwitchOff\n");
     if (gLCDHandler != nullptr)
     {
         gLCDHandler->TriggerShowCounter();
@@ -509,7 +509,7 @@ void Application::TaskMenuSwitchOff()
 
 void Application::TaskLCDRefresh()
 {
-    // DebugPrintFromTask("LCDRefresh");
+    // DEBUG_PRINT_FROM_TASK("LCDRefresh");
     gReadEventCounter = true;
     if (gLCDHandler != nullptr)
     {
@@ -519,7 +519,7 @@ void Application::TaskLCDRefresh()
 
 long Application::GetFreeRAM()
 {
-    DebugMethodCalls("Application::GetFreeRAM");
+    DEBUG_METHOD_CALL("Application::GetFreeRAM");
 
     char top;
 #ifdef __arm__
@@ -534,7 +534,7 @@ long Application::GetFreeRAM()
 
 void Application::ResetCounters()
 {
-    DebugMethodCalls("Application::ResetCounters");
+    DEBUG_METHOD_CALL("Application::ResetCounters");
 
     // reset counters
     digitalWrite(cOResetCounter, HIGH);
@@ -545,7 +545,7 @@ void Application::ResetCounters()
 
 void Application::RestartPulsDetection()
 {
-    DebugMethodCalls("Application::RestartPulsDetection");
+    DEBUG_METHOD_CALL("Application::RestartPulsDetection");
 
     // Restart puls detection
     digitalWrite(cONotResetPeriod, LOW);
@@ -556,7 +556,7 @@ void Application::RestartPulsDetection()
 
 void Application::RestartGateTimer()
 {
-    DebugMethodCalls("Application::RestartGateTimer");
+    DEBUG_METHOD_CALL("Application::RestartGateTimer");
 
     // restart 0.5Hz
     digitalWrite(cOReset0_5Hz, HIGH);

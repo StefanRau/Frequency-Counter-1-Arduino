@@ -17,17 +17,17 @@
 /// </summary>
 TextModuleAnalog::TextModuleAnalog() : TextBase()
 {
-	DebugInstantiation("TextModuleAnalog");
+	DEBUG_INSTANTIATION("TextModuleAnalog");
 }
 
 TextModuleAnalog::~TextModuleAnalog()
 {
-	DebugDestroy("TextModuleAnalog");
+	DEBUG_DESTROY("TextModuleAnalog");
 }
 
 String TextModuleAnalog::GetObjectName()
 {
-	DebugMethodCalls("TextModuleAnalog::GetObjectName");
+	DEBUG_METHOD_CALL("TextModuleAnalog::GetObjectName");
 
 	switch (GetLanguage())
 	{
@@ -38,49 +38,49 @@ String TextModuleAnalog::GetObjectName()
 
 String TextModuleAnalog::MenuItem100uV()
 {
-	DebugMethodCalls("TextModuleAnalog::MenuItem100uV");
+	DEBUG_METHOD_CALL("TextModuleAnalog::MenuItem100uV");
 
 	return ("100uV");
 }
 
 String TextModuleAnalog::MenuItem1mV()
 {
-	DebugMethodCalls("TextModuleAnalog::MenuItem1mV");
+	DEBUG_METHOD_CALL("TextModuleAnalog::MenuItem1mV");
 
 	return ("1mV");
 }
 
 String TextModuleAnalog::MenuItem10mV()
 {
-	DebugMethodCalls("TextModuleAnalog::MenuItem10mV");
+	DEBUG_METHOD_CALL("TextModuleAnalog::MenuItem10mV");
 
 	return ("10mV");
 }
 
 String TextModuleAnalog::MenuItem100mV()
 {
-	DebugMethodCalls("TextModuleAnalog::MenuItem100mV");
+	DEBUG_METHOD_CALL("TextModuleAnalog::MenuItem100mV");
 
 	return ("100mV");
 }
 
 String TextModuleAnalog::MenuItem1V()
 {
-	DebugMethodCalls("TextModuleAnalog::MenuItem1V");
+	DEBUG_METHOD_CALL("TextModuleAnalog::MenuItem1V");
 
 	return ("1V");
 }
 
 String TextModuleAnalog::MenuItem10V()
 {
-	DebugMethodCalls("TextModuleAnalog::MenuItem10V");
+	DEBUG_METHOD_CALL("TextModuleAnalog::MenuItem10V");
 
 	return ("10V");
 }
 
 String TextModuleAnalog::MenuItem100V()
 {
-	DebugMethodCalls("TextModuleAnalog::MenuItem100V");
+	DEBUG_METHOD_CALL("TextModuleAnalog::MenuItem100V");
 
 	return ("100V");
 }
@@ -89,7 +89,7 @@ String TextModuleAnalog::MenuItem100V()
 
 ModuleAnalog::ModuleAnalog(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-	DebugInstantiation("ModuleAnalog: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DEBUG_INSTANTIATION("ModuleAnalog: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleAnalog();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -103,22 +103,22 @@ ModuleAnalog::ModuleAnalog(sInitializeModule iInitializeModule) : ModuleBase(iIn
 
 ModuleAnalog::~ModuleAnalog()
 {
-	DebugDestroy("ModuleAnalog");
+	DEBUG_DESTROY("ModuleAnalog");
 }
 
 void ModuleAnalog::I2EActivate()
 {
-	DebugMethodCalls("ModuleAnalog::I2EActivate");
+	DEBUG_METHOD_CALL("ModuleAnalog::I2EActivate");
 }
 
 void ModuleAnalog::I2EDeactivate()
 {
-	DebugMethodCalls("ModuleAnalog::I2EDeactivate");
+	DEBUG_METHOD_CALL("ModuleAnalog::I2EDeactivate");
 }
 
 void ModuleAnalog::I2ESelectFunction()
 {
-	DebugMethodCalls("ModuleAnalog::I2ESelectFunction");
+	DEBUG_METHOD_CALL("ModuleAnalog::I2ESelectFunction");
 
 	if (!mModuleIsInitialized)
 	{
@@ -153,28 +153,28 @@ void ModuleAnalog::I2ESelectFunction()
 
 String ModuleAnalog::GetName()
 {
-	DebugMethodCalls("ModuleAnalog::GetName");
+	DEBUG_METHOD_CALL("ModuleAnalog::GetName");
 
 	return _mText->GetObjectName();
 }
 
 bool ModuleAnalog::IsPeriodMeasurementPossible()
 {
-	DebugMethodCalls("ModuleAnalog::IsPeriodMeasurementPossible");
+	DEBUG_METHOD_CALL("ModuleAnalog::IsPeriodMeasurementPossible");
 
 	return true;
 }
 
 bool ModuleAnalog::IsEventCountingPossible()
 {
-	DebugMethodCalls("ModuleAnalog::IsEventCountingPossible");
+	DEBUG_METHOD_CALL("ModuleAnalog::IsEventCountingPossible");
 
 	return true;
 }
 
 String ModuleAnalog::GetCurrentMenuEntry(int iMenuEntry)
 {
-	DebugMethodCalls("ModuleAnalog::GetCurrentMenuEntry");
+	DEBUG_METHOD_CALL("ModuleAnalog::GetCurrentMenuEntry");
 
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
@@ -205,7 +205,7 @@ String ModuleAnalog::GetCurrentMenuEntry(int iMenuEntry)
 
 ModuleBase::eModuleCode ModuleAnalog::GetModuleCode()
 {
-	DebugMethodCalls("ModuleAnalog::GetModuleCode");
+	DEBUG_METHOD_CALL("ModuleAnalog::GetModuleCode");
 
 	return ModuleBase::eModuleCode::TModuleAnalog;
 }

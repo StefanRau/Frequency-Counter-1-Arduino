@@ -24,17 +24,17 @@
 /// </summary>
 TextModuleBase::TextModuleBase() : TextBase()
 {
-	DebugInstantiation("TextModuleBase");
+	DEBUG_INSTANTIATION("TextModuleBase");
 }
 
 TextModuleBase::~TextModuleBase()
 {
-	DebugDestroy("TextModuleBase");
+	DEBUG_DESTROY("TextModuleBase");
 }
 
 String TextModuleBase::GetObjectName()
 {
-	DebugMethodCalls("TextModuleBase::GetObjectName");
+	DEBUG_METHOD_CALL("TextModuleBase::GetObjectName");
 
 	switch (GetLanguage())
 	{
@@ -47,7 +47,7 @@ String TextModuleBase::GetObjectName()
 
 ModuleBase::ModuleBase(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DEBUG_INSTANTIATION("ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleBase();
 
@@ -61,12 +61,12 @@ ModuleBase::ModuleBase(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 
 ModuleBase::~ModuleBase()
 {
-	DebugDestroy("ModuleBase");
+	DEBUG_DESTROY("ModuleBase");
 }
 
 void ModuleBase::loop()
 {
-	DebugMethodCalls("ModuleBase::loop");
+	DEBUG_METHOD_CALL("ModuleBase::loop");
 }
 
 #if DEBUG_APPLICATION == 0
@@ -78,17 +78,17 @@ String ModuleBase::DispatchSerial(char iModuleIdentifyer, char iParameter)
 
 void ModuleBase::I2EActivate()
 {
-	DebugMethodCalls("ModuleBase::I2EActivate");
+	DEBUG_METHOD_CALL("ModuleBase::I2EActivate");
 
-	DebugPrintLn("Switch on module: " + GetName());
+	DEBUG_PRINT_LN("Switch on module: " + GetName());
 	I2ESwitchLamp(true);
 }
 
 void ModuleBase::I2EDeactivate()
 {
-	DebugMethodCalls("ModuleBase::I2EDeactivate");
+	DEBUG_METHOD_CALL("ModuleBase::I2EDeactivate");
 
-	DebugPrintLn("Switch off module: " + GetName());
+	DEBUG_PRINT_LN("Switch off module: " + GetName());
 	mI2EModule->digitalWrite(_cOSelectionFrequency, LOW);
 	mI2EModule->digitalWrite(_cOSelectionPeriod, LOW);
 	I2ESwitchLamp(false);
@@ -96,7 +96,7 @@ void ModuleBase::I2EDeactivate()
 
 void ModuleBase::I2EScrollFunctionUp()
 {
-	DebugMethodCalls("ModuleBase::I2EScrollFunctionUp");
+	DEBUG_METHOD_CALL("ModuleBase::I2EScrollFunctionUp");
 
 	if (mCurrentMenuEntryNumber < (mLastMenuEntryNumber - 1))
 	{
@@ -108,7 +108,7 @@ void ModuleBase::I2EScrollFunctionUp()
 
 void ModuleBase::I2EScrollFunctionDown()
 {
-	DebugMethodCalls("ModuleBase::I2EScrollFunctionDown");
+	DEBUG_METHOD_CALL("ModuleBase::I2EScrollFunctionDown");
 
 	if (mCurrentMenuEntryNumber > 0)
 	{
@@ -120,7 +120,7 @@ void ModuleBase::I2EScrollFunctionDown()
 
 void ModuleBase::I2ESetCurrentMenuEntryNumber(int iCurrentMenuEntryNumber)
 {
-	DebugMethodCalls("ModuleBase::I2ESetCurrentMenuEntryNumber");
+	DEBUG_METHOD_CALL("ModuleBase::I2ESetCurrentMenuEntryNumber");
 
 	int lCurrentMenuEntryNumber = mCurrentMenuEntryNumber;
 
@@ -147,7 +147,7 @@ void ModuleBase::I2ESetCurrentMenuEntryNumber(int iCurrentMenuEntryNumber)
 
 void ModuleBase::I2ESwitchLamp(bool iState)
 {
-	DebugMethodCalls("ModuleBase::I2ESwitchLamp");
+	DEBUG_METHOD_CALL("ModuleBase::I2ESwitchLamp");
 
 	if (!mModuleIsInitialized)
 	{
@@ -159,7 +159,7 @@ void ModuleBase::I2ESwitchLamp(bool iState)
 
 bool ModuleBase::I2EIsKeySelected()
 {
-	DebugMethodCalls("ModuleBase::I2EIsKeySelected");
+	DEBUG_METHOD_CALL("ModuleBase::I2EIsKeySelected");
 
 	if (!mModuleIsInitialized)
 	{
@@ -176,7 +176,7 @@ bool ModuleBase::I2EIsKeySelected()
 
 void ModuleBase::I2ESelectModule(bool iSelect)
 {
-	DebugMethodCalls("ModuleBase::I2ESelectModule");
+	DEBUG_METHOD_CALL("ModuleBase::I2ESelectModule");
 
 	if (!mModuleIsInitialized)
 	{
@@ -188,50 +188,50 @@ void ModuleBase::I2ESelectModule(bool iSelect)
 
 void ModuleBase::I2ESelectFrequencyCounter()
 {
-	DebugMethodCalls("ModuleBase::I2ESelectFrequencyCounter");
+	DEBUG_METHOD_CALL("ModuleBase::I2ESelectFrequencyCounter");
 
 	if (!mModuleIsInitialized)
 	{
 		return;
 	}
 
-	DebugPrintLn("Switch on frequency measurement for: " + GetName());
+	DEBUG_PRINT_LN("Switch on frequency measurement for: " + GetName());
 	mI2EModule->digitalWrite(_cOSelectionFrequency, HIGH);
 	mI2EModule->digitalWrite(_cOSelectionPeriod, LOW);
 }
 
 void ModuleBase::I2ESelectPeriodMeasurement()
 {
-	DebugMethodCalls("ModuleBase::I2ESelectPeriodMeasurement");
+	DEBUG_METHOD_CALL("ModuleBase::I2ESelectPeriodMeasurement");
 
 	if (!mModuleIsInitialized)
 	{
 		return;
 	}
 
-	DebugPrintLn("Switch on period measurement for: " + GetName());
+	DEBUG_PRINT_LN("Switch on period measurement for: " + GetName());
 	mI2EModule->digitalWrite(_cOSelectionFrequency, LOW);
 	mI2EModule->digitalWrite(_cOSelectionPeriod, HIGH);
 }
 
 bool ModuleBase::I2EInitialize()
 {
-	DebugMethodCalls("ModuleBase::I2EInitialize");
+	DEBUG_METHOD_CALL("ModuleBase::I2EInitialize");
 
 	mModuleIsInitialized = false;
 
 	if (mI2CAddress < 0)
 	{
-		DebugPrintLn(GetName() + " I2C address is not defined");
+		DEBUG_PRINT_LN(GetName() + " I2C address is not defined");
 		return false;
 	}
 
 	if (!mI2EModule->begin_I2C(mI2CAddress, &Wire))
 	{
-		DebugPrintLn(GetName() + " is not initialized");
+		DEBUG_PRINT_LN(GetName() + " is not initialized");
 		return false;
 	}
-	DebugPrintLn(GetName() + " is initialized at address: " + String(mI2CAddress));
+	DEBUG_PRINT_LN(GetName() + " is initialized at address: " + String(mI2CAddress));
 	// mI2EModule->enableAddrPins();
 
 	// set common I/O
@@ -246,21 +246,21 @@ bool ModuleBase::I2EInitialize()
 
 bool ModuleBase::IsModuleInitialized()
 {
-	DebugMethodCalls("ModuleBase::IsModuleInitialized");
+	DEBUG_METHOD_CALL("ModuleBase::IsModuleInitialized");
 
 	return mModuleIsInitialized;
 }
 
 int ModuleBase::GetCurrentMenuEntryNumber()
 {
-	DebugMethodCalls("ModuleBase::GetCurrentMenuEntryNumber");
+	DEBUG_METHOD_CALL("ModuleBase::GetCurrentMenuEntryNumber");
 
 	return mCurrentMenuEntryNumber;
 }
 
 int ModuleBase::GetLastMenuEntryNumber()
 {
-	DebugMethodCalls("ModuleBase::GetLastMenuEntryNumber");
+	DEBUG_METHOD_CALL("ModuleBase::GetLastMenuEntryNumber");
 
 	return mLastMenuEntryNumber;
 }

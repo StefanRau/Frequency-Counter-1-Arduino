@@ -40,7 +40,7 @@ Application *gApplication;
 
 void setup()
 {
-	DebugPrintLn("Start Main");
+	DEBUG_PRINT_LN("Start Main");
 	gApplication = Application::GetInstance();
 }
 

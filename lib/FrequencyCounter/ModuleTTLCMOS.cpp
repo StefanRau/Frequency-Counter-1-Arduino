@@ -18,17 +18,17 @@
 /// </summary>
 TextModuleTTLCMOS::TextModuleTTLCMOS() : TextBase()
 {
-	DebugInstantiation("TextModuleTTLCMOS");
+	DEBUG_INSTANTIATION("TextModuleTTLCMOS");
 }
 
 TextModuleTTLCMOS::~TextModuleTTLCMOS()
 {
-	DebugDestroy("TextModuleTTLCMOS");
+	DEBUG_DESTROY("TextModuleTTLCMOS");
 }
 
 String TextModuleTTLCMOS::GetObjectName()
 {
-	DebugMethodCalls("TextModuleTTLCMOS::GetObjectName");
+	DEBUG_METHOD_CALL("TextModuleTTLCMOS::GetObjectName");
 
 	switch (GetLanguage())
 	{
@@ -39,21 +39,21 @@ String TextModuleTTLCMOS::GetObjectName()
 
 String TextModuleTTLCMOS::MenuItemTTL()
 {
-	DebugMethodCalls("TextModuleTTLCMOS::MenuItemTTL");
+	DEBUG_METHOD_CALL("TextModuleTTLCMOS::MenuItemTTL");
 
 	return ("TTL");
 }
 
 String TextModuleTTLCMOS::MenuItemCMOS()
 {
-	DebugMethodCalls("TextModuleTTLCMOS::MenuItemCMOS");
+	DEBUG_METHOD_CALL("TextModuleTTLCMOS::MenuItemCMOS");
 
 	return ("CMOS");
 }
 
 String TextModuleTTLCMOS::MenuItemOC()
 {
-	DebugMethodCalls("TextModuleTTLCMOS::MenuItemOC");
+	DEBUG_METHOD_CALL("TextModuleTTLCMOS::MenuItemOC");
 
 	switch (GetLanguage())
 	{
@@ -64,7 +64,7 @@ String TextModuleTTLCMOS::MenuItemOC()
 
 String TextModuleTTLCMOS::MenuItemOE()
 {
-	DebugMethodCalls("TextModuleTTLCMOS::MenuItemOE");
+	DEBUG_METHOD_CALL("TextModuleTTLCMOS::MenuItemOE");
 
 	switch (GetLanguage())
 	{
@@ -77,7 +77,7 @@ String TextModuleTTLCMOS::MenuItemOE()
 
 ModuleTTLCMOS::ModuleTTLCMOS(sInitializeModule iInitializeModule) : ModuleBase(iInitializeModule)
 {
-	DebugInstantiation("ModuleTTLCMOS: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DEBUG_INSTANTIATION("ModuleTTLCMOS: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	_mText = new TextModuleTTLCMOS();
 	mLastMenuEntryNumber = _cNumberOfMenuEntries;
@@ -105,23 +105,23 @@ ModuleTTLCMOS::ModuleTTLCMOS(sInitializeModule iInitializeModule) : ModuleBase(i
 
 ModuleTTLCMOS::~ModuleTTLCMOS()
 {
-	DebugDestroy("ModuleTTLCMOS");
+	DEBUG_DESTROY("ModuleTTLCMOS");
 }
 
 void ModuleTTLCMOS::I2EActivate()
 {
-	DebugMethodCalls("ModuleTTLCMOS::I2EActivate");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::I2EActivate");
 
-	DebugPrintLn("Switch on derived: " + GetName());
+	DEBUG_PRINT_LN("Switch on derived: " + GetName());
 	ModuleBase::I2EActivate();
 	I2ESelectFunction();
 }
 
 void ModuleTTLCMOS::I2EDeactivate()
 {
-	DebugMethodCalls("ModuleTTLCMOS::I2EDeactivate");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::I2EDeactivate");
 
-	DebugPrintLn("Switch off derived: " + GetName());
+	DEBUG_PRINT_LN("Switch off derived: " + GetName());
 	ModuleBase::I2EDeactivate();
 
 	// Switch off all relais for input selection
@@ -133,7 +133,7 @@ void ModuleTTLCMOS::I2EDeactivate()
 
 void ModuleTTLCMOS::I2ESelectFunction()
 {
-	DebugMethodCalls("ModuleTTLCMOS::I2ESelectFunction");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::I2ESelectFunction");
 
 	if (!mModuleIsInitialized)
 	{
@@ -151,7 +151,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 	{
 	case 0:
 		// TTL Eingang
-		DebugPrintLn("TTL input");
+		DEBUG_PRINT_LN("TTL input");
 		mI2EModule->digitalWrite(_cOInputSelection0, LOW);
 		mI2EModule->digitalWrite(_cOInputSelection1, LOW);
 		mI2EModule->digitalWrite(_cOSelectTTL, HIGH); // Relais
@@ -159,7 +159,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 	case 1:
 		// CMOS Eingang
-		DebugPrintLn("CMOS input");
+		DEBUG_PRINT_LN("CMOS input");
 		mI2EModule->digitalWrite(_cOInputSelection0, HIGH);
 		mI2EModule->digitalWrite(_cOInputSelection1, LOW);
 		mI2EModule->digitalWrite(_cOSelectCMOS, HIGH); // Relais
@@ -167,7 +167,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 	case 2:
 		// Open Emitter Eingang
-		DebugPrintLn("Open emitter input");
+		DEBUG_PRINT_LN("Open emitter input");
 		mI2EModule->digitalWrite(_cOInputSelection0, LOW);
 		mI2EModule->digitalWrite(_cOInputSelection1, HIGH);
 		mI2EModule->digitalWrite(_cOSelectOpenEmitter, HIGH); // Relais
@@ -175,7 +175,7 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 	case 3:
 		// Open Kollektor Eingang
-		DebugPrintLn("Open collector input");
+		DEBUG_PRINT_LN("Open collector input");
 		mI2EModule->digitalWrite(_cOInputSelection0, HIGH);
 		mI2EModule->digitalWrite(_cOInputSelection1, HIGH);
 		mI2EModule->digitalWrite(_cOSelectOpenCollector, HIGH); // Relais
@@ -185,28 +185,28 @@ void ModuleTTLCMOS::I2ESelectFunction()
 
 String ModuleTTLCMOS::GetName()
 {
-	DebugMethodCalls("ModuleTTLCMOS::GetName");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::GetName");
 
 	return _mText->GetObjectName();
 }
 
 bool ModuleTTLCMOS::IsPeriodMeasurementPossible()
 {
-	DebugMethodCalls("ModuleTTLCMOS::IsPeriodMeasurementPossible");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::IsPeriodMeasurementPossible");
 
 	return true;
 }
 
 bool ModuleTTLCMOS::IsEventCountingPossible()
 {
-	DebugMethodCalls("ModuleTTLCMOS::IsEventCountingPossible");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::IsEventCountingPossible");
 
 	return true;
 }
 
 String ModuleTTLCMOS::GetCurrentMenuEntry(int iMenuEntry)
 {
-	DebugMethodCalls("ModuleTTLCMOS::GetCurrentMenuEntry");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::GetCurrentMenuEntry");
 
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
@@ -224,7 +224,7 @@ String ModuleTTLCMOS::GetCurrentMenuEntry(int iMenuEntry)
 
 ModuleBase::eModuleCode ModuleTTLCMOS::GetModuleCode()
 {
-	DebugMethodCalls("ModuleTTLCMOS::GetModuleCode");
+	DEBUG_METHOD_CALL("ModuleTTLCMOS::GetModuleCode");
 
 	return ModuleBase::eModuleCode::TModuleTTLCMOS;
 }

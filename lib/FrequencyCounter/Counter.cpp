@@ -24,17 +24,17 @@
 /// </summary>
 TextCounter::TextCounter() : TextBase()
 {
-	DebugInstantiation("TextCounter");
+	DEBUG_INSTANTIATION("TextCounter");
 }
 
 TextCounter::~TextCounter()
 {
-	DebugDestroy("TextCounter");
+	DEBUG_DESTROY("TextCounter");
 }
 
 String TextCounter::GetObjectName()
 {
-	DebugMethodCalls("TextCounter::GetObjectName");
+	DEBUG_METHOD_CALL("TextCounter::GetObjectName");
 
 	switch (GetLanguage())
 	{
@@ -45,7 +45,7 @@ String TextCounter::GetObjectName()
 
 String TextCounter::InitError(String iICName)
 {
-	DebugMethodCalls("TextCounter::InitError");
+	DEBUG_METHOD_CALL("TextCounter::InitError");
 
 	switch (GetLanguage())
 	{
@@ -56,14 +56,14 @@ String TextCounter::InitError(String iICName)
 
 String TextCounter::ResultFrequency(float iNumber)
 {
-	DebugMethodCalls("TextCounter::ResultFrequency");
+	DEBUG_METHOD_CALL("TextCounter::ResultFrequency");
 
 	return String(iNumber, 0) + " Hz";
 }
 
 String TextCounter::ResultPeriod(float iNumber)
 {
-	DebugMethodCalls("TextCounter::ResultPeriod");
+	DEBUG_METHOD_CALL("TextCounter::ResultPeriod");
 
 	if (iNumber >= 1)
 	{
@@ -83,14 +83,14 @@ String TextCounter::ResultPeriod(float iNumber)
 
 String TextCounter::ResultEventCount(float iNumber)
 {
-	DebugMethodCalls("TextCounter::ResultEventCount");
+	DEBUG_METHOD_CALL("TextCounter::ResultEventCount");
 
 	return String(iNumber, 0);
 }
 
 String TextCounter::Overflow()
 {
-	DebugMethodCalls("TextCounter::Overflow");
+	DEBUG_METHOD_CALL("TextCounter::Overflow");
 
 	switch (GetLanguage())
 	{
@@ -101,7 +101,7 @@ String TextCounter::Overflow()
 
 String TextCounter::FunctionNameFrequency()
 {
-	DebugMethodCalls("TextCounter::FunctionNameFrequency");
+	DEBUG_METHOD_CALL("TextCounter::FunctionNameFrequency");
 
 	switch (GetLanguage())
 	{
@@ -112,7 +112,7 @@ String TextCounter::FunctionNameFrequency()
 
 String TextCounter::FunctionNameEdgeNegative()
 {
-	DebugMethodCalls("TextCounter::FunctionNameEdgeNegative");
+	DEBUG_METHOD_CALL("TextCounter::FunctionNameEdgeNegative");
 
 	switch (GetLanguage())
 	{
@@ -123,7 +123,7 @@ String TextCounter::FunctionNameEdgeNegative()
 
 String TextCounter::FunctionNameEdgePositive()
 {
-	DebugMethodCalls("TextCounter::FunctionNameEdgePositive");
+	DEBUG_METHOD_CALL("TextCounter::FunctionNameEdgePositive");
 
 	switch (GetLanguage())
 	{
@@ -134,7 +134,7 @@ String TextCounter::FunctionNameEdgePositive()
 
 String TextCounter::FunctionNameNegative()
 {
-	DebugMethodCalls("TextCounter::FunctionNameNegative");
+	DEBUG_METHOD_CALL("TextCounter::FunctionNameNegative");
 
 	switch (GetLanguage())
 	{
@@ -145,7 +145,7 @@ String TextCounter::FunctionNameNegative()
 
 String TextCounter::FunctionNamePositive()
 {
-	DebugMethodCalls("TextCounter::FunctionNamePositive");
+	DEBUG_METHOD_CALL("TextCounter::FunctionNamePositive");
 
 	switch (GetLanguage())
 	{
@@ -156,7 +156,7 @@ String TextCounter::FunctionNamePositive()
 
 String TextCounter::FunctionNameEventCounting()
 {
-	DebugMethodCalls("TextCounter::FunctionNameEventCounting");
+	DEBUG_METHOD_CALL("TextCounter::FunctionNameEventCounting");
 
 	switch (GetLanguage())
 	{
@@ -167,7 +167,7 @@ String TextCounter::FunctionNameEventCounting()
 
 String TextCounter::FunctionNameNoSelection()
 {
-	DebugMethodCalls("");
+	DEBUG_METHOD_CALL("");
 
 	switch (GetLanguage())
 	{
@@ -178,7 +178,7 @@ String TextCounter::FunctionNameNoSelection()
 
 String TextCounter::FunctionNameUnknown()
 {
-	DebugMethodCalls("TextCounter::FunctionNameUnknown");
+	DEBUG_METHOD_CALL("TextCounter::FunctionNameUnknown");
 
 	switch (GetLanguage())
 	{
@@ -193,7 +193,7 @@ static Counter *gInstance = nullptr;
 
 Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
 {
-	DebugInstantiation("Counter: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
+	DEBUG_INSTANTIATION("Counter: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	short lI2CAddress = mI2CAddress;
 	// Initialize hardware
@@ -203,7 +203,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 
 	if (lI2CAddress < 0)
 	{
-		DebugPrintLn("Counter I2C address is not defined");
+		DEBUG_PRINT_LN("Counter I2C address is not defined");
 		return;
 	}
 
@@ -212,10 +212,10 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	if (!_mI2LowerWord->begin_I2C(lI2CAddress, &Wire))
 	{
 		ErrorPrint(Error::eSeverity::TFatal, _mText->InitError("lower word"));
-		DebugPrintLn("Counter IC for lower word can't be initialized");
+		DEBUG_PRINT_LN("Counter IC for lower word can't be initialized");
 		return;
 	}
-	DebugPrintLn("Counter IC for lower word is initialized at address: " + String(lI2CAddress));
+	DEBUG_PRINT_LN("Counter IC for lower word is initialized at address: " + String(lI2CAddress));
 	//_mI2LowerWord->enableAddrPins();
 	lI2CAddress += 1;
 
@@ -224,10 +224,10 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	if (!_mI2UpperWord->begin_I2C(lI2CAddress, &Wire))
 	{
 		ErrorPrint(Error::eSeverity::TFatal, _mText->InitError("upper word"));
-		DebugPrintLn("Counter IC for upper word can't be initialized");
+		DEBUG_PRINT_LN("Counter IC for upper word can't be initialized");
 		return;
 	}
-	DebugPrintLn("Counter IC for upper word is initialized at address: " + String(lI2CAddress));
+	DEBUG_PRINT_LN("Counter IC for upper word is initialized at address: " + String(lI2CAddress));
 	//_mI2UpperWord->enableAddrPins();
 
 	_mI2LowerWord->pinMode(0, INPUT);
@@ -272,12 +272,12 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 
 Counter::~Counter()
 {
-	DebugDestroy("Counter");
+	DEBUG_DESTROY("Counter");
 }
 
 Counter *Counter::GetInstance(sInitializeModule iInitializeModule)
 {
-	DebugMethodCalls("Counter::GetInstance");
+	DEBUG_METHOD_CALL("Counter::GetInstance");
 
 	gInstance = (gInstance == nullptr) ? new Counter(iInitializeModule) : gInstance;
 	return gInstance;
@@ -285,7 +285,7 @@ Counter *Counter::GetInstance(sInitializeModule iInitializeModule)
 
 void Counter::loop()
 {
-	DebugMethodCalls("Counter::loop");
+	DEBUG_METHOD_CALL("Counter::loop");
 }
 
 #if DEBUG_APPLICATION == 0
@@ -297,7 +297,7 @@ String Counter::DispatchSerial(char iModuleIdentifyer, char iParameter)
 
 String Counter::I2EGetCounterValue()
 {
-	DebugMethodCalls("Counter::I2EGetCounterValue");
+	DEBUG_METHOD_CALL("Counter::I2EGetCounterValue");
 
 	uint16_t lLowerWord;
 	uint16_t lUpperWord;
@@ -361,13 +361,13 @@ String Counter::I2EGetCounterValue()
 		lResultString = _mText->Overflow();
 	}
 
-	// DebugPrintLn("Counter value: " + lResultString);
+	// DEBUG_PRINT_LN("Counter value: " + lResultString);
 	return lResultString;
 }
 
 void Counter::I2ESetFunctionCode(eFunctionCode iFunctionCode)
 {
-	DebugMethodCalls("Counter::I2ESetFunctionCode");
+	DEBUG_METHOD_CALL("Counter::I2ESetFunctionCode");
 
 	if (!mModuleIsInitialized)
 	{
@@ -414,14 +414,14 @@ void Counter::I2ESetFunctionCode(eFunctionCode iFunctionCode)
 
 Counter::eFunctionCode Counter::GetFunctionCode()
 {
-	DebugMethodCalls("Counter::GetFunctionCode");
+	DEBUG_METHOD_CALL("Counter::GetFunctionCode");
 
 	return _mFunctionCode;
 }
 
 String Counter::GetSelectedFunctionName()
 {
-	DebugMethodCalls("Counter::GetSelectedFunctionName");
+	DEBUG_METHOD_CALL("Counter::GetSelectedFunctionName");
 
 	switch (_mFunctionCode)
 	{
@@ -445,7 +445,7 @@ String Counter::GetSelectedFunctionName()
 
 String Counter::GetName()
 {
-	DebugMethodCalls("Counter::GetName");
+	DEBUG_METHOD_CALL("Counter::GetName");
 
 	return _mText->GetObjectName();
 }

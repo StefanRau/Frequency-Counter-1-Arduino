@@ -42,8 +42,8 @@ ModuleHF::ModuleHF(sInitializeModule iInitializeModule) : ModuleBase(iInitialize
 {
     DEBUG_INSTANTIATION("ModuleHF: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
-    _mText = new TextModuleHF();
-    mLastMenuEntryNumber = _cNumberOfMenuEntries;
+    mText = new TextModuleHF();
+    mLastMenuEntryNumber = cNumberOfMenuEntries;
 
     // Initialize hardware
     if (I2EInitialize())
@@ -78,7 +78,7 @@ String ModuleHF::GetName()
 {
     DEBUG_METHOD_CALL("ModuleHF::GetName");
 
-    return _mText->GetObjectName();
+    return mText->GetObjectName();
 }
 
 bool ModuleHF::IsPeriodMeasurementPossible()

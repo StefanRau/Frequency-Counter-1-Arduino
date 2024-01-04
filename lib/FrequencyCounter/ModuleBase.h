@@ -32,7 +32,7 @@ public:
 class ModuleBase : public I2CBase
 {
 public:
-	enum eModuleCode : char
+	enum class eModuleCode : char
 	{
 		TModuleTTLCMOS = 'T',
 		TModuleAnalog = 'A',
@@ -41,23 +41,6 @@ public:
 		TNoSelection = '-'
 	};
 
-private:
-	// I/O bits of MCP23017 - for all modues the same
-	const uint8_t _cOSelectionFrequency = 0;	 // Selects output relais of frequency output
-	const uint8_t _cOSelectionPeriod = 1;		 // Selects output relais of period output
-	const uint8_t _cIAddressSelectionButton = 8; // Button at front plate
-	const uint8_t _cOAddressLED = 9;			 // LED at front plate
-	const int _cEepromIndexMenu = 1;			 // Entry used for selected menu
-	const int _cEepromIndexFunction = 2;		 // Entry used for selected function
-
-	TextModuleBase *_mText; // Pointer to current text objekt of the class
-
-protected:
-	Adafruit_MCP23X17 *mI2EModule = nullptr; // Reference of port extender
-	int mLastMenuEntryNumber;				 // Number of menu entries of the current input module
-	int mCurrentMenuEntryNumber = 0;		 // Number of current menu entry
-
-public:
 	/// <summary>
 	/// Constructor
 	/// </summary>
@@ -139,16 +122,6 @@ public:
 	/// </summary>
 	void I2ESelectPeriodMeasurement();
 
-protected:
-	/// <summary>
-	/// Called from constructor of derived classes. Initializes the module hardware.
-	/// </summary>
-	/// <returns>true: module is initialized, false: module is not initialized</returns>
-	bool I2EInitialize();
-
-public:
-	// Functions that can be called also from tasks
-
 	/// <summary>
 	/// Gets the information about possibility of period measurement of the module.
 	/// </summary>
@@ -199,6 +172,28 @@ public:
 	/// <returns>String with comma separated list of menu entries</returns>
 	String GetAllMenuEntryItems();
 #endif
+
+protected:
+	Adafruit_MCP23X17 *mI2EModule = nullptr; // Reference of port extender
+	int mLastMenuEntryNumber;				 // Number of menu entries of the current input module
+	int mCurrentMenuEntryNumber = 0;		 // Number of current menu entry
+
+	/// <summary>
+	/// Called from constructor of derived classes. Initializes the module hardware.
+	/// </summary>
+	/// <returns>true: module is initialized, false: module is not initialized</returns>
+	bool I2EInitialize();
+
+private:
+	// I/O bits of MCP23017 - for all modues the same
+	const uint8_t cOSelectionFrequency = 0;		// Selects output relais of frequency output
+	const uint8_t cOSelectionPeriod = 1;		// Selects output relais of period output
+	const uint8_t cIAddressSelectionButton = 8; // Button at front plate
+	const uint8_t cOAddressLED = 9;				// LED at front plate
+	const int cEepromIndexMenu = 1;				// Entry used for selected menu
+	const int cEepromIndexFunction = 2;			// Entry used for selected function
+
+	TextModuleBase *mText; // Pointer to current text objekt of the class
 };
 
 #endif

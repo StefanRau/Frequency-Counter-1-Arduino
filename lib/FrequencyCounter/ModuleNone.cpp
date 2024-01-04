@@ -74,8 +74,8 @@ ModuleNone::ModuleNone(sInitializeModule iInitializeModule) : ModuleBase(iInitia
 {
 	DEBUG_INSTANTIATION("ModuleNone: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
-	_mText = new TextModuleNone();
-	mLastMenuEntryNumber = _cNumberOfMenuEntries;
+	mText = new TextModuleNone();
+	mLastMenuEntryNumber = cNumberOfMenuEntries;
 
 	DEBUG_PRINT_LN(GetName() + " module is initialized");
 	mModuleIsInitialized = true;
@@ -105,7 +105,7 @@ String ModuleNone::GetName()
 {
 	DEBUG_METHOD_CALL("ModuleNone::GetName");
 
-	return _mText->GetObjectName();
+	return mText->GetObjectName();
 }
 
 bool ModuleNone::IsPeriodMeasurementPossible()
@@ -129,11 +129,11 @@ String ModuleNone::GetCurrentMenuEntry(int iMenuEntry)
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
 	case 0:
-		return _mText->MenuItemStart();
+		return mText->MenuItemStart();
 	case 1:
-		return _mText->MenuItemCenter();
+		return mText->MenuItemCenter();
 	case 2:
-		return _mText->MenuItemEnd();
+		return mText->MenuItemEnd();
 	}
 	return "";
 }

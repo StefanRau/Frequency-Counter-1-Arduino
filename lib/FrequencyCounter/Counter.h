@@ -44,7 +44,7 @@ public:
 class Counter : public I2CBase
 {
 public:
-	enum eFunctionCode : char
+	enum class eFunctionCode : char
 	{
 		TFrequency = 'f',
 		TEdgeNegative = 'n',
@@ -55,32 +55,6 @@ public:
 		TNoSelection = '-'
 	};
 
-	TextCounter *_mText = nullptr; // Pointer to current text objekt of the class
-
-private:
-	const uint8_t _cOSelectFunctionS0 = 12;
-	const uint8_t _cOSelectFunctionS1 = 13;
-	const uint8_t _cOSelectPeriod = 14;
-	const uint8_t _cIOverflow = 15;
-
-	// MCP23017 IC 4 - lower word input 0 .. 15
-	Adafruit_MCP23X17 *_mI2LowerWord = nullptr;
-
-	// MCP23017 IC 5 - upper word input 16 .. 26, reset counter, input selection
-	Adafruit_MCP23X17 *_mI2UpperWord = nullptr;
-
-	eFunctionCode _mFunctionCode; // Code of the currently selected function
-
-private:
-	/// <summary>
-	/// Constructor
-	/// </summary>
-	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
-	Counter(sInitializeModule iInitializeModule);
-	
-	~Counter();
-
-public:
 	static Counter *GetInstance(sInitializeModule iInitializeModule);
 
 	// Functions that can be called from within main loop
@@ -133,6 +107,30 @@ public:
 	/// </summary>
 	/// <returns>Gets the current name depending on current language</returns>
 	String GetName() override;
+
+private:
+	const uint8_t _cOSelectFunctionS0 = 12;
+	const uint8_t _cOSelectFunctionS1 = 13;
+	const uint8_t _cOSelectPeriod = 14;
+	const uint8_t _cIOverflow = 15;
+
+	TextCounter *mText = nullptr; // Pointer to current text objekt of the class
+
+	// MCP23017 IC 4 - lower word input 0 .. 15
+	Adafruit_MCP23X17 *_mI2LowerWord = nullptr;
+
+	// MCP23017 IC 5 - upper word input 16 .. 26, reset counter, input selection
+	Adafruit_MCP23X17 *_mI2UpperWord = nullptr;
+
+	eFunctionCode _mFunctionCode; // Code of the currently selected function
+
+	/// <summary>
+	/// Constructor
+	/// </summary>
+	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
+	Counter(sInitializeModule iInitializeModule);
+
+	~Counter();
 };
 
 #endif

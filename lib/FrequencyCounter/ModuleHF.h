@@ -26,13 +26,6 @@ public:
 
 class ModuleHF : public ModuleBase
 {
-private:
-    static const int _cNumberOfMenuEntries = 0;
-
-    /// <summary>
-    /// Pointer to current text objekt of the class
-    /// </summary>
-    TextModuleHF *_mText = nullptr;
 
 public:
     /// <summary>
@@ -41,8 +34,6 @@ public:
     /// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
     ModuleHF(sInitializeModule iInitializeModule);
     ~ModuleHF();
-
-    // Functions that can be called from within main loop
 
     /// <summary>
     /// Activates the module => restores the last stored state
@@ -53,15 +44,6 @@ public:
     /// Deactivates the module - switch off all outputs
     /// </summary>
     void I2EDeactivate() override;
-
-protected:
-    /// <summary>
-    /// Triggers hardware for selected menu entry
-    /// </summary>
-    void I2ESelectFunction() override;
-
-public:
-    // Functions that can be called also from tasks
 
     /// <summary>
     /// Readable name of the module
@@ -93,6 +75,20 @@ public:
     /// </summary>
     /// <returns>Module code</returns>
     ModuleBase::eModuleCode GetModuleCode() override;
+
+protected:
+    /// <summary>
+    /// Triggers hardware for selected menu entry
+    /// </summary>
+    void I2ESelectFunction() override;
+
+private:
+    static const int cNumberOfMenuEntries = 0;
+
+    /// <summary>
+    /// Pointer to current text objekt of the class
+    /// </summary>
+    TextModuleHF *mText = nullptr;
 };
 
 #endif

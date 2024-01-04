@@ -49,10 +49,10 @@ ModuleBase::ModuleBase(sInitializeModule iInitializeModule) : I2CBase(iInitializ
 {
 	DEBUG_INSTANTIATION("ModuleBase: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
-	_mText = new TextModuleBase();
+	mText = new TextModuleBase();
 
 	mI2EModule = new Adafruit_MCP23X17();
-	mCurrentMenuEntryNumber = GetSetting(_cEepromIndexMenu);
+	mCurrentMenuEntryNumber = GetSetting(cEepromIndexMenu);
 	if (mCurrentMenuEntryNumber == cNullSetting)
 	{
 		mCurrentMenuEntryNumber = 0;
@@ -89,8 +89,8 @@ void ModuleBase::I2EDeactivate()
 	DEBUG_METHOD_CALL("ModuleBase::I2EDeactivate");
 
 	DEBUG_PRINT_LN("Switch off module: " + GetName());
-	mI2EModule->digitalWrite(_cOSelectionFrequency, LOW);
-	mI2EModule->digitalWrite(_cOSelectionPeriod, LOW);
+	mI2EModule->digitalWrite(cOSelectionFrequency, LOW);
+	mI2EModule->digitalWrite(cOSelectionPeriod, LOW);
 	I2ESwitchLamp(false);
 }
 
@@ -101,7 +101,7 @@ void ModuleBase::I2EScrollFunctionUp()
 	if (mCurrentMenuEntryNumber < (mLastMenuEntryNumber - 1))
 	{
 		mCurrentMenuEntryNumber += 1;
-		SetSetting(_cEepromIndexMenu, mCurrentMenuEntryNumber);
+		SetSetting(cEepromIndexMenu, mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -113,7 +113,7 @@ void ModuleBase::I2EScrollFunctionDown()
 	if (mCurrentMenuEntryNumber > 0)
 	{
 		mCurrentMenuEntryNumber -= 1;
-		SetSetting(_cEepromIndexMenu, mCurrentMenuEntryNumber);
+		SetSetting(cEepromIndexMenu, mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -140,7 +140,7 @@ void ModuleBase::I2ESetCurrentMenuEntryNumber(int iCurrentMenuEntryNumber)
 	// Something changed?
 	if (lCurrentMenuEntryNumber != mCurrentMenuEntryNumber)
 	{
-		SetSetting(_cEepromIndexMenu, mCurrentMenuEntryNumber);
+		SetSetting(cEepromIndexMenu, mCurrentMenuEntryNumber);
 		I2ESelectFunction();
 	}
 }
@@ -154,7 +154,7 @@ void ModuleBase::I2ESwitchLamp(bool iState)
 		return;
 	}
 
-	mI2EModule->digitalWrite(_cOAddressLED, Bool2State(iState));
+	mI2EModule->digitalWrite(cOAddressLED, Bool2State(iState));
 }
 
 bool ModuleBase::I2EIsKeySelected()
@@ -166,7 +166,7 @@ bool ModuleBase::I2EIsKeySelected()
 		return false;
 	}
 
-	if (mI2EModule->digitalRead(_cIAddressSelectionButton) == HIGH)
+	if (mI2EModule->digitalRead(cIAddressSelectionButton) == HIGH)
 	{
 		return true;
 	}
@@ -196,8 +196,8 @@ void ModuleBase::I2ESelectFrequencyCounter()
 	}
 
 	DEBUG_PRINT_LN("Switch on frequency measurement for: " + GetName());
-	mI2EModule->digitalWrite(_cOSelectionFrequency, HIGH);
-	mI2EModule->digitalWrite(_cOSelectionPeriod, LOW);
+	mI2EModule->digitalWrite(cOSelectionFrequency, HIGH);
+	mI2EModule->digitalWrite(cOSelectionPeriod, LOW);
 }
 
 void ModuleBase::I2ESelectPeriodMeasurement()
@@ -210,8 +210,8 @@ void ModuleBase::I2ESelectPeriodMeasurement()
 	}
 
 	DEBUG_PRINT_LN("Switch on period measurement for: " + GetName());
-	mI2EModule->digitalWrite(_cOSelectionFrequency, LOW);
-	mI2EModule->digitalWrite(_cOSelectionPeriod, HIGH);
+	mI2EModule->digitalWrite(cOSelectionFrequency, LOW);
+	mI2EModule->digitalWrite(cOSelectionPeriod, HIGH);
 }
 
 bool ModuleBase::I2EInitialize()
@@ -235,10 +235,10 @@ bool ModuleBase::I2EInitialize()
 	// mI2EModule->enableAddrPins();
 
 	// set common I/O
-	mI2EModule->pinMode(_cOSelectionFrequency, OUTPUT);
-	mI2EModule->pinMode(_cOSelectionPeriod, OUTPUT);
-	mI2EModule->pinMode(_cOAddressLED, OUTPUT);
-	mI2EModule->pinMode(_cIAddressSelectionButton, INPUT);
+	mI2EModule->pinMode(cOSelectionFrequency, OUTPUT);
+	mI2EModule->pinMode(cOSelectionPeriod, OUTPUT);
+	mI2EModule->pinMode(cOAddressLED, OUTPUT);
+	mI2EModule->pinMode(cIAddressSelectionButton, INPUT);
 
 	mModuleIsInitialized = true;
 	return true;

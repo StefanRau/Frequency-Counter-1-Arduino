@@ -79,27 +79,27 @@ ModuleTTLCMOS::ModuleTTLCMOS(sInitializeModule iInitializeModule) : ModuleBase(i
 {
 	DEBUG_INSTANTIATION("ModuleTTLCMOS: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
-	_mText = new TextModuleTTLCMOS();
-	mLastMenuEntryNumber = _cNumberOfMenuEntries;
+	mText = new TextModuleTTLCMOS();
+	mLastMenuEntryNumber = cNumberOfMenuEntries;
 
 	// Initialize hardware
 	if (I2EInitialize())
 	{
 		// initialize specific part
-		mI2EModule->pinMode(_cOSelectTTL, OUTPUT);
-		mI2EModule->pinMode(_cOSelectCMOS, OUTPUT);
-		mI2EModule->pinMode(_cOSelectOpenEmitter, OUTPUT);
-		mI2EModule->pinMode(_cOSelectOpenCollector, OUTPUT);
-		mI2EModule->pinMode(_cOInputSelection0, OUTPUT);
-		mI2EModule->pinMode(_cOInputSelection1, OUTPUT);
+		mI2EModule->pinMode(cOSelectTTL, OUTPUT);
+		mI2EModule->pinMode(cOSelectCMOS, OUTPUT);
+		mI2EModule->pinMode(cOSelectOpenEmitter, OUTPUT);
+		mI2EModule->pinMode(cOSelectOpenCollector, OUTPUT);
+		mI2EModule->pinMode(cOInputSelection0, OUTPUT);
+		mI2EModule->pinMode(cOInputSelection1, OUTPUT);
 
 		// unassigned pins => set as input with pull ups
-		mI2EModule->pinMode(_cB2Unassigned, INPUT_PULLUP);
-		mI2EModule->pinMode(_cB3Unassigned, INPUT_PULLUP);
-		mI2EModule->pinMode(_cB4Unassigned, INPUT_PULLUP);
-		mI2EModule->pinMode(_cB5Unassigned, INPUT_PULLUP);
-		mI2EModule->pinMode(_cB6Unassigned, INPUT_PULLUP);
-		mI2EModule->pinMode(_cB7Unassigned, INPUT_PULLUP);
+		mI2EModule->pinMode(cB2Unassigned, INPUT_PULLUP);
+		mI2EModule->pinMode(cB3Unassigned, INPUT_PULLUP);
+		mI2EModule->pinMode(cB4Unassigned, INPUT_PULLUP);
+		mI2EModule->pinMode(cB5Unassigned, INPUT_PULLUP);
+		mI2EModule->pinMode(cB6Unassigned, INPUT_PULLUP);
+		mI2EModule->pinMode(cB7Unassigned, INPUT_PULLUP);
 	}
 }
 
@@ -125,10 +125,10 @@ void ModuleTTLCMOS::I2EDeactivate()
 	ModuleBase::I2EDeactivate();
 
 	// Switch off all relais for input selection
-	mI2EModule->digitalWrite(_cOSelectTTL, LOW);
-	mI2EModule->digitalWrite(_cOSelectCMOS, LOW);
-	mI2EModule->digitalWrite(_cOSelectOpenEmitter, LOW);
-	mI2EModule->digitalWrite(_cOSelectOpenCollector, LOW);
+	mI2EModule->digitalWrite(cOSelectTTL, LOW);
+	mI2EModule->digitalWrite(cOSelectCMOS, LOW);
+	mI2EModule->digitalWrite(cOSelectOpenEmitter, LOW);
+	mI2EModule->digitalWrite(cOSelectOpenCollector, LOW);
 }
 
 void ModuleTTLCMOS::I2ESelectFunction()
@@ -141,10 +141,10 @@ void ModuleTTLCMOS::I2ESelectFunction()
 	}
 
 	// Alle Relais zur Eingangswahl ausschalten
-	mI2EModule->digitalWrite(_cOSelectTTL, LOW);
-	mI2EModule->digitalWrite(_cOSelectCMOS, LOW);
-	mI2EModule->digitalWrite(_cOSelectOpenEmitter, LOW);
-	mI2EModule->digitalWrite(_cOSelectOpenCollector, LOW);
+	mI2EModule->digitalWrite(cOSelectTTL, LOW);
+	mI2EModule->digitalWrite(cOSelectCMOS, LOW);
+	mI2EModule->digitalWrite(cOSelectOpenEmitter, LOW);
+	mI2EModule->digitalWrite(cOSelectOpenCollector, LOW);
 	delay(50);
 
 	switch (mCurrentMenuEntryNumber)
@@ -152,33 +152,33 @@ void ModuleTTLCMOS::I2ESelectFunction()
 	case 0:
 		// TTL Eingang
 		DEBUG_PRINT_LN("TTL input");
-		mI2EModule->digitalWrite(_cOInputSelection0, LOW);
-		mI2EModule->digitalWrite(_cOInputSelection1, LOW);
-		mI2EModule->digitalWrite(_cOSelectTTL, HIGH); // Relais
+		mI2EModule->digitalWrite(cOInputSelection0, LOW);
+		mI2EModule->digitalWrite(cOInputSelection1, LOW);
+		mI2EModule->digitalWrite(cOSelectTTL, HIGH); // Relais
 		break;
 
 	case 1:
 		// CMOS Eingang
 		DEBUG_PRINT_LN("CMOS input");
-		mI2EModule->digitalWrite(_cOInputSelection0, HIGH);
-		mI2EModule->digitalWrite(_cOInputSelection1, LOW);
-		mI2EModule->digitalWrite(_cOSelectCMOS, HIGH); // Relais
+		mI2EModule->digitalWrite(cOInputSelection0, HIGH);
+		mI2EModule->digitalWrite(cOInputSelection1, LOW);
+		mI2EModule->digitalWrite(cOSelectCMOS, HIGH); // Relais
 		break;
 
 	case 2:
 		// Open Emitter Eingang
 		DEBUG_PRINT_LN("Open emitter input");
-		mI2EModule->digitalWrite(_cOInputSelection0, LOW);
-		mI2EModule->digitalWrite(_cOInputSelection1, HIGH);
-		mI2EModule->digitalWrite(_cOSelectOpenEmitter, HIGH); // Relais
+		mI2EModule->digitalWrite(cOInputSelection0, LOW);
+		mI2EModule->digitalWrite(cOInputSelection1, HIGH);
+		mI2EModule->digitalWrite(cOSelectOpenEmitter, HIGH); // Relais
 		break;
 
 	case 3:
 		// Open Kollektor Eingang
 		DEBUG_PRINT_LN("Open collector input");
-		mI2EModule->digitalWrite(_cOInputSelection0, HIGH);
-		mI2EModule->digitalWrite(_cOInputSelection1, HIGH);
-		mI2EModule->digitalWrite(_cOSelectOpenCollector, HIGH); // Relais
+		mI2EModule->digitalWrite(cOInputSelection0, HIGH);
+		mI2EModule->digitalWrite(cOInputSelection1, HIGH);
+		mI2EModule->digitalWrite(cOSelectOpenCollector, HIGH); // Relais
 		break;
 	}
 }
@@ -187,7 +187,7 @@ String ModuleTTLCMOS::GetName()
 {
 	DEBUG_METHOD_CALL("ModuleTTLCMOS::GetName");
 
-	return _mText->GetObjectName();
+	return mText->GetObjectName();
 }
 
 bool ModuleTTLCMOS::IsPeriodMeasurementPossible()
@@ -211,13 +211,13 @@ String ModuleTTLCMOS::GetCurrentMenuEntry(int iMenuEntry)
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
 	case 0:
-		return _mText->MenuItemTTL();
+		return mText->MenuItemTTL();
 	case 1:
-		return _mText->MenuItemCMOS();
+		return mText->MenuItemCMOS();
 	case 2:
-		return _mText->MenuItemOE();
+		return mText->MenuItemOE();
 	case 3:
-		return _mText->MenuItemOC();
+		return mText->MenuItemOC();
 	}
 	return "";
 }

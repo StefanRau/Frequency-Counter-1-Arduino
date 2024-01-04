@@ -91,8 +91,8 @@ ModuleAnalog::ModuleAnalog(sInitializeModule iInitializeModule) : ModuleBase(iIn
 {
 	DEBUG_INSTANTIATION("ModuleAnalog: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
-	_mText = new TextModuleAnalog();
-	mLastMenuEntryNumber = _cNumberOfMenuEntries;
+	mText = new TextModuleAnalog();
+	mLastMenuEntryNumber = cNumberOfMenuEntries;
 
 	// Initialize hardware
 	if (I2EInitialize())
@@ -155,7 +155,7 @@ String ModuleAnalog::GetName()
 {
 	DEBUG_METHOD_CALL("ModuleAnalog::GetName");
 
-	return _mText->GetObjectName();
+	return mText->GetObjectName();
 }
 
 bool ModuleAnalog::IsPeriodMeasurementPossible()
@@ -179,25 +179,25 @@ String ModuleAnalog::GetCurrentMenuEntry(int iMenuEntry)
 	switch (iMenuEntry == -1 ? mCurrentMenuEntryNumber : iMenuEntry)
 	{
 	case 0:
-		return _mText->MenuItem100uV();
+		return mText->MenuItem100uV();
 		break;
 	case 1:
-		return _mText->MenuItem1mV();
+		return mText->MenuItem1mV();
 		break;
 	case 2:
-		return _mText->MenuItem10mV();
+		return mText->MenuItem10mV();
 		break;
 	case 3:
-		return _mText->MenuItem100mV();
+		return mText->MenuItem100mV();
 		break;
 	case 4:
-		return _mText->MenuItem1V();
+		return mText->MenuItem1V();
 		break;
 	case 5:
-		return _mText->MenuItem10V();
+		return mText->MenuItem10V();
 		break;
 	case 6:
-		return _mText->MenuItem100V();
+		return mText->MenuItem100V();
 		break;
 	}
 	return "";

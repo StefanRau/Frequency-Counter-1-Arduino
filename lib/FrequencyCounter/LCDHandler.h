@@ -38,7 +38,7 @@ class LCDHandler : public I2CBase
 {
 	// private:
 public:
-	enum _eStateCode : char
+	enum class eStateCode : char
 	{
 		TDone = 'D',
 		TInitialize = 'I',
@@ -50,32 +50,7 @@ public:
 		TShowError = 'E'
 	};
 
-private:
-	hd44780_I2Cexp *_mI2ELCD = nullptr; // LDC driver
-	TextLCDHandler *_mText = nullptr;	// Pointer to current text objekt of the class
-										//	_eStateCode _mStateCode;			   // State of LCD forhandler for synchronization
-	String _mMenuSelectedFunction;		// In case of manu output: name of the menu
-	int _mCurrentMenuEntryNumber;		// In case of manu output: current index of the menu entry
-	int _mLastMenuEntryNumber;			// In case of manu output: number of menu entries for the given module
-	String _mInputSelectedFunction;		// Name of the function to show
-	String _mInputCurrentValue;			// Measurement value to show
-	String _mInputError;				// Error messge to show
-	bool _mIsCritical = false;
-
-protected:
-	/// <summary>
-	/// Constructor
-	/// </summary>
-	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
-	LCDHandler(sInitializeModule iInitializeModule);
-	~LCDHandler();
-
-public:
 	static LCDHandler *GetInstance(sInitializeModule iInitializeModule);
-
-	/////////////////////////////////////////////////////
-	// Functions that can be called from within main loop
-	/////////////////////////////////////////////////////
 
 	/// <summary>
 	/// Is called periodically from main loop
@@ -97,24 +72,6 @@ public:
 	/// <returns>Reaction of dispatching</returns>
 	String DispatchSerial(char iModuleIdentifyer, char iParameter) override;
 #endif
-
-private:
-	/// <summary>
-	/// This function limits the maximum size of a text to 16
-	/// </summary>
-	/// <param name="iText">The text that shall be trimmed</param>
-	/// <returns>Result: Text with 16 characters</returns>
-	String _TrimLine(String iText);
-
-	/// <summary>
-	/// Writes up / down arrows for menue selection
-	/// </summary>
-	void _I2EWriteMenuNavigator();
-
-public:
-	///////////////////////////////////////////////
-	// Functions that can be called also from tasks
-	///////////////////////////////////////////////
 
 	/// <summary>
 	///
@@ -151,6 +108,37 @@ public:
 	/// Triggers output of measurement value
 	/// </summary>
 	void TriggerShowCounter();
+
+protected:
+	/// <summary>
+	/// Constructor
+	/// </summary>
+	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
+	LCDHandler(sInitializeModule iInitializeModule);
+	~LCDHandler();
+
+private:
+	hd44780_I2Cexp *mI2ELCD = nullptr; // LDC driver
+	TextLCDHandler *mText = nullptr;   // Pointer to current text objekt of the class
+	String mMenuSelectedFunction;	   // In case of manu output: name of the menu
+	int mCurrentMenuEntryNumber;	   // In case of manu output: current index of the menu entry
+	int mLastMenuEntryNumber;		   // In case of manu output: number of menu entries for the given module
+	String mInputSelectedFunction;	   // Name of the function to show
+	String mInputCurrentValue;		   // Measurement value to show
+	String mInputError;				   // Error messge to show
+	bool mIsCritical = false;
+
+	/// <summary>
+	/// This function limits the maximum size of a text to 16
+	/// </summary>
+	/// <param name="iText">The text that shall be trimmed</param>
+	/// <returns>Result: Text with 16 characters</returns>
+	String TrimLine(String iText);
+
+	/// <summary>
+	/// Writes up / down arrows for menue selection
+	/// </summary>
+	void I2EWriteMenuNavigator();
 };
 
 #endif

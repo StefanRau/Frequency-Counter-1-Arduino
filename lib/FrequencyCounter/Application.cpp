@@ -109,27 +109,27 @@ Application::Application()
     pinMode(cOResetFF, OUTPUT);
 
     // LCD
-    if (!ErrorDetected())
+    if (!ERROR_DETECTED())
     {
         gLCDHandler = LCDHandler::GetInstance(mInitializeSystem.LCDHandler);
     }
 
     // Reset input modules and start lamp test
-    if (!ErrorDetected())
+    if (!ERROR_DETECTED())
     {
         gModuleFactory = ModuleFactory::GetInstance(mInitializeSystem.ModuleFactory);
         gModuleFactory->I2ELampTestOn();
     }
 
     // Initialize main counter
-    if (!ErrorDetected())
+    if (!ERROR_DETECTED())
     {
         gCounter = Counter::GetInstance(mInitializeSystem.Counter);
         gCounter->I2ESetFunctionCode(Counter::eFunctionCode::TFrequency);
     }
 
     // Initialize front plate
-    if (!ErrorDetected())
+    if (!ERROR_DETECTED())
     {
         // Reset selection and start
         gFrontPlate = FrontPlate::GetInstance(mInitializeSystem.FrontPlate, gLCDHandler, gModuleFactory, gCounter);
@@ -139,14 +139,14 @@ Application::Application()
     DEBUG_PRINT_LN("Initialize tasks");
 
     // Task for lamp test end
-    mLampTestTime = Task::GetNewTask(Task::TOneTime, 20, Application::TaskLampTestEnd);
+    mLampTestTime = Task::GetNewTask(Task::eTaskType::TOneTime, 20, Application::TaskLampTestEnd);
 
     // Task timer for switching off the menue in LCD
-    mMenuSwitchOfTime = Task::GetNewTask(Task::TTriggerOneTime, 20, Application::TaskMenuSwitchOff);
+    mMenuSwitchOfTime = Task::GetNewTask(Task::eTaskType::TTriggerOneTime, 20, Application::TaskMenuSwitchOff);
     mMenuSwitchOfTime->DefinePrevious(mLampTestTime);
 
     // Task timer LCD refresh
-    mLCDRefreshCycleTime = Task::GetNewTask(Task::TFollowUpCyclic, 10, Application::TaskLCDRefresh);
+    mLCDRefreshCycleTime = Task::GetNewTask(Task::eTaskType::TFollowUpCyclic, 10, Application::TaskLCDRefresh);
     mLCDRefreshCycleTime->DefinePrevious(mLampTestTime);
 
     // Initialize task handler
@@ -166,7 +166,7 @@ Application::Application()
 #endif
 
     // Output potential errors
-    if (ErrorDetected())
+    if (ERROR_DETECTED())
     {
         if (gLCDHandler != nullptr)
         {

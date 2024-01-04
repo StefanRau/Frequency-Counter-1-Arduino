@@ -115,32 +115,32 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	DEBUG_INSTANTIATION("FrontPlate: iInitializeModule[SettingsAddress, NumberOfSettings, I2CAddress]=[" + String(iInitializeModule.SettingsAddress) + ", " + String(iInitializeModule.NumberOfSettings) + ", " + String(iInitializeModule.I2CAddress) + "]");
 
 	// Initialize hardware
-	_mText = new TextFrontPlate();
+	mText = new TextFrontPlate();
 	//_mText = &gTextFrontPlate;
 
 	if (iLCDHandler == nullptr)
 	{
-		ErrorPrint(Error::eSeverity::TFatal, _mText->InitErrorLCDRequired());
+		ERROR_PRINT(Error::eSeverity::TFatal, mText->InitErrorLCDRequired());
 		DEBUG_PRINT_LN("Front Plate: LCD is required");
 		return;
 	}
-	_mLCDHandler = iLCDHandler;
+	mLCDHandler = iLCDHandler;
 
 	if (iCounter == nullptr)
 	{
-		ErrorPrint(Error::eSeverity::TFatal, _mText->InitErrorCounterRequired());
+		ERROR_PRINT(Error::eSeverity::TFatal, mText->InitErrorCounterRequired());
 		DEBUG_PRINT_LN("Front Plate: Counter is required");
 		return;
 	}
-	_mCounter = iCounter;
+	mCounter = iCounter;
 
 	if (iModuleFactory == nullptr)
 	{
-		ErrorPrint(Error::eSeverity::TFatal, _mText->InitErrorModuleFactoryRequired());
+		ERROR_PRINT(Error::eSeverity::TFatal, mText->InitErrorModuleFactoryRequired());
 		DEBUG_PRINT_LN("Front Plate: ModuleFactory is required");
 		return;
 	}
-	_mModuleFactory = iModuleFactory;
+	mModuleFactory = iModuleFactory;
 
 	if (mI2CAddress < 0)
 	{
@@ -151,7 +151,7 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	_mI2EModule = new Adafruit_MCP23X17();
 	if (!_mI2EModule->begin_I2C(mI2CAddress, &Wire))
 	{
-		ErrorPrint(Error::eSeverity::TWarning, _mText->InitError());
+		ERROR_PRINT(Error::eSeverity::TWarning, mText->InitError());
 		DEBUG_PRINT_LN("Front Plate can't be initialized");
 		return;
 	}
@@ -188,10 +188,10 @@ FrontPlate::FrontPlate(sInitializeModule iInitializeModule, LCDHandler *iLCDHand
 	_mI2EModule->pinMode(_cB6Unassigned, INPUT_PULLUP);
 	_mI2EModule->pinMode(_cB7Unassigned, INPUT_PULLUP);
 
-	_mSelectedCounterFunctionCode = Counter::eFunctionCode::TNoSelection;
+	mSelectedCounterFunctionCode = Counter::eFunctionCode::TNoSelection;
 
 	// swith on all LEDs for lamp test
-	_I2ESwitchLEDs(HIGH);
+	I2ESwitchLEDs(HIGH);
 
 	mModuleIsInitialized = true;
 }
@@ -222,7 +222,7 @@ void FrontPlate::loop()
 	bool lIsEventCountingPossible;
 	bool lMenuUpKeyPressed;
 	bool lMenuDownKeyPressed;
-	char lSetting;
+	Counter::eFunctionCode lSetting;
 
 	if (!mModuleIsInitialized)
 	{
@@ -230,33 +230,33 @@ void FrontPlate::loop()
 	}
 
 	// switch off LEDs and show the current function on the LCD
-	if (_mTriggerLampTestOff)
+	if (mTriggerLampTestOff)
 	{
-		lSetting = GetSetting(_cEepromIndexFunction); // Read setting from processor internal EEPROM
-		if (lSetting == cNullSetting)				  // Defaulting, if EEPROM does not exist
+		lSetting = (Counter::eFunctionCode)GetSetting(cEepromIndexFunction); // Read setting from processor internal EEPROM
+		if (lSetting == (Counter::eFunctionCode)cNullSetting)				  // Defaulting, if EEPROM does not exist
 		{
 			lSetting = Counter::eFunctionCode::TFrequency;
 		}
-		_I2ESelectFunction((Counter::eFunctionCode)lSetting);
-		_mLCDHandler->SetSelectedFunction(_mCounter->GetSelectedFunctionName()); // Output at LCD
-		_mCurrentModuleCode = _mModuleFactory->GetSelectedModule()->GetModuleCode();
-		_mTriggerLampTestOff = false;
+		I2ESelectFunction((Counter::eFunctionCode)lSetting);
+		mLCDHandler->SetSelectedFunction(mCounter->GetSelectedFunctionName()); // Output at LCD
+		mCurrentModuleCode = mModuleFactory->GetSelectedModule()->GetModuleCode();
+		mTriggerLampTestOff = false;
 		return;
 	}
 
 	// if module has changed: set frequency measurement on, because that is sopported by all modules
 	// e.g. HF module does not support periode measurement
-	if (_mCurrentModuleCode != _mModuleFactory->GetSelectedModule()->GetModuleCode())
+	if (mCurrentModuleCode != mModuleFactory->GetSelectedModule()->GetModuleCode())
 	{
-		DEBUG_PRINT_LN("Old Function code:" + String(_mCurrentModuleCode));
-		_I2ESelectFunction(Counter::eFunctionCode::TFrequency);
-		_mCurrentModuleCode = _mModuleFactory->GetSelectedModule()->GetModuleCode();
-		DEBUG_PRINT_LN("New Function code:" + String(_mCurrentModuleCode));
+		DEBUG_PRINT_LN("Old Function code:" + String((char)mCurrentModuleCode));
+		I2ESelectFunction(Counter::eFunctionCode::TFrequency);
+		mCurrentModuleCode = mModuleFactory->GetSelectedModule()->GetModuleCode();
+		DEBUG_PRINT_LN("New Function code:" + String((char)mCurrentModuleCode));
 		return;
 	}
 
 	// Read keys
-	if (!_mChangeFunctionDetected)
+	if (!mChangeFunctionDetected)
 	{
 		lFunctionKeyFrequencyPressed = (_mI2EModule->digitalRead(_cIKeySelectFrequency) == HIGH);
 		lFunctionKeyPositivePressed = (_mI2EModule->digitalRead(_cIKeySelectTPositive) == HIGH);
@@ -271,65 +271,65 @@ void FrontPlate::loop()
 			return;
 		}
 
-		lIsPeriodMeasurementPossible = _mModuleFactory->GetSelectedModule()->IsPeriodMeasurementPossible();
-		lIsEventCountingPossible = _mModuleFactory->GetSelectedModule()->IsEventCountingPossible();
+		lIsPeriodMeasurementPossible = mModuleFactory->GetSelectedModule()->IsPeriodMeasurementPossible();
+		lIsEventCountingPossible = mModuleFactory->GetSelectedModule()->IsEventCountingPossible();
 
 		if (lFunctionKeyFrequencyPressed)
 		{
-			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TFrequency)
+			if (mSelectedCounterFunctionCode != Counter::eFunctionCode::TFrequency)
 			{
 				DEBUG_PRINT_LN("\nFrequency selected");
-				_I2ESelectFunction(Counter::eFunctionCode::TFrequency);
+				I2ESelectFunction(Counter::eFunctionCode::TFrequency);
 				delay(100);
 			}
 		}
 
 		if (lFunctionKeyPositivePressed && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TPositive)
+			if (mSelectedCounterFunctionCode != Counter::eFunctionCode::TPositive)
 			{
 				DEBUG_PRINT_LN("\nLevel positive selected");
-				_I2ESelectFunction(Counter::eFunctionCode::TPositive);
+				I2ESelectFunction(Counter::eFunctionCode::TPositive);
 				delay(100);
 			}
 		}
 
 		if (lFunctionKeyNegativePressed && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TNegative)
+			if (mSelectedCounterFunctionCode != Counter::eFunctionCode::TNegative)
 			{
 				DEBUG_PRINT_LN("\nLevel negative selected");
-				_I2ESelectFunction(Counter::eFunctionCode::TNegative);
+				I2ESelectFunction(Counter::eFunctionCode::TNegative);
 				delay(100);
 			}
 		}
 
 		if (lFunctionKeyEdgePositivePressed && (!lFunctionKeyEdgeNegativePressed) && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgePositive)
+			if (mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgePositive)
 			{
 				DEBUG_PRINT_LN("\nEdge negative selected");
-				_I2ESelectFunction(Counter::eFunctionCode::TEdgePositive);
+				I2ESelectFunction(Counter::eFunctionCode::TEdgePositive);
 				delay(100);
 			}
 		}
 
 		if ((!lFunctionKeyEdgePositivePressed) && lFunctionKeyEdgeNegativePressed && lIsPeriodMeasurementPossible)
 		{
-			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgeNegative)
+			if (mSelectedCounterFunctionCode != Counter::eFunctionCode::TEdgeNegative)
 			{
 				DEBUG_PRINT_LN("\nEdge positive selected");
-				_I2ESelectFunction(Counter::eFunctionCode::TEdgeNegative);
+				I2ESelectFunction(Counter::eFunctionCode::TEdgeNegative);
 				delay(100);
 			}
 		}
 
 		if (lFunctionKeyEdgePositivePressed && lFunctionKeyEdgeNegativePressed && lIsEventCountingPossible)
 		{
-			if (_mSelectedCounterFunctionCode != Counter::eFunctionCode::TEventCounting)
+			if (mSelectedCounterFunctionCode != Counter::eFunctionCode::TEventCounting)
 			{
 				DEBUG_PRINT_LN("\nEvent counting selected");
-				_I2ESelectFunction(Counter::eFunctionCode::TEventCounting);
+				I2ESelectFunction(Counter::eFunctionCode::TEventCounting);
 				delay(500);
 			}
 		}
@@ -342,7 +342,7 @@ void FrontPlate::loop()
 	}
 
 	// Menu key processing
-	if (!_mChangeMenuDecected)
+	if (!mChangeMenuDecected)
 	{
 		lMenuUpKeyPressed = (_mI2EModule->digitalRead(_cIKeySelectMenuUp) == HIGH);
 		lMenuDownKeyPressed = (_mI2EModule->digitalRead(_cIKeySelectMenuDown) == HIGH);
@@ -350,12 +350,12 @@ void FrontPlate::loop()
 		// Menu up is pressed?
 		if (lMenuUpKeyPressed)
 		{
-			if (_mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyUp)
+			if (mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyUp)
 			{
 				DEBUG_PRINT_LN("\nMenu up");
-				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionUp();
-				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyUp;
-				_mChangeMenuDecected = true;
+				mModuleFactory->GetSelectedModule()->I2EScrollFunctionUp();
+				mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyUp;
+				mChangeMenuDecected = true;
 				delay(100);
 			}
 		}
@@ -363,12 +363,12 @@ void FrontPlate::loop()
 		// Menu down is pressed?
 		if (lMenuDownKeyPressed)
 		{
-			if (_mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyDown)
+			if (mSelectedeMenuKeyCode != eMenuKeyCode::TMenuKeyDown)
 			{
 				DEBUG_PRINT_LN("\nMenu down");
-				_mModuleFactory->GetSelectedModule()->I2EScrollFunctionDown();
-				_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyDown;
-				_mChangeMenuDecected = true;
+				mModuleFactory->GetSelectedModule()->I2EScrollFunctionDown();
+				mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyDown;
+				mChangeMenuDecected = true;
 				delay(100);
 			}
 		}
@@ -376,7 +376,7 @@ void FrontPlate::loop()
 		// No menu key is pressed
 		if ((!lMenuUpKeyPressed) && (!lMenuDownKeyPressed))
 		{
-			_mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyNo;
+			mSelectedeMenuKeyCode = eMenuKeyCode::TMenuKeyNo;
 		}
 	}
 }
@@ -485,36 +485,36 @@ String FrontPlate::DispatchSerial(char iModuleIdentifyer, char iParameter)
 }
 #endif
 
-void FrontPlate::_I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
+void FrontPlate::I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
 {
 	DEBUG_METHOD_CALL("FrontPlate::_I2ESelectFunction");
 
-	_I2ESwitchLEDs(LOW);
+	I2ESwitchLEDs(LOW);
 
 	switch (iFunctionCode)
 	{
 	case Counter::eFunctionCode::TFrequency:
-		_I2ESelectSingleFunction(Counter::eFunctionCode::TFrequency);
+		I2ESelectSingleFunction(Counter::eFunctionCode::TFrequency);
 		_mI2EModule->digitalWrite(_cOLEDSelectFrequency, HIGH);
 		break;
 	case Counter::eFunctionCode::TPositive:
-		_I2ESelectSingleFunction(Counter::eFunctionCode::TPositive);
+		I2ESelectSingleFunction(Counter::eFunctionCode::TPositive);
 		_mI2EModule->digitalWrite(_cOLEDSelectTPositive, HIGH);
 		break;
 	case Counter::eFunctionCode::TNegative:
-		_I2ESelectSingleFunction(Counter::eFunctionCode::TNegative);
+		I2ESelectSingleFunction(Counter::eFunctionCode::TNegative);
 		_mI2EModule->digitalWrite(_cOLEDSelectTNegative, HIGH);
 		break;
 	case Counter::eFunctionCode::TEdgePositive:
-		_I2ESelectSingleFunction(Counter::eFunctionCode::TEdgePositive);
+		I2ESelectSingleFunction(Counter::eFunctionCode::TEdgePositive);
 		_mI2EModule->digitalWrite(_cOLEDSelectTEdgePositive, HIGH);
 		break;
 	case Counter::eFunctionCode::TEdgeNegative:
-		_I2ESelectSingleFunction(Counter::eFunctionCode::TEdgeNegative);
+		I2ESelectSingleFunction(Counter::eFunctionCode::TEdgeNegative);
 		_mI2EModule->digitalWrite(_cOLEDSelectTEdgeNegative, HIGH);
 		break;
 	case Counter::eFunctionCode::TEventCounting:
-		_I2ESelectSingleFunction(Counter::eFunctionCode::TEventCounting);
+		I2ESelectSingleFunction(Counter::eFunctionCode::TEventCounting);
 		_mI2EModule->digitalWrite(_cOLEDSelectTEdgePositive, HIGH);
 		_mI2EModule->digitalWrite(_cOLEDSelectTEdgeNegative, HIGH);
 		break;
@@ -523,36 +523,36 @@ void FrontPlate::_I2ESelectFunction(Counter::eFunctionCode iFunctionCode)
 	}
 }
 
-void FrontPlate::_I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
+void FrontPlate::I2ESelectSingleFunction(Counter::eFunctionCode iFunctionCode)
 {
 	DEBUG_METHOD_CALL("FrontPlate::_I2ESelectSingleFunction");
 
-	_mSelectedCounterFunctionCode = iFunctionCode;
-	_mCounter->I2ESetFunctionCode(_mSelectedCounterFunctionCode);
-	_mLCDHandler->SetSelectedFunction(_mCounter->GetSelectedFunctionName());
-	_mLCDHandler->TriggerShowCounter();
+	mSelectedCounterFunctionCode = iFunctionCode;
+	mCounter->I2ESetFunctionCode(mSelectedCounterFunctionCode);
+	mLCDHandler->SetSelectedFunction(mCounter->GetSelectedFunctionName());
+	mLCDHandler->TriggerShowCounter();
 	switch (iFunctionCode)
 	{
 	case Counter::eFunctionCode::TFrequency:
 	case Counter::eFunctionCode::TEventCounting:
-		_mModuleFactory->GetSelectedModule()->I2ESelectFrequencyCounter();
+		mModuleFactory->GetSelectedModule()->I2ESelectFrequencyCounter();
 		break;
 	case Counter::eFunctionCode::TPositive:
 	case Counter::eFunctionCode::TNegative:
 	case Counter::eFunctionCode::TEdgePositive:
 	case Counter::eFunctionCode::TEdgeNegative:
-		_mModuleFactory->GetSelectedModule()->I2ESelectPeriodMeasurement();
+		mModuleFactory->GetSelectedModule()->I2ESelectPeriodMeasurement();
 		break;
 	default:
 		break;
 	}
 
-	_mChangeFunctionDetected = true;
-	SetSetting(_cEepromIndexFunction, iFunctionCode);
-	DEBUG_PRINT_LN("New function selected: " + _mCounter->GetSelectedFunctionName());
+	mChangeFunctionDetected = true;
+	SetSetting(cEepromIndexFunction, (char)iFunctionCode);
+	DEBUG_PRINT_LN("New function selected: " + mCounter->GetSelectedFunctionName());
 }
 
-void FrontPlate::_I2ESwitchLEDs(uint8_t iTest)
+void FrontPlate::I2ESwitchLEDs(uint8_t iTest)
 {
 	DEBUG_METHOD_CALL("FrontPlate::_I2ESwitchLEDs");
 
@@ -567,14 +567,14 @@ String FrontPlate::GetName()
 {
 	DEBUG_METHOD_CALL("FrontPlate::GetName");
 
-	return _mText->GetObjectName();
+	return mText->GetObjectName();
 }
 
 void FrontPlate::TriggerLampTestOff()
 {
 	DEBUG_METHOD_CALL("FrontPlate::TriggerLampTestOff");
 
-	_mTriggerLampTestOff = true;
+	mTriggerLampTestOff = true;
 }
 
 bool FrontPlate::IsNewFunctionSelected()
@@ -582,9 +582,9 @@ bool FrontPlate::IsNewFunctionSelected()
 	DEBUG_METHOD_CALL("FrontPlate::IsNewFunctionSelected");
 
 	// the result is only one time valid
-	bool lReturn = _mChangeFunctionDetected;
+	bool lReturn = mChangeFunctionDetected;
 
-	_mChangeFunctionDetected = false;
+	mChangeFunctionDetected = false;
 	return lReturn;
 }
 
@@ -593,8 +593,8 @@ bool FrontPlate::IsNewMenuSelected()
 	DEBUG_METHOD_CALL("FrontPlate::IsNewMenuSelected");
 
 	// the result is only one time valid
-	bool lReturn = _mChangeMenuDecected;
+	bool lReturn = mChangeMenuDecected;
 
-	_mChangeMenuDecected = false;
+	mChangeMenuDecected = false;
 	return lReturn;
 }

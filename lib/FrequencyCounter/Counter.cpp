@@ -198,7 +198,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	short lI2CAddress = mI2CAddress;
 	// Initialize hardware
 
-	_mText = new TextCounter();
+	mText = new TextCounter();
 	//	_mText = &gTextCounter;
 
 	if (lI2CAddress < 0)
@@ -211,7 +211,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	_mI2LowerWord = new Adafruit_MCP23X17();
 	if (!_mI2LowerWord->begin_I2C(lI2CAddress, &Wire))
 	{
-		ErrorPrint(Error::eSeverity::TFatal, _mText->InitError("lower word"));
+		ERROR_PRINT(Error::eSeverity::TFatal, mText->InitError("lower word"));
 		DEBUG_PRINT_LN("Counter IC for lower word can't be initialized");
 		return;
 	}
@@ -223,7 +223,7 @@ Counter::Counter(sInitializeModule iInitializeModule) : I2CBase(iInitializeModul
 	_mI2UpperWord = new Adafruit_MCP23X17();
 	if (!_mI2UpperWord->begin_I2C(lI2CAddress, &Wire))
 	{
-		ErrorPrint(Error::eSeverity::TFatal, _mText->InitError("upper word"));
+		ERROR_PRINT(Error::eSeverity::TFatal, mText->InitError("upper word"));
 		DEBUG_PRINT_LN("Counter IC for upper word can't be initialized");
 		return;
 	}
@@ -323,32 +323,32 @@ String Counter::I2EGetCounterValue()
 	case eFunctionCode::TFrequency:
 		// lResultFloat = (float)lResultInt32;
 		lResultFloat = (float)lResultInt32 / 1.0000002;
-		lResultString = _mText->ResultFrequency(lResultFloat);
+		lResultString = mText->ResultFrequency(lResultFloat);
 		break;
 
 	case eFunctionCode::TNegative:
 		lResultFloat = (float)lResultInt32 / 10000000;
-		lResultString = _mText->ResultPeriod(lResultFloat);
+		lResultString = mText->ResultPeriod(lResultFloat);
 		break;
 
 	case eFunctionCode::TPositive:
 		lResultFloat = (float)lResultInt32 / 10000000;
-		lResultString = _mText->ResultPeriod(lResultFloat);
+		lResultString = mText->ResultPeriod(lResultFloat);
 		break;
 
 	case eFunctionCode::TEdgeNegative:
 		lResultFloat = (float)lResultInt32 / 10000000;
-		lResultString = _mText->ResultPeriod(lResultFloat);
+		lResultString = mText->ResultPeriod(lResultFloat);
 		break;
 
 	case eFunctionCode::TEdgePositive:
 		lResultFloat = (float)lResultInt32 / 10000000;
-		lResultString = _mText->ResultPeriod(lResultFloat);
+		lResultString = mText->ResultPeriod(lResultFloat);
 		break;
 
 	case eFunctionCode::TEventCounting:
 		lResultFloat = (float)lResultInt32;
-		lResultString = _mText->ResultEventCount(lResultFloat);
+		lResultString = mText->ResultEventCount(lResultFloat);
 		break;
 
 	default:
@@ -358,7 +358,7 @@ String Counter::I2EGetCounterValue()
 	// Check for overflow
 	if (_mI2UpperWord->digitalRead(_cIOverflow) == HIGH)
 	{
-		lResultString = _mText->Overflow();
+		lResultString = mText->Overflow();
 	}
 
 	// DEBUG_PRINT_LN("Counter value: " + lResultString);
@@ -426,26 +426,26 @@ String Counter::GetSelectedFunctionName()
 	switch (_mFunctionCode)
 	{
 	case Counter::eFunctionCode::TFrequency:
-		return _mText->FunctionNameFrequency();
+		return mText->FunctionNameFrequency();
 	case Counter::eFunctionCode::TPositive:
-		return _mText->FunctionNamePositive();
+		return mText->FunctionNamePositive();
 	case Counter::eFunctionCode::TNegative:
-		return _mText->FunctionNameNegative();
+		return mText->FunctionNameNegative();
 	case Counter::eFunctionCode::TEdgePositive:
-		return _mText->FunctionNameEdgePositive();
+		return mText->FunctionNameEdgePositive();
 	case Counter::eFunctionCode::TEdgeNegative:
-		return _mText->FunctionNameEdgeNegative();
+		return mText->FunctionNameEdgeNegative();
 	case Counter::eFunctionCode::TEventCounting:
-		return _mText->FunctionNameEventCounting();
+		return mText->FunctionNameEventCounting();
 	default:
 		break;
 	}
-	return _mText->FunctionNameUnknown();
+	return mText->FunctionNameUnknown();
 }
 
 String Counter::GetName()
 {
 	DEBUG_METHOD_CALL("Counter::GetName");
 
-	return _mText->GetObjectName();
+	return mText->GetObjectName();
 }

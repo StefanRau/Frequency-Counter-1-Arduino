@@ -64,51 +64,51 @@ ModuleFactory::ModuleFactory(sInitializeModule iInitializeModule) : I2CBase(iIni
 
 	sInitializeModule lInitializeModule = iInitializeModule;
 
-	_mText = new TextModuleFactory();
+	mText = new TextModuleFactory();
 
 	// Initialize the hardware of all modules
 	// 100 MHz TTL / CMOS
-	_mModuleTTLCMOS = new ModuleTTLCMOS(lInitializeModule);
+	mModuleTTLCMOS = new ModuleTTLCMOS(lInitializeModule);
 
 	// 100 MHz analog
 	lInitializeModule.I2CAddress += 1;
 	lInitializeModule.SettingsAddress += iInitializeModule.NumberOfSettings;
-	_mModuleAnalog = new ModuleAnalog(lInitializeModule);
+	mModuleAnalog = new ModuleAnalog(lInitializeModule);
 
 	// 10GHz
 	lInitializeModule.I2CAddress += 1;
 	lInitializeModule.SettingsAddress += iInitializeModule.NumberOfSettings;
-	_mModuleHF = new ModuleHF(lInitializeModule);
+	mModuleHF = new ModuleHF(lInitializeModule);
 
 	// Dummy module
 	lInitializeModule.I2CAddress = -1;
 	lInitializeModule.SettingsAddress += iInitializeModule.NumberOfSettings;
-	_mModuleNone = new ModuleNone(lInitializeModule);
+	mModuleNone = new ModuleNone(lInitializeModule);
 
-	if (_mModuleTTLCMOS->IsModuleInitialized())
+	if (mModuleTTLCMOS->IsModuleInitialized())
 	{
-		_mSelectedModule = _mModuleTTLCMOS;
+		mSelectedModule = mModuleTTLCMOS;
 	}
 	else
 	{
-		if (_mModuleAnalog->IsModuleInitialized())
+		if (mModuleAnalog->IsModuleInitialized())
 		{
-			_mSelectedModule = _mModuleAnalog;
+			mSelectedModule = mModuleAnalog;
 		}
 		else
 		{
-			if (_mModuleHF->IsModuleInitialized())
+			if (mModuleHF->IsModuleInitialized())
 			{
-				_mSelectedModule = _mModuleHF;
+				mSelectedModule = mModuleHF;
 			}
 			else
 			{
-				_mSelectedModule = _mModuleNone;
+				mSelectedModule = mModuleNone;
 			}
 		}
 	}
 
-	_mSelectedModule->I2ESelectFunction();
+	mSelectedModule->I2ESelectFunction();
 	DEBUG_PRINT_LN("Module factory is initialized");
 }
 
@@ -130,43 +130,43 @@ void ModuleFactory::loop()
 	DEBUG_METHOD_CALL("ModuleFactory::loop");
 
 	// check the state of the key of all modules
-	if (_mModuleTTLCMOS->I2EIsKeySelected())
+	if (mModuleTTLCMOS->I2EIsKeySelected())
 	{
-		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleTTLCMOS)
+		if (mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleTTLCMOS)
 		{
 			DEBUG_PRINT_LN("\nModule TTL/CMOS key pressed");
-			_I2ESelectModule(ModuleBase::eModuleCode::TModuleTTLCMOS);
+			I2ESelectModule(ModuleBase::eModuleCode::TModuleTTLCMOS);
 			delay(100);
 		}
 	};
 
-	if (_mModuleAnalog->I2EIsKeySelected())
+	if (mModuleAnalog->I2EIsKeySelected())
 	{
-		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleAnalog)
+		if (mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleAnalog)
 		{
 			DEBUG_PRINT_LN("\nModule Analog key pressed");
-			_I2ESelectModule(ModuleBase::eModuleCode::TModuleAnalog);
+			I2ESelectModule(ModuleBase::eModuleCode::TModuleAnalog);
 			delay(100);
 		}
 	};
 
-	if (_mModuleHF->I2EIsKeySelected())
+	if (mModuleHF->I2EIsKeySelected())
 	{
-		if (_mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleHF)
+		if (mSelectedModule->GetModuleCode() != ModuleBase::eModuleCode::TModuleHF)
 		{
 			DEBUG_PRINT_LN("\nModule HF key pressed");
-			_I2ESelectModule(ModuleBase::eModuleCode::TModuleHF);
+			I2ESelectModule(ModuleBase::eModuleCode::TModuleHF);
 			delay(100);
 		}
 	};
 
-	if (_mTriggerLampTestOff)
+	if (mTriggerLampTestOff)
 	{
-		_mModuleTTLCMOS->I2ESwitchLamp(false); // 100 MHz TTL / CMOS
-		_mModuleAnalog->I2ESwitchLamp(false);  // 100 MHz Analog
-		_mModuleHF->I2ESwitchLamp(false);	   // 10GHz
-		_mTriggerLampTestOff = false;
-		_I2ESelectModule(_mSelectedModule->GetModuleCode());
+		mModuleTTLCMOS->I2ESwitchLamp(false); // 100 MHz TTL / CMOS
+		mModuleAnalog->I2ESwitchLamp(false);  // 100 MHz Analog
+		mModuleHF->I2ESwitchLamp(false);	   // 10GHz
+		mTriggerLampTestOff = false;
+		I2ESelectModule(mSelectedModule->GetModuleCode());
 	}
 }
 
@@ -241,16 +241,16 @@ void ModuleFactory::I2ELampTestOn()
 {
 	DEBUG_METHOD_CALL("ModuleFactory::I2ELampTestOn");
 
-	_mModuleTTLCMOS->I2ESwitchLamp(true); // 100 MHz TTL / CMOS
-	_mModuleAnalog->I2ESwitchLamp(true);  // 100 MHz Analog
-	_mModuleHF->I2ESwitchLamp(true);	  // 10GHz
+	mModuleTTLCMOS->I2ESwitchLamp(true); // 100 MHz TTL / CMOS
+	mModuleAnalog->I2ESwitchLamp(true);  // 100 MHz Analog
+	mModuleHF->I2ESwitchLamp(true);	  // 10GHz
 }
 
 String ModuleFactory::GetName()
 {
 	DEBUG_METHOD_CALL("ModuleFactory::GetName");
 
-	return _mText->GetObjectName();
+	return mText->GetObjectName();
 }
 
 String ModuleFactory::GetStatus()
@@ -259,10 +259,10 @@ String ModuleFactory::GetStatus()
 
 	String lReturn;
 
-	lReturn = _mModuleTTLCMOS->GetStatus();
-	lReturn += _mModuleAnalog->GetStatus();
-	lReturn += _mModuleHF->GetStatus();
-	lReturn += _mModuleNone->GetStatus();
+	lReturn = mModuleTTLCMOS->GetStatus();
+	lReturn += mModuleAnalog->GetStatus();
+	lReturn += mModuleHF->GetStatus();
+	lReturn += mModuleNone->GetStatus();
 
 	return lReturn;
 }
@@ -271,17 +271,17 @@ void ModuleFactory::TriggerLampTestOff()
 {
 	DEBUG_METHOD_CALL("ModuleFactory::TriggerLampTestOff");
 
-	_mTriggerLampTestOff = true;
+	mTriggerLampTestOff = true;
 }
 
 ModuleBase *ModuleFactory::GetSelectedModule()
 {
 	DEBUG_METHOD_CALL("ModuleFactory::GetSelectedModule");
 
-	return _mSelectedModule;
+	return mSelectedModule;
 }
 
-void ModuleFactory::_I2ESelectModule(char iModuleCode)
+void ModuleFactory::I2ESelectModule(ModuleBase::eModuleCode iModuleCode)
 {
 	DEBUG_METHOD_CALL("ModuleFactory::_I2ESelectModule");
 
@@ -289,39 +289,39 @@ void ModuleFactory::_I2ESelectModule(char iModuleCode)
 	switch (iModuleCode)
 	{
 	case ModuleBase::eModuleCode::TModuleTTLCMOS:
-		_mModuleNone->I2ESelectModule(false);
-		_mModuleAnalog->I2ESelectModule(false);
-		_mModuleHF->I2ESelectModule(false);
+		mModuleNone->I2ESelectModule(false);
+		mModuleAnalog->I2ESelectModule(false);
+		mModuleHF->I2ESelectModule(false);
 		delay(10);
-		_mModuleTTLCMOS->I2ESelectModule(true);
-		_mSelectedModule = _mModuleTTLCMOS;
+		mModuleTTLCMOS->I2ESelectModule(true);
+		mSelectedModule = mModuleTTLCMOS;
 		break;
 
 	case ModuleBase::eModuleCode::TModuleAnalog:
-		_mModuleNone->I2ESelectModule(false);
-		_mModuleTTLCMOS->I2ESelectModule(false);
-		_mModuleHF->I2ESelectModule(false);
+		mModuleNone->I2ESelectModule(false);
+		mModuleTTLCMOS->I2ESelectModule(false);
+		mModuleHF->I2ESelectModule(false);
 		delay(10);
-		_mModuleAnalog->I2ESelectModule(true);
-		_mSelectedModule = _mModuleAnalog;
+		mModuleAnalog->I2ESelectModule(true);
+		mSelectedModule = mModuleAnalog;
 		break;
 
 	case ModuleBase::eModuleCode::TModuleHF:
-		_mModuleNone->I2ESelectModule(false);
-		_mModuleTTLCMOS->I2ESelectModule(false);
-		_mModuleAnalog->I2ESelectModule(false);
+		mModuleNone->I2ESelectModule(false);
+		mModuleTTLCMOS->I2ESelectModule(false);
+		mModuleAnalog->I2ESelectModule(false);
 		delay(10);
-		_mModuleHF->I2ESelectModule(true);
-		_mSelectedModule = _mModuleHF;
+		mModuleHF->I2ESelectModule(true);
+		mSelectedModule = mModuleHF;
 		break;
 
 	case ModuleBase::eModuleCode::TModuleNone:
-		_mModuleTTLCMOS->I2ESelectModule(false);
-		_mModuleAnalog->I2ESelectModule(false);
-		_mModuleHF->I2ESelectModule(false);
+		mModuleTTLCMOS->I2ESelectModule(false);
+		mModuleAnalog->I2ESelectModule(false);
+		mModuleHF->I2ESelectModule(false);
 		delay(10);
-		_mModuleNone->I2ESelectModule(true);
-		_mSelectedModule = _mModuleNone;
+		mModuleNone->I2ESelectModule(true);
+		mSelectedModule = mModuleNone;
 		break;
 	}
 }

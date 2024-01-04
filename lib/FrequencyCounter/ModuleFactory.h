@@ -32,35 +32,8 @@ public:
 
 class ModuleFactory : public I2CBase
 {
-private:
-#if DEBUG_APPLICATION == 0
-	// Commands for remote control
-	enum eFunctionCode : char
-	{
-		TName = 'M' // Code for this class, if controlled remotely
-	};
-#endif
-
-	bool _mTriggerLampTestOff = false;		  // In queue: Switch lamps off
-	ModuleTTLCMOS *_mModuleTTLCMOS = nullptr; // Instance of TTL/CMOS module
-	ModuleAnalog *_mModuleAnalog = nullptr;	  // Instance of analog module
-	ModuleHF *_mModuleHF = nullptr;			  // Instance of HF module
-	ModuleNone *_mModuleNone = nullptr;		  // Instance of dummy module
-	ModuleBase *_mSelectedModule = nullptr;	  // Instance of the currently selected module
-	TextModuleFactory *_mText = nullptr;	  // Pointer to current text objekt of the class
-
-protected:
-	/// <summary>
-	/// Constructor
-	/// </summary>
-	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
-	ModuleFactory(sInitializeModule iInitializeModule);
-	~ModuleFactory();
-
 public:
 	static ModuleFactory *GetInstance(sInitializeModule iInitializeModule);
-
-	// Functions that can be called from within main loop
 
 	/// <summary>
 	/// Is called periodically from main loop
@@ -81,16 +54,6 @@ public:
 	/// Switches lamps on for all modules
 	/// </summary>
 	void I2ELampTestOn();
-
-private:
-	/// <summary>
-	/// Selects the module with the given module code
-	/// </summary>
-	/// <param name=""></param>
-	void _I2ESelectModule(char iModuleCode);
-
-public:
-	// Functions that can be called also from tasks
 
 	/// <summary>
 	/// Readable name of the module
@@ -114,6 +77,37 @@ public:
 	/// </summary>
 	/// <returns>Instance of the module' object</returns>
 	ModuleBase *GetSelectedModule();
+
+protected:
+	/// <summary>
+	/// Constructor
+	/// </summary>
+	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
+	ModuleFactory(sInitializeModule iInitializeModule);
+	~ModuleFactory();
+
+private:
+#if DEBUG_APPLICATION == 0
+	// Commands for remote control
+	enum class eFunctionCode : char
+	{
+		TName = 'M' // Code for this class, if controlled remotely
+	};
+#endif
+
+	bool mTriggerLampTestOff = false;		 // In queue: Switch lamps off
+	ModuleTTLCMOS *mModuleTTLCMOS = nullptr; // Instance of TTL/CMOS module
+	ModuleAnalog *mModuleAnalog = nullptr;	 // Instance of analog module
+	ModuleHF *mModuleHF = nullptr;			 // Instance of HF module
+	ModuleNone *mModuleNone = nullptr;		 // Instance of dummy module
+	ModuleBase *mSelectedModule = nullptr;	 // Instance of the currently selected module
+	TextModuleFactory *mText = nullptr;		 // Pointer to current text objekt of the class
+
+	/// <summary>
+	/// Selects the module with the given module code
+	/// </summary>
+	/// <param name="iModuleCode">Module that shall be selected</param>
+	void I2ESelectModule(ModuleBase::eModuleCode iModuleCode);
 };
 
 #endif

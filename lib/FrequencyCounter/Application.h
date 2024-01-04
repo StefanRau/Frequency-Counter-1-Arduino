@@ -76,33 +76,6 @@ public:
         I2CBase::sInitializeModule ErrorLogger = {-1, 0, -1};       // EEPROM is not used
     } mInitializeSystem;
 
-private:
-    TextMain *mText = nullptr;           // Pointer to current text objekt of main
-    TextWrapper *mTextWrapper = nullptr; // Textwrapper
-    bool mErrorPrinted;                  // Signals than an error in the main loop is outputted
-    bool mEventCountingInitialized;      // Event counting shall be initialized only once after selected
-    long mFreeMemory;
-
-#if DEBUG_APPLICATION == 0
-    RemoteControl *mRemoteControl = nullptr;
-#define RemoteControlBufferSize 80
-    char mRemoteControlBuffer[RemoteControlBufferSize];
-#endif
-
-    // Tasks
-    Task *mLampTestTime = nullptr;
-    Task *mMenuSwitchOfTime = nullptr;
-    Task *mLCDRefreshCycleTime = nullptr;
-
-    String mMeasurementValue = "";
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    Application();
-    ~Application();
-
-public:
     /// <summary>
     /// Gets a singleton.
     /// </summary>
@@ -156,6 +129,31 @@ public:
     /// Restart 0.5Hz
     /// </summary>
     void RestartGateTimer();
+
+private:
+    TextMain *mText = nullptr;           // Pointer to current text objekt of main
+    TextWrapper *mTextWrapper = nullptr; // Textwrapper
+    bool mErrorPrinted;                  // Signals than an error in the main loop is outputted
+    bool mEventCountingInitialized;      // Event counting shall be initialized only once after selected
+    long mFreeMemory;
+
+#if DEBUG_APPLICATION == 0
+    RemoteControl *mRemoteControl = nullptr;
+#define RemoteControlBufferSize 80
+    char mRemoteControlBuffer[RemoteControlBufferSize];
+#endif
+
+    // Tasks
+    Task *mLampTestTime = nullptr;
+    Task *mMenuSwitchOfTime = nullptr;
+    Task *mLCDRefreshCycleTime = nullptr;
+    String mMeasurementValue = "";
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    Application();
+    ~Application();
 };
 
 #endif

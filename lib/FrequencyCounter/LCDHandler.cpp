@@ -93,7 +93,7 @@ String TextLCDHandler::InitError()
 
 // Module implementation
 
-static LCDHandler::_eStateCode _mStateCode; // State of LCD handler for synchronization
+static LCDHandler::eStateCode _mStateCode; // State of LCD handler for synchronization
 static LCDHandler *gInstance = nullptr;
 
 LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializeModule)
@@ -104,31 +104,31 @@ LCDHandler::LCDHandler(sInitializeModule iInitializeModule) : I2CBase(iInitializ
     uint8_t lDown[8] = {0x00, 0x00, 0x00, 0x00, 0x11, 0x0A, 0x04, 0x00};
     uint8_t lUpDown[8] = {0x04, 0x0A, 0x11, 0x00, 0x11, 0x0A, 0x04, 0x00};
 
-    _mText = new TextLCDHandler();
+    mText = new TextLCDHandler();
 
     // Initialize hardware
-    _mI2ELCD = new hd44780_I2Cexp(mI2CAddress);
+    mI2ELCD = new hd44780_I2Cexp(mI2CAddress);
 
-    if (_mI2ELCD->begin(16, 2) != 0)
+    if (mI2ELCD->begin(16, 2) != 0)
     {
         DEBUG_PRINT_LN("LCD can't be initialized");
-        ErrorPrint(Error::eSeverity::TFatal, _mText->InitError());
+        ERROR_PRINT(Error::eSeverity::TFatal, mText->InitError());
         return;
     }
 
     DEBUG_PRINT_LN("LCD is initialized at address: " + String(mI2CAddress));
 
-    _mI2ELCD->noCursor();
-    _mI2ELCD->noBlink();
+    mI2ELCD->noCursor();
+    mI2ELCD->noBlink();
 
     // Create special characters for scrolling the menu
-    _mI2ELCD->createChar(0, lUp);
-    _mI2ELCD->createChar(1, lDown);
-    _mI2ELCD->createChar(2, lUpDown);
+    mI2ELCD->createChar(0, lUp);
+    mI2ELCD->createChar(1, lDown);
+    mI2ELCD->createChar(2, lUpDown);
 
     mModuleIsInitialized = true;
 
-    _mStateCode = TInitialize;
+    _mStateCode = eStateCode::TInitialize;
 }
 
 LCDHandler::~LCDHandler()
@@ -156,51 +156,51 @@ void LCDHandler::loop()
     // the LCD must not be updated from a timer interrupt
     switch (_mStateCode)
     {
-    case TInitialize:
+    case eStateCode::TInitialize:
         // Initialize LCD
-        _mI2ELCD->backlight();
-        _mI2ELCD->clear();
-        _mI2ELCD->home();
-        _mI2ELCD->print(_TrimLine(_mText->FrequencyCounter()));
-        _mI2ELCD->setCursor(0, 1);
-        _mI2ELCD->print(_TrimLine(String(__DATE__)));
+        mI2ELCD->backlight();
+        mI2ELCD->clear();
+        mI2ELCD->home();
+        mI2ELCD->print(TrimLine(mText->FrequencyCounter()));
+        mI2ELCD->setCursor(0, 1);
+        mI2ELCD->print(TrimLine(String(__DATE__)));
 
-        if (_mInputError == "")
+        if (mInputError == "")
         {
-            _mStateCode = TDone;
+            _mStateCode = eStateCode::TDone;
         }
         else
         {
-            _mStateCode = TShowError;
+            _mStateCode = eStateCode::TShowError;
         }
         break;
 
-    case TShowMenu:
+    case eStateCode::TShowMenu:
         // show the menu
-        _mI2ELCD->home();
-        _mI2ELCD->print(_TrimLine(_mText->Selection()));
-        _mI2ELCD->setCursor(0, 1);
-        _mI2ELCD->print(_TrimLine(_mMenuSelectedFunction));
-        _I2EWriteMenuNavigator();
-        _mStateCode = TShowMenuDone;
+        mI2ELCD->home();
+        mI2ELCD->print(TrimLine(mText->Selection()));
+        mI2ELCD->setCursor(0, 1);
+        mI2ELCD->print(TrimLine(mMenuSelectedFunction));
+        I2EWriteMenuNavigator();
+        _mStateCode = eStateCode::TShowMenuDone;
         break;
 
-    case TShowCounter:
+    case eStateCode::TShowCounter:
         // show the value of the counter
-        _mI2ELCD->home();
-        _mI2ELCD->print(_TrimLine(_mInputSelectedFunction));
-        _mI2ELCD->setCursor(0, 1);
-        _mI2ELCD->print(_TrimLine(_mInputCurrentValue));
-        _I2EWriteMenuNavigator();
-        _mStateCode = TShowCounterDone;
+        mI2ELCD->home();
+        mI2ELCD->print(TrimLine(mInputSelectedFunction));
+        mI2ELCD->setCursor(0, 1);
+        mI2ELCD->print(TrimLine(mInputCurrentValue));
+        I2EWriteMenuNavigator();
+        _mStateCode = eStateCode::TShowCounterDone;
         break;
 
-    case TShowError:
+    case eStateCode::TShowError:
         // output error message
-        _mI2ELCD->home();
-        _mI2ELCD->print(_TrimLine(_mText->Error()));
-        _mI2ELCD->setCursor(0, 1);
-        _mI2ELCD->print(_TrimLine(_mInputError));
+        mI2ELCD->home();
+        mI2ELCD->print(TrimLine(mText->Error()));
+        mI2ELCD->setCursor(0, 1);
+        mI2ELCD->print(TrimLine(mInputError));
         break;
 
     default:
@@ -212,7 +212,7 @@ String LCDHandler::GetName()
 {
     DEBUG_METHOD_CALL("LCDHandler::GetName");
 
-    return _mText->GetObjectName();
+    return mText->GetObjectName();
 }
 
 #if DEBUG_APPLICATION == 0
@@ -223,7 +223,7 @@ String LCDHandler::DispatchSerial(char iModuleIdentifyer, char iParameter)
 #endif
 
 // This function limits the maximum size of a text to 16
-String LCDHandler::_TrimLine(String iText)
+String LCDHandler::TrimLine(String iText)
 {
     DEBUG_METHOD_CALL("LCDHandler::_TrimLine");
 
@@ -234,7 +234,7 @@ String LCDHandler::_TrimLine(String iText)
     return lLine;
 }
 
-void LCDHandler::_I2EWriteMenuNavigator()
+void LCDHandler::I2EWriteMenuNavigator()
 {
     DEBUG_METHOD_CALL("LCDHandler::_I2EWriteMenuNavigator");
 
@@ -243,29 +243,29 @@ void LCDHandler::_I2EWriteMenuNavigator()
         return;
     }
 
-    _mI2ELCD->setCursor(15, 1);
+    mI2ELCD->setCursor(15, 1);
 
-    if (_mLastMenuEntryNumber > 0)
+    if (mLastMenuEntryNumber > 0)
     {
-        if (_mCurrentMenuEntryNumber < 1)
+        if (mCurrentMenuEntryNumber < 1)
         {
             // Scrolling up symbol
-            _mI2ELCD->print((char)0);
+            mI2ELCD->print((char)0);
         }
-        else if (_mCurrentMenuEntryNumber == (_mLastMenuEntryNumber - 1))
+        else if (mCurrentMenuEntryNumber == (mLastMenuEntryNumber - 1))
         {
             // Scrolling down symbol
-            _mI2ELCD->print((char)1);
+            mI2ELCD->print((char)1);
         }
         else
         {
             // scrolling both directions
-            _mI2ELCD->print((char)2);
+            mI2ELCD->print((char)2);
         }
     }
     else
     {
-        _mI2ELCD->print(' ');
+        mI2ELCD->print(' ');
     }
 }
 
@@ -273,34 +273,34 @@ void LCDHandler::SetSelectedFunction(String iText)
 {
     DEBUG_METHOD_CALL("LCDHandler::SetSelectedFunction");
 
-    _mInputSelectedFunction = iText;
+    mInputSelectedFunction = iText;
 }
 
 void LCDHandler::SetMeasurementValue(String iText)
 {
     DEBUG_METHOD_CALL("LCDHandler::SetMeasurementValue");
 
-    _mInputCurrentValue = iText;
+    mInputCurrentValue = iText;
 }
 
 void LCDHandler::SetErrorText(String iText)
 {
     DEBUG_METHOD_CALL("LCDHandler::SetErrorText");
 
-    _mInputError = iText;
-    _mStateCode = TShowError;
+    mInputError = iText;
+    _mStateCode = eStateCode::TShowError;
 }
 
 void LCDHandler::TriggerMenuSelectedFunction(String iText, int iCurrentMenuEntryNumber, int iLastMenuEntryNumber)
 {
     DEBUG_METHOD_CALL("LCDHandler::TriggerMenuSelectedFunction");
 
-    _mMenuSelectedFunction = iText;
-    _mCurrentMenuEntryNumber = iCurrentMenuEntryNumber;
-    _mLastMenuEntryNumber = iLastMenuEntryNumber;
-    if (_mStateCode != TInitialize)
+    mMenuSelectedFunction = iText;
+    mCurrentMenuEntryNumber = iCurrentMenuEntryNumber;
+    mLastMenuEntryNumber = iLastMenuEntryNumber;
+    if (_mStateCode != eStateCode::TInitialize)
     {
-        _mStateCode = TShowMenu;
+        _mStateCode = eStateCode::TShowMenu;
     }
 }
 
@@ -310,11 +310,11 @@ void LCDHandler::TriggerShowRefresh()
 
     switch (_mStateCode)
     {
-    case TShowMenuDone:
-        _mStateCode = TShowMenu;
+    case eStateCode::TShowMenuDone:
+        _mStateCode = eStateCode::TShowMenu;
         break;
-    case TShowCounterDone:
-        _mStateCode = TShowCounter;
+    case eStateCode::TShowCounterDone:
+        _mStateCode = eStateCode::TShowCounter;
         break;
     default:
         break;
@@ -327,11 +327,11 @@ void LCDHandler::TriggerShowCounter()
 
     switch (_mStateCode)
     {
-    case TInitialize:
-    case TShowError:
+    case eStateCode::TInitialize:
+    case eStateCode::TShowError:
         break;
     default:
-        _mStateCode = TShowCounter;
+        _mStateCode = eStateCode::TShowCounter;
         break;
     }
 }

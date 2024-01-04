@@ -30,24 +30,6 @@ public:
 
 class ModuleTTLCMOS : public ModuleBase
 {
-private:
-	static const int _cNumberOfMenuEntries = 4;
-	const uint8_t _cOSelectTTL = 2;
-	const uint8_t _cOSelectCMOS = 3;
-	const uint8_t _cOSelectOpenEmitter = 4;
-	const uint8_t _cOSelectOpenCollector = 5;
-	const uint8_t _cOInputSelection0 = 6;
-	const uint8_t _cOInputSelection1 = 7;
-
-	// unassigned pins
-	const uint8_t _cB2Unassigned = 10;
-	const uint8_t _cB3Unassigned = 11;
-	const uint8_t _cB4Unassigned = 12;
-	const uint8_t _cB5Unassigned = 13;
-	const uint8_t _cB6Unassigned = 14;
-	const uint8_t _cB7Unassigned = 15;
-
-	TextModuleTTLCMOS *_mText; // Pointer to current text objekt of the class
 
 public:
 	/// <summary>
@@ -56,8 +38,6 @@ public:
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	ModuleTTLCMOS(sInitializeModule iInitializeModule);
 	~ModuleTTLCMOS();
-
-	// Functions that can be called from within main loop
 
 	/// <summary>
 	/// Activates the module => restores the last stored state
@@ -68,15 +48,6 @@ public:
 	/// Deactivates the module - switch off all outputs
 	/// </summary>
 	void I2EDeactivate() override;
-
-protected:
-	/// <summary>
-	/// Triggers hardware for selected menu entry
-	/// </summary>
-	void I2ESelectFunction() override;
-
-public:
-	// Functions that can be called also from tasks
 
 	/// <summary>
 	/// Readable name of the module
@@ -108,6 +79,31 @@ public:
 	/// </summary>
 	/// <returns>Module code</returns>
 	ModuleBase::eModuleCode GetModuleCode() override;
+
+protected:
+	/// <summary>
+	/// Triggers hardware for selected menu entry
+	/// </summary>
+	void I2ESelectFunction() override;
+
+private:
+	static const int cNumberOfMenuEntries = 4;
+	const uint8_t cOSelectTTL = 2;
+	const uint8_t cOSelectCMOS = 3;
+	const uint8_t cOSelectOpenEmitter = 4;
+	const uint8_t cOSelectOpenCollector = 5;
+	const uint8_t cOInputSelection0 = 6;
+	const uint8_t cOInputSelection1 = 7;
+
+	// unassigned pins
+	const uint8_t cB2Unassigned = 10;
+	const uint8_t cB3Unassigned = 11;
+	const uint8_t cB4Unassigned = 12;
+	const uint8_t cB5Unassigned = 13;
+	const uint8_t cB6Unassigned = 14;
+	const uint8_t cB7Unassigned = 15;
+
+	TextModuleTTLCMOS *mText; // Pointer to current text objekt of the class
 };
 
 #endif

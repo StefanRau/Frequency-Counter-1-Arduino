@@ -32,20 +32,6 @@ public:
 
 class ModuleAnalog : public ModuleBase
 {
-private:
-	static const int _cNumberOfMenuEntries = 7;
-	const uint8_t _cOSelect100uV = 0;
-	const uint8_t _cOSelect1mV = 1;
-	const uint8_t _cOSelect10mV = 2;
-	const uint8_t _cOSelect100mV = 3;
-	const uint8_t _cOSelect1V = 4;
-	const uint8_t _cOSelect10V = 5;
-	const uint8_t _cOSelect100V = 6;
-
-	/// <summary>
-	/// Pointer to current text objekt of the class
-	/// </summary>
-	TextModuleAnalog *_mText = nullptr;
 
 public:
 	/// <summary>
@@ -54,8 +40,6 @@ public:
 	/// <param name="iInitializeModule">Structure that contains EEPROM settings address (or starting address) as well as I2C address (or starting address) of the module</param>
 	ModuleAnalog(sInitializeModule iInitializeModule);
 	~ModuleAnalog();
-
-	// Functions that can be called from within main loop
 
 	/// <summary>
 	/// Activates the module => restores the last stored state
@@ -66,15 +50,6 @@ public:
 	/// Deactivates the module - switch off all outputs
 	/// </summary>
 	void I2EDeactivate() override;
-
-protected:
-	/// <summary>
-	/// Triggers hardware for selected menu entry
-	/// </summary>
-	void I2ESelectFunction() override;
-
-public:
-	// Functions that can be called also from tasks
 
 	/// <summary>
 	/// Readable name of the module
@@ -106,6 +81,28 @@ public:
 	/// </summary>
 	/// <returns>Module code</returns>
 	ModuleBase::eModuleCode GetModuleCode() override;
+
+protected:
+	/// <summary>
+	/// Triggers hardware for selected menu entry
+	/// </summary>
+	void I2ESelectFunction() override;
+
+private:
+	static const int cNumberOfMenuEntries = 7;
+
+	const uint8_t cOSelect100uV = 0;
+	const uint8_t cOSelect1mV = 1;
+	const uint8_t cOSelect10mV = 2;
+	const uint8_t cOSelect100mV = 3;
+	const uint8_t cOSelect1V = 4;
+	const uint8_t cOSelect10V = 5;
+	const uint8_t cOSelect100V = 6;
+
+	/// <summary>
+	/// Pointer to current text objekt of the class
+	/// </summary>
+	TextModuleAnalog *mText = nullptr;
 };
 
 #endif

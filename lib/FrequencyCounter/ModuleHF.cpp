@@ -31,8 +31,8 @@ String TextModuleHF::GetObjectName()
 
     switch (GetLanguage())
     {
-        TextLangE("HF Module");
-        TextLangD("HF Modul");
+        TEXTBASE_LANG_E("HF Module");
+        TEXTBASE_LANG_D("HF Modul");
     }
 }
 

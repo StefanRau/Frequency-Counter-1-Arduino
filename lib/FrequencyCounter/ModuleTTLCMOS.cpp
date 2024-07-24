@@ -32,8 +32,8 @@ String TextModuleTTLCMOS::GetObjectName()
 
 	switch (GetLanguage())
 	{
-		TextLangE("TTL/CMOS module");
-		TextLangD("TTL/CMOS Modul");
+		TEXTBASE_LANG_E("TTL/CMOS module");
+		TEXTBASE_LANG_D("TTL/CMOS Modul");
 	}
 }
 
@@ -57,8 +57,8 @@ String TextModuleTTLCMOS::MenuItemOC()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Open collector");
-		TextLangD("Open Collector");
+		TEXTBASE_LANG_E("Open collector");
+		TEXTBASE_LANG_D("Open Collector");
 	}
 }
 
@@ -68,8 +68,8 @@ String TextModuleTTLCMOS::MenuItemOE()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Open emitter");
-		TextLangD("Open Emitter");
+		TEXTBASE_LANG_E("Open emitter");
+		TEXTBASE_LANG_D("Open Emitter");
 	}
 }
 

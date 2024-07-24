@@ -38,8 +38,8 @@ String TextCounter::GetObjectName()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Counter");
-		TextLangD("Zaehler");
+		TEXTBASE_LANG_E("Counter");
+		TEXTBASE_LANG_D("Zaehler");
 	}
 }
 
@@ -49,8 +49,8 @@ String TextCounter::InitError(String iICName)
 
 	switch (GetLanguage())
 	{
-		TextLangE("Counter IC" + iICName + " defect");
-		TextLangD("Zaehler IC" + iICName + " defekt");
+		TEXTBASE_LANG_E("Counter IC" + iICName + " defect");
+		TEXTBASE_LANG_D("Zaehler IC" + iICName + " defekt");
 	}
 }
 
@@ -94,8 +94,8 @@ String TextCounter::Overflow()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Overflow");
-		TextLangD("Ueberlauf");
+		TEXTBASE_LANG_E("Overflow");
+		TEXTBASE_LANG_D("Ueberlauf");
 	}
 }
 
@@ -105,8 +105,8 @@ String TextCounter::FunctionNameFrequency()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Frequency");
-		TextLangD("Frequenz");
+		TEXTBASE_LANG_E("Frequency");
+		TEXTBASE_LANG_D("Frequenz");
 	}
 }
 
@@ -116,8 +116,8 @@ String TextCounter::FunctionNameEdgeNegative()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Dur. neg. edge");
-		TextLangD("Dauer neg.Flanke");
+		TEXTBASE_LANG_E("Dur. neg. edge");
+		TEXTBASE_LANG_D("Dauer neg.Flanke");
 	}
 }
 
@@ -127,8 +127,8 @@ String TextCounter::FunctionNameEdgePositive()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Dur. pos. edge");
-		TextLangD("Dauer pos.Flanke");
+		TEXTBASE_LANG_E("Dur. pos. edge");
+		TEXTBASE_LANG_D("Dauer pos.Flanke");
 	}
 }
 
@@ -138,8 +138,8 @@ String TextCounter::FunctionNameNegative()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Length neg.level");
-		TextLangD("Dauer neg. Pegel");
+		TEXTBASE_LANG_E("Length neg.level");
+		TEXTBASE_LANG_D("Dauer neg. Pegel");
 	}
 }
 
@@ -149,8 +149,8 @@ String TextCounter::FunctionNamePositive()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Length pos.level");
-		TextLangD("Dauer pos. Pegel");
+		TEXTBASE_LANG_E("Length pos.level");
+		TEXTBASE_LANG_D("Dauer pos. Pegel");
 	}
 }
 
@@ -160,8 +160,8 @@ String TextCounter::FunctionNameEventCounting()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Event counting");
-		TextLangD("Ereigniszaehlung");
+		TEXTBASE_LANG_E("Event counting");
+		TEXTBASE_LANG_D("Ereigniszaehlung");
 	}
 }
 
@@ -171,8 +171,8 @@ String TextCounter::FunctionNameNoSelection()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Initial");
-		TextLangD("Initial");
+		TEXTBASE_LANG_E("Initial");
+		TEXTBASE_LANG_D("Initial");
 	}
 }
 
@@ -182,8 +182,8 @@ String TextCounter::FunctionNameUnknown()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Unknown function");
-		TextLangD("Unbekannte Funktion");
+		TEXTBASE_LANG_E("Unknown function");
+		TEXTBASE_LANG_D("Unbekannte Funktion");
 	}
 }
 

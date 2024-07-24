@@ -31,8 +31,8 @@ String TextModuleAnalog::GetObjectName()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Analog module");
-		TextLangD("Analogmodul");
+		TEXTBASE_LANG_E("Analog module");
+		TEXTBASE_LANG_D("Analogmodul");
 	}
 }
 

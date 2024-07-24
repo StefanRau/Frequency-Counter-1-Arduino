@@ -38,8 +38,8 @@ String TextModuleFactory::GetObjectName()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Module factory");
-		TextLangD("Module Factory");
+		TEXTBASE_LANG_E("Module factory");
+		TEXTBASE_LANG_D("Module Factory");
 	}
 }
 
@@ -49,8 +49,8 @@ String TextModuleFactory::Unknown()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Unknown function");
-		TextLangD("Unbekannte Funktion");
+		TEXTBASE_LANG_E("Unknown function");
+		TEXTBASE_LANG_D("Unbekannte Funktion");
 	}
 }
 

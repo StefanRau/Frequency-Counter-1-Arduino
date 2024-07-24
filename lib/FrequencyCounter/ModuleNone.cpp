@@ -30,8 +30,8 @@ String TextModuleNone::GetObjectName()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Dummy module");
-		TextLangD("Dummymodul");
+		TEXTBASE_LANG_E("Dummy module");
+		TEXTBASE_LANG_D("Dummymodul");
 	}
 }
 
@@ -41,8 +41,8 @@ String TextModuleNone::MenuItemStart()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Start");
-		TextLangD("Start");
+		TEXTBASE_LANG_E("Start");
+		TEXTBASE_LANG_D("Start");
 	}
 }
 
@@ -52,8 +52,8 @@ String TextModuleNone::MenuItemCenter()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Center");
-		TextLangD("Mitte");
+		TEXTBASE_LANG_E("Center");
+		TEXTBASE_LANG_D("Mitte");
 	}
 }
 
@@ -63,8 +63,8 @@ String TextModuleNone::MenuItemEnd()
 
 	switch (GetLanguage())
 	{
-		TextLangE("End");
-		TextLangD("Ende");
+		TEXTBASE_LANG_E("End");
+		TEXTBASE_LANG_D("Ende");
 	}
 }
 

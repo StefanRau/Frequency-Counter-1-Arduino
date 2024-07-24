@@ -40,8 +40,8 @@ String TextLCDHandler::GetObjectName()
 
     switch (GetLanguage())
     {
-        TextLangE("LCD");
-        TextLangD("LCD");
+        TEXTBASE_LANG_E("LCD");
+        TEXTBASE_LANG_D("LCD");
     }
 }
 
@@ -51,8 +51,8 @@ String TextLCDHandler::FrequencyCounter()
 
     switch (GetLanguage())
     {
-        TextLangE("Frequencycounter");
-        TextLangD("Frequenzzaehler");
+        TEXTBASE_LANG_E("Frequencycounter");
+        TEXTBASE_LANG_D("Frequenzzaehler");
     }
 }
 
@@ -62,8 +62,8 @@ String TextLCDHandler::Selection()
 
     switch (GetLanguage())
     {
-        TextLangE("Selection");
-        TextLangD("Auswahl");
+        TEXTBASE_LANG_E("Selection");
+        TEXTBASE_LANG_D("Auswahl");
     }
 }
 
@@ -73,8 +73,8 @@ String TextLCDHandler::Error()
 
     switch (GetLanguage())
     {
-        TextLangE("Error");
-        TextLangD("Fehler");
+        TEXTBASE_LANG_E("Error");
+        TEXTBASE_LANG_D("Fehler");
     }
 }
 
@@ -84,8 +84,8 @@ String TextLCDHandler::InitError()
 
     switch (GetLanguage())
     {
-        TextLangE("Can't init LCD");
-        TextLangD("LCD kann nicht initialisiert werden");
+        TEXTBASE_LANG_E("Can't init LCD");
+        TEXTBASE_LANG_D("LCD kann nicht initialisiert werden");
     }
 }
 

@@ -49,8 +49,8 @@ String TextMain::FreeMemory(int iFreeMemory)
 
     switch (GetLanguage())
     {
-        TextLangE("Free memory: " + String(iFreeMemory) + " byte");
-        TextLangD("Freier Speicher: " + String(iFreeMemory) + " Byte");
+        TEXTBASE_LANG_E("Free memory: " + String(iFreeMemory) + " byte");
+        TEXTBASE_LANG_D("Freier Speicher: " + String(iFreeMemory) + " Byte");
     }
 }
 #endif
@@ -61,8 +61,8 @@ String TextMain::ErrorInSetup()
 
     switch (GetLanguage())
     {
-        TextLangE("Error in setup");
-        TextLangD("Fehler im setup");
+        TEXTBASE_LANG_E("Error in setup");
+        TEXTBASE_LANG_D("Fehler im setup");
     }
 }
 
@@ -72,8 +72,8 @@ String TextMain::ErrorInLoop()
 
     switch (GetLanguage())
     {
-        TextLangE("Error in loop");
-        TextLangD("Fehler in loop");
+        TEXTBASE_LANG_E("Error in loop");
+        TEXTBASE_LANG_D("Fehler in loop");
     }
 }
 

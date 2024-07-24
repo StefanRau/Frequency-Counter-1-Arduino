@@ -46,8 +46,8 @@ String TextFrontPlate::GetObjectName()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Front plate");
-		TextLangD("Frontplatte");
+		TEXTBASE_LANG_E("Front plate");
+		TEXTBASE_LANG_D("Frontplatte");
 	}
 }
 
@@ -57,8 +57,8 @@ String TextFrontPlate::InitError()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Keyb/LEDs defect");
-		TextLangD("Keyb/LEDs defekt");
+		TEXTBASE_LANG_E("Keyb/LEDs defect");
+		TEXTBASE_LANG_D("Keyb/LEDs defekt");
 	}
 }
 
@@ -68,8 +68,8 @@ String TextFrontPlate::InitErrorCounterRequired()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Counter is required");
-		TextLangD("Zähler wird benötigt");
+		TEXTBASE_LANG_E("Counter is required");
+		TEXTBASE_LANG_D("Zähler wird benötigt");
 	}
 }
 
@@ -79,8 +79,8 @@ String TextFrontPlate::InitErrorModuleFactoryRequired()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Module factory required");
-		TextLangD("Modul Factory benötigt");
+		TEXTBASE_LANG_E("Module factory required");
+		TEXTBASE_LANG_D("Modul Factory benötigt");
 	}
 }
 
@@ -90,8 +90,8 @@ String TextFrontPlate::InitErrorLCDRequired()
 
 	switch (GetLanguage())
 	{
-		TextLangE("LCD is required");
-		TextLangD("LCD wird benötigt");
+		TEXTBASE_LANG_E("LCD is required");
+		TEXTBASE_LANG_D("LCD wird benötigt");
 	}
 }
 
@@ -101,8 +101,8 @@ String TextFrontPlate::ErrorPlausibilityViolation()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Frontplate plausibility violation");
-		TextLangD("Frontplatte Plausibilitaetsverletzung");
+		TEXTBASE_LANG_E("Frontplate plausibility violation");
+		TEXTBASE_LANG_D("Frontplatte Plausibilitaetsverletzung");
 	}
 }
 

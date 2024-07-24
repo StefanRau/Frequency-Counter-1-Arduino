@@ -38,8 +38,8 @@ String TextModuleBase::GetObjectName()
 
 	switch (GetLanguage())
 	{
-		TextLangE("Base");
-		TextLangD("Basis");
+		TEXTBASE_LANG_E("Base");
+		TEXTBASE_LANG_D("Basis");
 	}
 }
 
